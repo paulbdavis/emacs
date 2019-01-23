@@ -239,5 +239,139 @@
 
   (setq compilation-scroll-output t))
 
+;; highlight parens in emacs lisp mode
+(use-package highlight-parentheses
+  :ensure
+  :diminish highlight-parentheses-mode
+  :hook (emacs-lisp-mode . highlight-parentheses-mode)
+  :config
+  (setq hl-paren-background-colors
+        `(,(ds/get-zenburn-color "bg-2")
+          ,(ds/get-zenburn-color "bg-1")
+          ,(ds/get-zenburn-color "bg-05")
+          ,(ds/get-zenburn-color "bg+05")
+          ,(ds/get-zenburn-color "bg+1")
+          ,(ds/get-zenburn-color "bg+2")
+          ,(ds/get-zenburn-color "bg+3")
+          ,(ds/get-zenburn-color "fg-1")))
+  (setq hl-paren-colors
+        `(,(ds/get-zenburn-color "red-2")
+          ,(ds/get-zenburn-color "green")
+          ,(ds/get-zenburn-color "orange")
+          ,(ds/get-zenburn-color "blue")
+          ,(ds/get-zenburn-color "yellow")
+          ,(ds/get-zenburn-color "cyan")
+          ,(ds/get-zenburn-color "magenta")
+          ,(ds/get-zenburn-color "fg+1"))))
+
+;; commenting
+(use-package evil-nerd-commenter
+  :ensure
+  :bind (("C-c C-/ C-/" . evilnc-comment-or-uncomment-lines)
+         ("C-c C-/ C-l" . evilnc-comment-or-uncomment-to-the-line)
+         ("C-c C-/ C-c" . evilnc-copy-and-comment-lines)
+         ("C-c C-/ C-p" . evilnc-comment-or-uncomment-paragraphs)
+         ("C-c C-_ C-_" . evilnc-comment-or-uncomment-lines)
+         ("C-c C-_ C-l" . evilnc-comment-or-uncomment-to-the-line)
+         ("C-c C-_ C-c" . evilnc-copy-and-comment-lines)
+         ("C-c C-_ C-p" . evilnc-comment-or-uncomment-paragraphs)))
+
+;; some basic modes for files I work on
+(use-package nginx-mode
+  :ensure)
+(use-package json-mode
+  :ensure)
+(use-package dockerfile-mode
+  :ensure)
+(use-package yaml-mode
+  :ensure
+  :config
+  (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
+  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+
+;; sql stuff (postgres by defualt)
+(require 'sql)
+(defun ds/postgresql-highlight ()
+  "Setup sql for postgres."
+  (sql-mode)
+  (sql-highlight-postgres-keywords))
+
+(add-to-list 'auto-mode-alist
+             '("\\.sql$" . ds/postgresql-highlight))
+
+(use-package sql-indent
+  :ensure
+  :hook (sql-mode . sqlind-minor-mode))
+
+;; rest client
+(use-package restclient
+  :ensure
+  :config
+  (ds/popup-thing-display-settings "*HTTP Response*" left 0 0.25))
+
+;; golang
+(use-package go-mode
+  :ensure
+  :mode ("\\go.mod\\'" . fundamental-mode)
+  :hook ((before-save . gofmt-before-save)
+         (after-save . flycheck-buffer)))
+
+;; javascript
+(defun ds/eslint-fix ()
+  "Format the current file with ESLint."
+  (interactive)
+  (let ((eslint (ds/find-eslint-executable)))
+    (if eslint
+        (progn (call-process eslint nil "*ESLint Errors*" nil "--fix" buffer-file-name)
+               (revert-buffer t t t))
+      (message "ESLint not found."))))
+(defun ds/setup-eslint-fix ()
+  "Setup eslint fixing."
+  (add-hook 'after-save-hook #'ds/eslint-fix))
+
+(use-package js
+  :hook ((js-mode . ds/setup-eslint-fix))
+  :config
+  (setq js-indent-level 2))
+
+;; html/web
+(use-package web-mode
+  :ensure
+  :hook ((web-mode . ds/setup-eslint-fix))
+  :mode ("\\.html\\'")
+  :config
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-part-padding 0)
+  (setq web-mode-script-padding 0)
+  (setq web-mode-style-padding 0))
+
+;; protobufs
+(use-package protobuf-mode
+  :ensure
+  :hook (protobuf-mode . ds/protobuf-setup)
+  :config
+  (defun ds/protobuf-setup ()
+    (flycheck-define-checker protobuf-protoc
+      "A modified protobuf syntax checker using the protoc compiler.
+
+          See URL `https://developers.google.com/protocol-buffers/'."
+      :command ("protoc" "--error_format" "gcc"
+                (eval (concat "--java_out=" (flycheck-temp-dir-system)))
+                ;; include the directory with the file and subdirs I use in my projects
+                (eval (concat "--proto_path=" (file-name-directory (buffer-file-name))))
+                (eval (concat "--proto_path=" (file-truename (concat (file-name-directory (buffer-file-name)) "lib/proto"))))
+                (eval (concat "--proto_path=" (file-truename (concat (file-name-directory (buffer-file-name)) "third_party"))))
+                source-inplace)
+      :error-patterns
+      ((info line-start (file-name) ":" line ":" column
+             ": note: " (message) line-end)
+       (error line-start (file-name) ":" line ":" column
+              ": " (message) line-end)
+       (error line-start
+              (message "In file included from") " " (file-name) ":" line ":"
+              column ":" line-end))
+      :modes protobuf-mode
+      :predicate buffer-file-name)))
+
 (provide 'init)
 ;;; init.el ends here
