@@ -74,7 +74,10 @@
 
 (defvar erc-hide-list '("JOIN" "PART" "QUIT"))
 
-(setq ediff-window-setup-function #'ediff-setup-windows-plain)
+(use-package ediff
+  :commands (ediff-setup-windows-plain)
+  :init
+  (defvar ediff-window-setup-function #'ediff-setup-windows-plain))
 
 ;; close ansi term when exiting
 (defun ds/ansi-term-handle-close ()
@@ -123,10 +126,10 @@
 (add-function :before (symbol-function 'scroll-down-command) #'push-mark)
 (add-function :before (symbol-function 'scroll-up-command) #'push-mark)
 
-(setq tramp-ssh-controlmaster-options
-      (concat
-       "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
-       "-o ControlMaster=auto -o ControlPersist=yes"))
+(defvar tramp-ssh-controlmaster-options
+  (concat
+   "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
+   "-o ControlMaster=auto -o ControlPersist=yes"))
 
 (add-hook 'prog-mode-hook #'electric-pair-local-mode)
 
