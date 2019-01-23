@@ -25,6 +25,7 @@
 ;;; Code:
 
 (setq load-path (cons "~/.emacs.d/lib" load-path))
+(setq load-path (cons "~/.emacs.d/lib/emacs-org-dnd" load-path))
 (setq load-path (cons "~/.emacs.d/packages" load-path))
 
 (require 'package-loader)
@@ -372,6 +373,85 @@
               column ":" line-end))
       :modes protobuf-mode
       :predicate buffer-file-name)))
+
+;; org-mode
+
+;; expand logbook on org all expand
+(defun ds/expand-logbook-drawer ()
+  "Expand the closest logbook drawer."
+  (interactive)
+  (search-forward ":LOGBOOK:")
+  (org-cycle))
+
+(defun ds/org-logbook-cycle-hook (ds/drawer-curr-state)
+  "When the DS/DRAWER-CURR-STATE is \"all\", open up logbooks."
+  (interactive)
+  (message "State changed")
+  (when (eq ds/drawer-curr-state "all")
+    
+    (ds/expand-logbook-drawer)))
+
+(use-package org
+  :ensure org-plus-contrib
+  :mode (("\\.org$" . org-mode))
+  :pin org
+  :custom-face
+  (org-mode-line-clock
+   ((t (:foreground nil :background nil :underline nil :box nil))))
+  :hook (org-cycle . ds/org-logbook-cycle-hook)
+  :init
+  (defvar org-directory "~/org" "Directory for org files.")
+  (defvar org-time-clocksum-format "%d:%.02d")
+  (defvar org-clock-idle-time 15)
+  (defvar org-clock-mode-line-total 'current)
+  (defvar org-clock-into-drawer "LOGBOOK")
+  (defvar org-duration-format '(("h" . t) (special . 2)))
+  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
+  (defvar org-clock-persist t)
+  ;; Resume clocking task on clock-in if the clock is open
+  (defvar org-clock-in-resume t)
+  ;; Do not prompt to resume an active clock, just resume it
+  (defvar org-clock-persist-query-resume nil)
+  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks
+  ;; with 0:00 duration
+  (defvar org-clock-out-remove-zero-time-clocks t)
+  ;; Clock out when moving task to a done state
+  (defvar org-clock-out-when-done t)
+  ;; Enable auto clock resolution for finding open clocks
+  (defvar org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+  ;; Include current clocking task in clock reports
+  (defvar org-clock-report-include-clocking-task t)
+  (defvar org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
+  :config
+  (condition-case nil
+      ;; make the org dir if it is not there already
+      (make-directory org-directory t)
+    (error nil))
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer "LOGBOOK")
+  (setq org-src-window-setup 'current-window)
+  ;; Resume clocking task when emacs is restarted
+  (org-clock-persistence-insinuate)
+  ;; use pretty things for the clocktable
+  (setq org-pretty-entities t)
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "IN-PROGRESS(i!)" "WAITING(w@)" "|" "WILL-NOT-IMPLEMENT(k@)" "DONE(d)")
+          (sequence "BUG(b)" "RESOLVING(r!)" "|" "NON-ISSUE(n@)" "PATCHED(p)")))
+  
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)
+     (ditaa . t))))
+
+(use-package org-bullets
+  :ensure
+  :after org
+  :hook (org-mode . org-bullets-mode))
+
+
+;; dnd
+(require 'ox-dnd)
 
 (provide 'init)
 ;;; init.el ends here
