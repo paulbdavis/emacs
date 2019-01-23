@@ -84,6 +84,11 @@
   
   (global-flycheck-mode))
 
+(use-package flycheck-pos-tip
+  :ensure
+  :after flycheck
+  :hook (flycheck-mode . flycheck-pos-tip-mode))
+
 ;; ivy/counsel setup
 (use-package flx
   :ensure)
@@ -172,6 +177,9 @@
 ;; git porcelean
 (use-package magit
   :ensure
+  :bind (:map magit-mode-map
+              ([remap previous-line] . magit-previous-line)
+              ([remap next-line] . magit-next-line))
   :config
   (setq magit-merge-arguments '("--no-ff"))
   (setq global-magit-file-mode        t
