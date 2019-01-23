@@ -387,6 +387,9 @@
                     :major-modes '(go-mode)
                     :server-id 'gopls)))
 
+(use-package lsp-ui
+  :ensure
+  :commands (lsp-ui-mode))
 ;; org-mode
 
 ;; expand logbook on org all expand
