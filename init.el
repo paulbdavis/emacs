@@ -381,7 +381,11 @@
   :hook ((go-mode . lsp)
          (js-mode . lsp))
   :config
-  (setq lsp-prefer-flymake nil))
+  (setq lsp-prefer-flymake nil)
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "gopls")
+                    :major-modes '(go-mode)
+                    :server-id 'gopls)))
 
 ;; org-mode
 
