@@ -1,0 +1,132 @@
+;;; ds-theme.el --- customize and set up theming        -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2019 Paul B Davis
+
+;; Author:  <paul@sputnik>
+;; Keywords: faces
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; 
+
+;;; Code:
+
+(defvar ds/zenburn-colors
+  '(("zenburn-fg+1"     . "#FFFFEF")
+    ("zenburn-fg"       . "#DCDCCC")
+    ("zenburn-fg-05"    . "#989888")
+    ("zenburn-fg-1"     . "#656555")
+    ("zenburn-bg-2"     . "#000000")
+    ("zenburn-bg-1"     . "#0C0C0C")
+    ("zenburn-bg-05"    . "#121212")
+    ("zenburn-bg"       . "#1C1C1C")
+    ("zenburn-bg+05"    . "#222222")
+    ("zenburn-bg+1"     . "#2C2C2C")
+    ("zenburn-bg+2"     . "#3C3C3C")
+    ("zenburn-bg+3"     . "#4C4C4C")
+    ("zenburn-red+1"    . "#DCA3A3")
+    ("zenburn-red"      . "#CC9393")
+    ("zenburn-red-1"    . "#BC8383")
+    ("zenburn-red-2"    . "#AC7373")
+    ("zenburn-red-3"    . "#9C6363")
+    ("zenburn-red-4"    . "#8C5353")
+    ("zenburn-orange"   . "#DFAF8F")
+    ("zenburn-yellow"   . "#F0DFAF")
+    ("zenburn-yellow-1" . "#E0CF9F")
+    ("zenburn-yellow-2" . "#D0BF8F")
+    ("zenburn-yellow-4" . "#B09F6F")
+    ("zenburn-green-2"  . "#4F6F4F")
+    ("zenburn-green-1"  . "#5F7F5F")
+    ("zenburn-green"    . "#7F9F7F")
+    ("zenburn-green+1"  . "#8FB28F")
+    ("zenburn-green+2"  . "#9FC59F")
+    ("zenburn-green+3"  . "#AFD8AF")
+    ("zenburn-green+4"  . "#BFEBBF")
+    ("zenburn-cyan"     . "#93E0E3")
+    ("zenburn-blue+3"   . "#3c3c45")
+    ("zenburn-blue+1"   . "#94BFF3")
+    ("zenburn-blue"     . "#8CD0D3")
+    ("zenburn-blue-1"   . "#7CB8BB")
+    ("zenburn-blue-2"   . "#6CA0A3")
+    ("zenburn-blue-3"   . "#5C888B")
+    ("zenburn-blue-4"   . "#4C7073")
+    ("zenburn-blue-5"   . "#366060")
+    ("zenburn-magenta"  . "#DC8CC3"))
+  "List of Zenburn colors.
+
+Each element has the form (NAME . HEX).
+
+`+N' suffixes indicate a color is lighter.
+`-N' suffixes indicate a color is darker.
+
+This overrides the colors provided by the `zenburn-theme' package.")
+
+(defun ds/get-zenburn-color (name)
+  "Get zenburn color by NAME."
+  (let* ((key (concat "zenburn-" name))
+         (data (assoc key ds/zenburn-colors)))
+    (if data
+        (cdr data))))
+
+
+(defun ds/setup-zenburn-faces ()
+  "Set up custom faces using zenburn colors."
+  (interactive)
+  ;; default face customizations
+  ;; region selection
+  (set-face-attribute 'region nil
+                      :background (ds/get-zenburn-color "blue+3")
+                      :inverse-video t)
+  ;; flat mode and header lines
+  (set-face-attribute 'header-line nil
+                      :background (ds/get-zenburn-color "bg+1")
+                      :box nil)
+  (set-face-attribute 'mode-line nil
+                      :background (ds/get-zenburn-color "bg+1")
+                      :box nil)
+  (set-face-attribute 'mode-line-inactive nil
+                      :foreground (ds/get-zenburn-color "bg+3")
+                      :background (ds/get-zenburn-color "bg+1")
+                      :box nil)
+  (set-face-attribute 'fringe nil
+                      :background (ds/get-zenburn-color "bg+1"))
+  ;; italic comments
+  (set-face-attribute 'font-lock-comment-face nil
+                      :slant 'italic)
+  ;; eldoc function face
+  (set-face-attribute 'eldoc-highlight-function-argument nil
+                      :foreground (ds/get-zenburn-color "blue-1"))
+  ;; set the verticle border color
+  (set-face-attribute 'vertical-border nil
+                      :foreground (ds/get-zenburn-color "bg-1"))
+
+  ;; auto suggest face for eshell
+  (make-face 'ds/esh-autosuggest-face)
+  (set-face-attribute 'ds/esh-autosuggest-face nil
+                      :foreground (ds/get-zenburn-color "fg-1")
+                      :background (ds/get-zenburn-color "bg")))
+
+
+(use-package zenburn-theme
+  :ensure t
+  :config
+  (setq zenburn-override-colors-alist ds/zenburn-colors)
+  (load-theme 'zenburn t)
+  (ds/setup-zenburn-faces))
+
+
+(provide 'ds-theme)
+;;; ds-theme.el ends here
