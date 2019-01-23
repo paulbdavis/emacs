@@ -96,6 +96,66 @@
   (open-line count)
   (indent-according-to-mode))
 
+(defun ds/set-window-pixel-width (pixel-width &optional window)
+  "Set the WINDOW to PIXEL-WIDTH pixels wide."
+  (interactive "nNew Pixel Width: ")
+  (let* ((win (or window (selected-window)))
+         (current-width (window-pixel-width win))
+         (wanted-delta (- pixel-width current-width))
+         (delta (window-resizable win wanted-delta t nil t)))
+    (window-resize win delta t nil t)))
+
+(defun ds/set-window-column-width (column-width &optional window)
+  "Set the WINDOW to COLUMN-WIDTH columns wide."
+  (interactive "nNew Column Width: ")
+  (let* ((win (or window (selected-window)))
+         (current-width (window-width win))
+         (wanted-delta (- column-width current-width))
+         (delta (window-resizable win wanted-delta t)))
+    (message "%s %d -> %d (%d)" win current-width column-width delta)
+    (window-resize win delta t)))
+
+(defun ds/set-window-pixel-height (pixel-height &optional window)
+  "Set the WINDOW to PIXEL-HEIGHT pixels wide."
+  (interactive "nNew Pixel Height: ")
+  (let* ((win (or window (selected-window)))
+         (current-height (window-pixel-height win))
+         (wanted-delta (- pixel-height current-height))
+         (delta (window-resizable win wanted-delta nil nil t)))
+    (window-resize win delta nil nil t)))
+
+(defun ds/set-window-column-height (column-height &optional window)
+  "Set the WINDOW to COLUMN-HEIGHT columns wide."
+  (interactive "nNew Column Height: ")
+  (let* ((win (or window (selected-window)))
+         (current-height (window-height win))
+         (wanted-delta (- column-height current-height))
+         (delta (window-resizable win wanted-delta)))
+    (message "%s %d -> %d (%d)" win current-height column-height delta)
+    (window-resize win delta)))
+
+(defun ds/set-window-ratio (&optional win width height horizontal)
+  "Set WIN size ratio in pixels based on WIDTH and HEIGHT, optionally resize HORIZONTAL."
+  (interactive "i\nnWidth: \nnHeight: \nSHorizontal: ")
+  (let* ((padding 19)
+         (win (or win (selected-window)))
+         (w (float (or width 16)))
+         (h (float (or height 9)))
+         (ratio (/ w h))
+         (original-size (if horizontal
+                            (window-width win t)
+                          (- (window-pixel-height win) padding)))
+         (reference-size (if horizontal
+                             (- (window-pixel-height win) padding)
+                           (window-width win t)))
+         (new-size (if horizontal
+                       (truncate (* reference-size ratio))
+                     (truncate (* reference-size (/ 1 ratio)))))
+         (delta (- new-size original-size)))
+    (message "%s %f reference: %d current: %d -> new: %d (delta: %d)" horizontal ratio reference-size original-size new-size delta)
+    (if horizontal
+        (ds/set-window-pixel-width new-size win)
+      (ds/set-window-pixel-height (+ new-size padding) win))))
 
 (provide 'ds-util)
 ;;; ds-util.el ends here
