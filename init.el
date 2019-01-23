@@ -374,6 +374,15 @@
       :modes protobuf-mode
       :predicate buffer-file-name)))
 
+;; LSP stuff
+(use-package lsp-mode
+  :ensure
+  :commands (lsp)
+  :hook ((go-mode . lsp)
+         (js-mode . lsp))
+  :config
+  (setq lsp-prefer-flymake nil))
+
 ;; org-mode
 
 ;; expand logbook on org all expand

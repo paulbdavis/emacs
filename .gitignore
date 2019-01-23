@@ -2,3 +2,5 @@
 /tmp/
 /recentf
 /projectile-bookmarks.eld
+/.lsp-session*
+/org-clock-save.el
