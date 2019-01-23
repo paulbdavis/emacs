@@ -191,6 +191,11 @@
 (use-package git-timemachine
   :ensure)
 
+(use-package pdf-tools
+  :ensure
+  :config
+  (pdf-tools-install))
+
 ;; popup display macro
 (defmacro ds/popup-thing-display-settings (BUFFER-NAME SIDE &optional SLOT SIZE)
   "Make a popup buffer on SIDE for BUFFER-NAME."
