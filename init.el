@@ -191,6 +191,48 @@
 (use-package git-timemachine
   :ensure)
 
+;; popup display macro
+(defmacro ds/popup-thing-display-settings (BUFFER-NAME SIDE &optional SLOT SIZE)
+  "Make a popup buffer on SIDE for BUFFER-NAME."
+  `(add-to-list 'display-buffer-alist
+                '(,(concat "\\`" (regexp-quote BUFFER-NAME) "\\'")
+                  (display-buffer-reuse-window
+                   display-buffer-in-side-window)
+                  (side            . ,SIDE)
+                  ,(if SLOT `(slot            . ,SLOT))
+                  (reusable-frames)
+                  (inhibit-switch-frame . t)
+                  ,(if SIZE
+                       (if (or (equal SIDE 'top)
+                               (equal SIDE 'bottom))
+                           `(window-height . ,SIZE)
+                         `(window-width   . ,(if (< SIZE 1) SIZE
+                                               `(lambda (win)
+                                                  (if (or (< (window-width win) ,SIZE)
+                                                          (not (or (window-in-direction 'above win t)
+                                                                   (window-in-direction 'below win t))))
+                                                      (ds/set-window-column-width ,SIZE win))))))))))
+
+
+;; compilation settings
+(use-package compile
+  :config
+  (define-key compilation-mode-map (kbd "q") #'delete-window)
+  (ds/popup-thing-display-settings "*compilation*" right 2 104)
+
+  (setq compilation-finish-functions
+        '((lambda (buf str)
+            (message "compilation %s" str)
+            (if (eq 0 (string-match-p "^finished$" str))
+                (let ((project-root (if (projectile-project-p) (projectile-project-root) nil)))
+                  (run-at-time
+                   2 nil 'delete-windows-on
+                   (get-buffer-create "*compilation*"))
+                  (if project-root
+                      (run-at-time
+                       2.01 nil 'projectile-vc project-root)))))))
+
+  (setq compilation-scroll-output t))
 
 (provide 'init)
 ;;; init.el ends here
