@@ -69,6 +69,7 @@
 ;; syntax checking
 (use-package flycheck
   :ensure
+  :demand
   :hook ((flycheck-mode . ds/use-eslint-from-node-modules))
   :custom ((flycheck-emacs-lisp-load-path 'inherit)
            (flycheck-display-errors-delay 0.4))
@@ -93,6 +94,17 @@
   :config
   (smex-initialize))
 
+;; customize the colors
+(defun ds/custom-ivy-faces ()
+  "Set custom colors for the ivy completion minibuffer."
+  (set-face-attribute 'ivy-subdir nil :foreground (ds/get-zenburn-color "blue-1") :background nil :weight 'bold)
+  (set-face-attribute 'ivy-remote nil :foreground (ds/get-zenburn-color "red-1") :background nil :weight 'bold)
+  (set-face-attribute 'ivy-current-match nil :foreground nil :background (ds/get-zenburn-color "bg+3") :box (ds/get-zenburn-color "blue") :underline nil)
+  (set-face-attribute 'ivy-minibuffer-match-face-1 nil :background nil :box (ds/get-zenburn-color "green-1") :underline nil)
+  (set-face-attribute 'ivy-minibuffer-match-face-2 nil :background nil :box (ds/get-zenburn-color "green-1") :underline nil)
+  (set-face-attribute 'ivy-minibuffer-match-face-3 nil :background nil :box (ds/get-zenburn-color "red-1") :underline nil)
+  (set-face-attribute 'ivy-minibuffer-match-face-4 nil :background nil :box (ds/get-zenburn-color "yellow-1") :underline nil))
+
 (use-package ivy
   :ensure
   :diminish (ivy-mode . "")
@@ -116,15 +128,6 @@
   (setq ivy-initial-inputs-alist nil)
   ;; configure regexp engine.
   (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-  ;; customize the colors
-  (defun ds/custom-ivy-faces ()
-    (set-face-attribute 'ivy-subdir nil :foreground (ds/get-zenburn-color "blue-1") :background nil :weight 'bold)
-    (set-face-attribute 'ivy-remote nil :foreground (ds/get-zenburn-color "red-1") :background nil :weight 'bold)
-    (set-face-attribute 'ivy-current-match nil :foreground nil :background (ds/get-zenburn-color "bg+3") :box (ds/get-zenburn-color "blue") :underline nil)
-    (set-face-attribute 'ivy-minibuffer-match-face-1 nil :background nil :box (ds/get-zenburn-color "green-1") :underline nil)
-    (set-face-attribute 'ivy-minibuffer-match-face-2 nil :background nil :box (ds/get-zenburn-color "green-1") :underline nil)
-    (set-face-attribute 'ivy-minibuffer-match-face-3 nil :background nil :box (ds/get-zenburn-color "red-1") :underline nil)
-    (set-face-attribute 'ivy-minibuffer-match-face-4 nil :background nil :box (ds/get-zenburn-color "yellow-1") :underline nil))
 
   (ivy-mode 1)
   (ds/custom-ivy-faces))
@@ -146,14 +149,14 @@
   :bind-keymap ("C-c C-p" . projectile-command-map)
   :init
   (defvar projectile-remember-window-configs t)
+  (defvar projectile-mode-line
+    '(:eval
+      (if (file-remote-p default-directory)
+          " NoProj"
+        (format " Proj[%s]"
+                (projectile-project-name)))))
   :config
   (setq projectile-completion-system 'ivy)
-  (setq projectile-mode-line
-        '(:eval
-          (if (file-remote-p default-directory)
-              " NoProj"
-            (format " Proj[%s]"
-                    (projectile-project-name)))))
   (projectile-mode +1))
 
 (use-package counsel-projectile
