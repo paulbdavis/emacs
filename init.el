@@ -436,6 +436,8 @@
   (defvar org-clock-report-include-clocking-task t)
   (defvar org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
   :config
+  ;; unbind this to not override global projectile keybinding
+  (unbind-key (kbd "C-c C-p") org-mode-map)
   (condition-case nil
       ;; make the org dir if it is not there already
       (make-directory org-directory t)
