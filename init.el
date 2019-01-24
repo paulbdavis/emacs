@@ -377,6 +377,7 @@
 ;; LSP stuff
 (use-package lsp-mode
   :ensure
+  :disabled
   :commands (lsp)
   :hook ((go-mode . lsp)
          (js-mode . lsp))
@@ -386,6 +387,12 @@
    (make-lsp-client :new-connection (lsp-stdio-connection "gopls")
                     :major-modes '(go-mode)
                     :server-id 'gopls)))
+
+(use-package eglot
+  :ensure
+  :config
+  (add-to-list 'eglot-server-programs '(go-mode . ("bingo")))
+  (add-hook 'eglot--managed-mode-hook (lambda () (flymake-mode -1))))
 
 ;; org-mode
 
