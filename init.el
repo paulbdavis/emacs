@@ -400,8 +400,12 @@
 
 (use-package eglot
   :ensure
+  :hook ((go-mode . eglot-ensure)
+         (vue-mode . eglot-ensure)
+         (js-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs '(go-mode . ("bingo")))
+  (add-to-list 'eglot-server-programs '(vue-mode . ("vls")))
   (add-hook 'eglot--managed-mode-hook (lambda () (flymake-mode -1))))
 
 ;; org-mode
