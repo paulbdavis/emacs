@@ -286,6 +286,8 @@
   :ensure)
 (use-package markdown-mode
   :ensure)
+(use-package systemd
+  :ensure)
 (use-package yaml-mode
   :ensure
   :config
