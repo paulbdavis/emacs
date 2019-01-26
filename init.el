@@ -348,6 +348,14 @@
   (setq web-mode-script-padding 0)
   (setq web-mode-style-padding 0))
 
+(defun ds/no-mmm-bg ()
+  "Disable background color for mode sections."
+  (set-face-background 'mmm-default-submode-face nil))
+
+(use-package vue-mode
+  :ensure
+  :hook ((mmm-mode . ds/no-mmm-bg)))
+
 ;; protobufs
 (use-package protobuf-mode
   :ensure
