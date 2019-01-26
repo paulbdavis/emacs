@@ -284,6 +284,8 @@
   :ensure)
 (use-package dockerfile-mode
   :ensure)
+(use-package markdown-mode
+  :ensure)
 (use-package yaml-mode
   :ensure
   :config
