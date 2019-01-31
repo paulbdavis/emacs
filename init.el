@@ -133,7 +133,8 @@
   ;; no regexp by default
   (setq ivy-initial-inputs-alist nil)
   ;; configure regexp engine.
-  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+  (setq ivy-re-builders-alist '((counsel-ag . ivy--regex-plus)
+                                (t . ivy--regex-fuzzy)))
 
   (ivy-mode 1)
   (ds/custom-ivy-faces))
@@ -168,10 +169,6 @@
 (use-package counsel-projectile
   :ensure
   :after projectile
-  :init
-  ;; shim for "older" ivy
-  (defvar ivy-highlight-grep-commands nil
-    "List of counsel grep-like commands.")
   :config
   (counsel-projectile-mode))
 
