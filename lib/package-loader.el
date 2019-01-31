@@ -36,7 +36,7 @@
         ("gnu"          . 10)
         ("melpa"        . 0))
       package-pinned-packages
-      '((counsel-projectile . "melpa")))
+      '())
 
 (package-initialize)
 
