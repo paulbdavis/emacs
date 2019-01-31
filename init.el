@@ -327,6 +327,7 @@
         (progn (call-process eslint nil "*ESLint Errors*" nil "--fix" buffer-file-name)
                (revert-buffer t t t))
       (message "ESLint not found."))))
+
 (defun ds/setup-eslint-fix ()
   "Setup eslint fixing."
   (add-hook 'after-save-hook #'ds/eslint-fix))
@@ -347,13 +348,11 @@
   (setq web-mode-script-padding 0)
   (setq web-mode-style-padding 0))
 
-(defun ds/no-mmm-bg ()
-  "Disable background color for mode sections."
-  (set-face-background 'mmm-default-submode-face nil))
-
-(use-package vue-mode
-  :ensure
-  :hook ((mmm-mode . ds/no-mmm-bg)))
+;; make a vue-mode that is just web mode with a different name
+(define-derived-mode vue-mode web-mode "VueJS")
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+(add-hook 'vue-mode-hook #'ds/setup-eslint-fix)
+(flycheck-add-mode 'javascript-eslint 'vue-mode)
 
 ;; protobufs
 (use-package protobuf-mode
