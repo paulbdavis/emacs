@@ -153,7 +153,7 @@
 (use-package projectile
   :ensure
   :after ivy
-  :bind-keymap ("C-c C-p" . projectile-command-map)
+  :bind-keymap ("C-c p" . projectile-command-map)
   :init
   (defvar projectile-remember-window-configs t)
   (defvar projectile-mode-line
