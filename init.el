@@ -402,7 +402,9 @@
          (vue-mode . eglot-ensure)
          (js-mode . eglot-ensure))
   :config
-  (add-to-list 'eglot-server-programs '(go-mode . ("bingo")))
+  ;; (add-to-list 'eglot-server-programs '(go-mode . ("bingo")))
+  (add-to-list 'eglot-server-programs '(go-mode . ("bingo2" "-disable-func-snippet")))
+  ;; (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
   (add-to-list 'eglot-server-programs '(vue-mode . ("vls")))
   (add-hook 'eglot--managed-mode-hook (lambda () (flymake-mode -1))))
 
