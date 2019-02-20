@@ -42,7 +42,7 @@
 ;; misc packages for general usability
 (use-package adaptive-wrap
   :ensure
-  :functions adaptive-wrap-prefix-mode
+  :commands adaptive-wrap-prefix-mode
   :init
   (defvar adaptive-wrap-extra-indent 6)
   (defun ds/wrap-on-visual-line-mode ()
@@ -63,6 +63,7 @@
 (use-package direnv
   :ensure
   :demand
+  :commands direnv-mode
   :config
   (direnv-mode)
   :hook ((eshell-directory-change . direnv-update-directory-environment)))
@@ -71,6 +72,7 @@
 (use-package flycheck
   :ensure
   :demand
+  :commands (flycheck-add-mode global-flycheck-mode flycheck-define-command-checker)
   :hook ((flycheck-mode . ds/use-eslint-from-node-modules))
   :custom ((flycheck-emacs-lisp-load-path 'inherit)
            (flycheck-display-errors-delay 0.4))
@@ -97,6 +99,7 @@
 (use-package smex
   :ensure
   :defines smex-save-file
+  :commands smex-initialize
   :config
   (smex-initialize))
 
@@ -113,6 +116,7 @@
 
 (use-package ivy
   :ensure
+  :commands ivy-mode
   :diminish (ivy-mode . "")
   :bind (("C-x C-b" . ivy-switch-buffer)
          :map ivy-minibuffer-map
@@ -153,6 +157,7 @@
 (use-package projectile
   :ensure
   :after ivy
+  :commands projectile-mode
   :bind-keymap ("C-c p" . projectile-command-map)
   :init
   (defvar projectile-remember-window-configs t)
@@ -168,6 +173,7 @@
 
 (use-package counsel-projectile
   :ensure
+  :commands counsel-projectile-mode
   :after projectile
   :config
   (counsel-projectile-mode))
@@ -191,6 +197,7 @@
 
 (use-package pdf-tools
   :ensure
+  :commands pdf-tools-install
   :config
   (pdf-tools-install))
 
@@ -382,6 +389,14 @@
       :modes protobuf-mode
       :predicate buffer-file-name)))
 
+;; completion
+(use-package company
+  :ensure
+  :disabled
+  :diminish company-mode
+  :hook ((after-init . global-company-mode)))
+
+
 ;; LSP stuff
 (use-package lsp-mode
   :ensure
@@ -429,6 +444,7 @@
   :ensure org-plus-contrib
   :mode (("\\.org$" . org-mode))
   :pin org
+  :commands (org-clock-persistence-insinuate org-babel-do-load-languages)
   :custom-face
   (org-mode-line-clock
    ((t (:foreground nil :background nil :underline nil :box nil))))
