@@ -355,11 +355,16 @@
 (flycheck-add-mode 'javascript-eslint 'vue-mode)
 
 ;; protobufs
+
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
 (use-package protobuf-mode
   :ensure
   :hook (protobuf-mode . ds/protobuf-setup)
   :config
   (defun ds/protobuf-setup ()
+    ;; add a flycheck checker
     (flycheck-define-checker protobuf-protoc
       "A modified protobuf syntax checker using the protoc compiler.
 
