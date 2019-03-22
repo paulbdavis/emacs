@@ -95,14 +95,18 @@ This overrides the colors provided by the `zenburn-theme' package.")
                       :background (ds/get-zenburn-color "bg+1")
                       :box nil)
   (set-face-attribute 'mode-line nil
-                      :background (ds/get-zenburn-color "bg+1")
-                      :box nil)
+                      :background (ds/get-zenburn-color "bg")
+                      :box `(:line-width 4 :color ,(ds/get-zenburn-color "bg"))
+                      :overline (ds/get-zenburn-color "bg+1")
+                      :underline nil)
   (set-face-attribute 'mode-line-inactive nil
                       :foreground (ds/get-zenburn-color "bg+3")
-                      :background (ds/get-zenburn-color "bg+1")
-                      :box nil)
+                      :background (ds/get-zenburn-color "bg")
+                      :box `(:line-width 4 :color ,(ds/get-zenburn-color "bg"))
+                      :overline (ds/get-zenburn-color "bg+1")
+                      :underline nil)
   (set-face-attribute 'fringe nil
-                      :background (ds/get-zenburn-color "bg+1"))
+                      :background (ds/get-zenburn-color "bg"))
   ;; italic comments
   (set-face-attribute 'font-lock-comment-face nil
                       :slant 'italic)
@@ -111,7 +115,7 @@ This overrides the colors provided by the `zenburn-theme' package.")
                       :foreground (ds/get-zenburn-color "blue-1"))
   ;; set the verticle border color
   (set-face-attribute 'vertical-border nil
-                      :foreground (ds/get-zenburn-color "bg-1"))
+                      :foreground (ds/get-zenburn-color "bg+1"))
 
   ;; auto suggest face for eshell
   (make-face 'ds/esh-autosuggest-face)
