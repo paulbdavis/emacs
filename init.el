@@ -184,6 +184,17 @@
         magit-log-highlight-keywords  t
         magit-diff-highlight-keywords t)
   
+  (setq magit-repolist-columns
+        '(("Name" 25 magit-repolist-column-ident nil)
+          ("Branch" 25 magit-repolist-column-branch nil)
+          ("Version" 25 magit-repolist-column-version nil)
+          ("B<U" 3 magit-repolist-column-unpulled-from-upstream
+           ((:right-align t)
+            (:help-echo "Upstream changes not in branch")))
+          ("B>U" 3 magit-repolist-column-unpushed-to-upstream
+           ((:right-align t)
+            (:help-echo "Local changes not in upstream")))
+          ("Path" 99 magit-repolist-column-path nil)))
   (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package git-timemachine
