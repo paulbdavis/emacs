@@ -4,3 +4,7 @@
 /projectile-bookmarks.eld
 /.lsp-session*
 /org-clock-save.el
+/local.el
+/url/
+/transient/
+/tramp
