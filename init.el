@@ -505,6 +505,28 @@
 ;; dnd
 (require 'ox-dnd)
 
+;; chordpro mode
+
+(defvar chordpro-font-lock-defaults
+  '((("\\(\\[[^]]*\\]\\)" . font-lock-string-face)
+     ("^\\(#.*\\)" . font-lock-comment-face)
+     ("\\({subtitle[^}]*}\\)" . font-lock-type-face)
+     ("\\({title[^}]*}\\)" . font-lock-keyword-face)
+     ("\\({[^}]*}\\)" . font-lock-variable-name-face))))
+
+
+(define-derived-mode chordpro-mode text-mode "Chordpro"
+  "Major mode for editing Chordpro files.
+     Special commands:
+     \\{chordpro-mode-map}"
+  (setq font-lock-defaults chordpro-font-lock-defaults)
+  (auto-fill-mode -1))
+
+(add-to-list 'auto-mode-alist '("\\.pro$" . chordpro-mode))
+(add-to-list 'auto-mode-alist '("\\.chopro$" . chordpro-mode))
+(add-to-list 'auto-mode-alist '("\\.chordpro$" . chordpro-mode))
+
+
 (if (file-exists-p "~/.emacs.d/local.el")
     (load-file "~/.emacs.d/local.el"))
 
