@@ -71,6 +71,7 @@
 (use-package flycheck
   :ensure
   :demand
+  :defines flycheck-add-mode
   :hook ((flycheck-mode . ds/use-eslint-from-node-modules))
   :custom ((flycheck-emacs-lisp-load-path 'inherit)
            (flycheck-display-errors-delay 0.4))
