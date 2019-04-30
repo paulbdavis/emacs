@@ -402,29 +402,35 @@
       :modes protobuf-mode
       :predicate buffer-file-name)))
 
+;; (setq load-path (cons "~/dev/emacs/lsp-mode" load-path))
+
 ;; LSP stuff
 (use-package lsp-mode
   :ensure
   :disabled
   :commands (lsp)
   :hook ((go-mode . lsp)
-         (js-mode . lsp))
+         (js-mode . lsp)
+         (vue-mode . lsp))
   :config
   (setq lsp-prefer-flymake nil)
   (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection "gopls")
+   (make-lsp-client :new-connection (lsp-stdio-connection "gopls2")
                     :major-modes '(go-mode)
                     :server-id 'gopls)))
 
+;; (setq load-path (cons "~/dev/emacs/eglot" load-path))
+
 (use-package eglot
   :ensure
+  ;; :disabled
   :hook ((go-mode . eglot-ensure)
          (vue-mode . eglot-ensure)
          (js-mode . eglot-ensure))
   :config
   ;; (add-to-list 'eglot-server-programs '(go-mode . ("bingo")))
   (add-to-list 'eglot-server-programs '(go-mode . ("bingo2" "-disable-func-snippet")))
-  ;; (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
+  ;; (add-to-list 'eglot-server-programs '(go-mode . ("gopls2")))
   (add-to-list 'eglot-server-programs '(vue-mode . ("vls")))
   (add-hook 'eglot--managed-mode-hook (lambda () (flymake-mode -1))))
 
