@@ -137,6 +137,8 @@
   (setq ivy-re-builders-alist '((counsel-ag . ivy--regex-plus)
                                 (t . ivy--regex-fuzzy)))
 
+  (setq ivy-display-functions-alist '())
+  
   (ivy-mode 1)
   (ds/custom-ivy-faces))
 
