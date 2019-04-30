@@ -121,7 +121,15 @@ This overrides the colors provided by the `zenburn-theme' package.")
   (make-face 'ds/esh-autosuggest-face)
   (set-face-attribute 'ds/esh-autosuggest-face nil
                       :foreground (ds/get-zenburn-color "fg-1")
-                      :background (ds/get-zenburn-color "bg")))
+                      :background (ds/get-zenburn-color "bg"))
+
+  (with-eval-after-load 'flymake
+    (set-face-attribute 'flymake-error nil
+                        :underline `(:style wave :color ,(ds/get-zenburn-color "red")))
+    (set-face-attribute 'flymake-warning nil
+                        :underline `(:style wave :color ,(ds/get-zenburn-color "yellow")))
+    (set-face-attribute 'flymake-note nil
+                        :underline `(:style wave :color ,(ds/get-zenburn-color "blue")))))
 
 
 (use-package zenburn-theme
