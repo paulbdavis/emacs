@@ -389,6 +389,7 @@
                 (eval (concat "--proto_path=" (file-name-directory (buffer-file-name))))
                 (eval (concat "--proto_path=" (file-truename (concat (file-name-directory (buffer-file-name)) "lib/proto"))))
                 (eval (concat "--proto_path=" (file-truename (concat (file-name-directory (buffer-file-name)) "third_party"))))
+                (eval (concat "--proto_path=" (file-truename (concat (file-name-directory (buffer-file-name)) ".."))))
                 source-inplace)
       :error-patterns
       ((info line-start (file-name) ":" line ":" column
