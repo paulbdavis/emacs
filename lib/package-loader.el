@@ -36,7 +36,10 @@
         ("gnu"          . 10)
         ("melpa"        . 0))
       package-pinned-packages
-      '())
+      '((org . "org")
+        (fontawesome . "melpa")
+        (lsp-mode . "melpa")
+        (lsp-ui . "melpa")))
 
 (package-initialize)
 

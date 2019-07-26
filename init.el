@@ -405,25 +405,42 @@
 ;; (setq load-path (cons "~/dev/emacs/lsp-mode" load-path))
 
 ;; LSP stuff
+(use-package yasnippet
+  :ensure)
+
 (use-package lsp-mode
   :ensure
-  :disabled
+  ;; :disabled
   :commands (lsp)
   :hook ((go-mode . lsp)
          (js-mode . lsp)
          (vue-mode . lsp))
   :config
   (setq lsp-prefer-flymake nil)
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection "gopls2")
-                    :major-modes '(go-mode)
-                    :server-id 'gopls)))
-
+  
+  ;; (lsp-register-client
+  ;;  (make-lsp-client :new-connection (lsp-stdio-connection "gopls2")
+  ;;                   :major-modes '(go-mode)
+  ;;                   :server-id 'gopls))
+  
+  (use-package lsp-ui
+    :ensure
+    :commands lsp-ui-mode
+    :hook ((lsp-mode-hook . lsp-ui-mode))
+    :config
+    (setq lsp-ui-doc-position 'bottom)
+    ;; (setq lsp-ui-doc-use-childframe nil)
+    (setq lsp-ui-sideline-show-code-actions nil)
+    (setq lsp-ui-sideline-show-hover nil)
+    (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
+    (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
+    (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg"))
+  ))
 ;; (setq load-path (cons "~/dev/emacs/eglot" load-path))
 
 (use-package eglot
   :ensure
-  ;; :disabled
+  :disabled
   :hook ((go-mode . eglot-ensure)
          (vue-mode . eglot-ensure)
          (js-mode . eglot-ensure))
