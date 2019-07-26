@@ -116,6 +116,7 @@
   :ensure
   :diminish (ivy-mode . "")
   :bind (("C-x C-b" . ivy-switch-buffer)
+         ("C-s" . swiper)
          :map ivy-minibuffer-map
          ("C-'" . ivy-avy)
          ("C-e" . ivy-alt-done)
@@ -135,6 +136,7 @@
   (setq ivy-initial-inputs-alist nil)
   ;; configure regexp engine.
   (setq ivy-re-builders-alist '((counsel-ag . ivy--regex-plus)
+                                (swiper . ivy--regex-plus)
                                 (t . ivy--regex-fuzzy)))
 
   (setq ivy-display-functions-alist '())
@@ -190,7 +192,7 @@
   (setq magit-repolist-columns
         '(("Name" 25 magit-repolist-column-ident nil)
           ("Branch" 25 magit-repolist-column-branch nil)
-          ("Version" 25 magit-repolist-column-version nil)
+          ("Version" 40 magit-repolist-column-version nil)
           ("B<U" 3 magit-repolist-column-unpulled-from-upstream
            ((:right-align t)
             (:help-echo "Upstream changes not in branch")))
@@ -323,7 +325,8 @@
 (use-package restclient
   :ensure
   :config
-  (ds/popup-thing-display-settings "*HTTP Response*" left 0 0.25))
+  (ds/popup-thing-display-settings "*HTTP Response*" left 0 0.25)
+  (add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode)))
 
 ;; golang
 (use-package go-mode
@@ -500,8 +503,6 @@
   (defvar org-clock-report-include-clocking-task t)
   (defvar org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
   :config
-  ;; unbind this to not override global projectile keybinding
-  (unbind-key (kbd "C-c C-p") org-mode-map)
   (condition-case nil
       ;; make the org dir if it is not there already
       (make-directory org-directory t)

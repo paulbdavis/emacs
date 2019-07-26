@@ -6,8 +6,11 @@
         c-electric-delete-forward
         c-electric-paren
         complete-symbol
+        ds/open-next-line
+        ds/open-previous-line
         electric-newline-and-maybe-indent
         electric-pair-delete-pair
+        indent-for-tab-command
         kill-region
         kill-sexp
         org-self-insert-command
