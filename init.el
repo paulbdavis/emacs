@@ -116,7 +116,7 @@
   :ensure
   :diminish (ivy-mode . "")
   :bind (("C-x C-b" . ivy-switch-buffer)
-         ("C-s" . swiper)
+         ;; ("C-s" . swiper)
          :map ivy-minibuffer-map
          ("C-'" . ivy-avy)
          ("C-e" . ivy-alt-done)
@@ -345,6 +345,7 @@
                (revert-buffer t t t))
       (message "ESLint not found."))))
 
+
 (defun ds/setup-eslint-fix ()
   "Setup eslint fixing."
   (add-hook 'after-save-hook #'ds/eslint-fix))
@@ -411,13 +412,21 @@
 (use-package yasnippet
   :ensure)
 
+(defun ds/go-mode-lsp ()
+  "Enable `lsp-mode' in `go-mode' unless there is an import \"C\" statement."
+  (save-excursion
+    (with-current-buffer (current-buffer)
+      (if (not (search-forward "import \"C\"" nil t 1))
+          (lsp t)))))
+
 (use-package lsp-mode
   :ensure
+  :demand
   ;; :disabled
   :commands (lsp)
-  :hook ((go-mode . lsp)
-         (js-mode . lsp)
-         (vue-mode . lsp))
+  :hook ((go-mode . ds/go-mode-lsp)
+         (js-mode . (lambda () (lsp t)))
+         (vue-mode . (lambda () (lsp t))))
   :config
   (setq lsp-prefer-flymake nil)
   
@@ -431,14 +440,20 @@
     :commands lsp-ui-mode
     :hook ((lsp-mode-hook . lsp-ui-mode))
     :config
+    
+    (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
+    (flycheck-add-next-checker 'lsp-ui 'javascript-eslint 'append)
+    
     (setq lsp-ui-doc-position 'bottom)
+    (setq lsp-ui-doc-delay 1)
     ;; (setq lsp-ui-doc-use-childframe nil)
     (setq lsp-ui-sideline-show-code-actions nil)
     (setq lsp-ui-sideline-show-hover nil)
+    (setq lsp-ui-sideline-delay 1)
     (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
     (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
     (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg"))
-  ))
+    ))
 ;; (setq load-path (cons "~/dev/emacs/eglot" load-path))
 
 (use-package eglot
@@ -502,7 +517,16 @@
   ;; Include current clocking task in clock reports
   (defvar org-clock-report-include-clocking-task t)
   (defvar org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
+  (defvar org-agenda-directory "~/org/agenda" "Directory for org files.")
   :config
+  (setq org-agenda-file-regexp "\\([^.].*\\.org\\)\\|\\([0-9]+\\)")
+  (defun org-agenda-reload ()
+    "Reset org agenda files by rescanning the org directory."
+    (interactive)
+    (setq org-agenda-files (directory-files-recursively org-agenda-directory "\\.org\\|[0-9]\\{8\\}"))
+    (setq org-refile-targets '((org-agenda-files . (:level . 1)))))
+
+  (org-agenda-reload)
   (condition-case nil
       ;; make the org dir if it is not there already
       (make-directory org-directory t)

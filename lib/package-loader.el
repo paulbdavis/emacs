@@ -39,7 +39,8 @@
       '((org . "org")
         (fontawesome . "melpa")
         (lsp-mode . "melpa")
-        (lsp-ui . "melpa")))
+        (lsp-ui . "melpa")
+        (flycheck . "melpa")))
 
 (package-initialize)
 
