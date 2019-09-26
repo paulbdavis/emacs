@@ -39,6 +39,8 @@
 	     ("C-o" . ds/open-next-line)
 	     ("M-o" . ds/open-previous-line)))
 
+(use-package ds-eshell)
+
 ;; misc packages for general usability
 (use-package adaptive-wrap
   :ensure
