@@ -10,10 +10,13 @@
         ds/open-previous-line
         electric-newline-and-maybe-indent
         electric-pair-delete-pair
+        forward-sexp
         indent-for-tab-command
+        keyboard-escape-quit
         kill-region
         kill-sexp
         org-self-insert-command
+        sh-assignment
         yaml-electric-backspace
         yaml-electric-dash-and-dot
         ))
