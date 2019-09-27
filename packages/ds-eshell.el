@@ -1,9 +1,9 @@
 ;;; ds-eshell.el --- eshell setup                    -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018  
+;; Copyright (C) 2018 paul davis
 
 ;; Author:  <paul@sputnik>
-;; Keywords: 
+;; Keywords: eshell
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -34,28 +34,45 @@
 
 (use-package eshell
   :hook ((eshell-mode . ds/eshell-setup)
-         (eshell-pre-command . ds/eshell-append-history))
-  :defines (eshell-history-ring eshell-history-file-name)
+         (eshell-pre-command . ds/eshell-append-history)
+         (eshell-post-command . eshell-read-history))
+  :defines (eshell-history-ring
+            eshell-history-file-name
+            eshell-prompt-regexp
+            eshell-password-prompt-regexp
+            eshell-scroll-to-bottom-on-input
+            eshell-error-if-no-glob
+            eshell-hist-ignoredups
+            eshell-save-history-on-exit
+            eshell-prefer-lisp-functions
+            eshell-history-size
+            eshell-destroy-buffer-when-process-dies
+            eshell-prompt-function
+            eshell-visual-commands)
   :functions (eshell-write-history eshell/pwd)
   :config
   (setenv "PAGER" "cat")
+  (setenv "EDITOR" "emacsclient")
 
   ;; add "pin" to the list of words for detecting password entry from eshell
   (push "pin" password-word-equivalents)
-  (setq eshell-password-prompt-regexp 
-        (format "\\(%s\\).*:\\s *\\'" (regexp-opt password-word-equivalents)))
-
-  (setq eshell-scroll-to-bottom-on-input 'all
+  
+  (setq eshell-prompt-regexp "^ [$#] "
+        eshell-password-prompt-regexp (format "\\(%s\\).*:\\s *\\'" (regexp-opt password-word-equivalents))
+        eshell-scroll-to-bottom-on-input 'all
         eshell-error-if-no-glob t
         eshell-hist-ignoredups t
         eshell-save-history-on-exit nil
         eshell-prefer-lisp-functions nil
         eshell-history-size 4096
-        eshell-destroy-buffer-when-process-dies t)
+        eshell-destroy-buffer-when-process-dies t
+        ;; Enable the new eshell prompt
+        eshell-prompt-function 'ds/eshell-prompt-func)
 
   (defun ds/eshell-setup ()
-    (defvar eshell-visual-commands '()
-      "Commands in shell that need a \"real\" terminal")
+    (setenv "PAGER" "cat")
+    (setenv "EDITOR" "emacsclient")
+    (direnv-update-environment)
     (add-to-list 'eshell-visual-commands "ssh")
     (add-to-list 'eshell-visual-commands "tail")
     (add-to-list 'eshell-visual-commands "top")
@@ -73,8 +90,7 @@
       (let ((newest-cmd-ring (make-ring 1)))
         (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
         (let ((eshell-history-ring newest-cmd-ring))
-          (eshell-write-history eshell-history-file-name t)
-          (eshell-read-history))))))
+          (eshell-write-history eshell-history-file-name t))))))
 
 (defvar company-require-match nil)
 (make-variable-buffer-local 'company-require-match)
@@ -85,7 +101,8 @@
   :init
   (require 'subr-x)
   (defun ds/esh-autosuggest-setup ()
-    (set-variable 'company-require-match nil)
+    (set (make-local-variable 'company-minimum-prefix-length) 1)
+    (set (make-local-variable 'company-require-match) nil)
     (face-remap-add-relative 'company-preview-common 'ds/esh-autosuggest-face)))
 
 
@@ -160,8 +177,6 @@
 
   (defvar ds/eshell-header "\n "
     "Eshell prompt header")
-
-  (setq eshell-prompt-regexp "^ [$#] ")
 
   (defmacro ds/with-face (STR &rest PROPS)
     "Return STR propertized with PROPS."
@@ -279,14 +294,14 @@
     (if (and (listp x) (not (functionp x)))
         (concat acc (-reduce-from 'ds/eshell-acc "" x) "\n ")
       (--if-let (funcall x)
-                (if (s-blank? acc)
-                    it
-                  (concat acc
-                          (if (string= "\n" (substring acc (- (length acc) 1) (length acc)))
-                              " "
-                            ds/eshell-sep)
-                          it))
-                acc)))
+          (if (s-blank? acc)
+              it
+            (concat acc
+                    (if (string= "\n" (substring acc (- (length acc) 1) (length acc)))
+                        " "
+                      ds/eshell-sep)
+                    it))
+        acc)))
 
 
   (defun ds/eshell-prompt-func ()
@@ -300,11 +315,7 @@
     "Eshell prompt sections")
 
   ;; Choose which eshell-funcs to enable
-  (setq ds/eshell-funcs (list (list esh-dir esh-clock) (list esh-git) (list esh-tramp-status esh-last-command-status)))
-  
-
-  ;; Enable the new eshell prompt
-  (setq eshell-prompt-function 'ds/eshell-prompt-func))
+  (setq ds/eshell-funcs (list (list esh-dir esh-clock) (list esh-git) (list esh-tramp-status esh-last-command-status))))
 
 (provide 'ds-eshell)
 ;;; ds-eshell.el ends here
