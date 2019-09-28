@@ -581,8 +581,406 @@
 (add-to-list 'auto-mode-alist '("\\.chordpro$" . chordpro-mode))
 
 
+(defvar ds/use-exwm nil
+  "Set to t to use exwm.")
+
 (if (file-exists-p "~/.emacs.d/local.el")
     (load-file "~/.emacs.d/local.el"))
+
+(if ds/use-exwm
+    (progn
+      (use-package exwm
+        :ensure t
+        :init
+        (defun ds/exwm-set-name ()
+          ;; (message "class: %s, instance: %s, title: %s, state: %s, type: %s" exwm-class-name exwm-instance-name exwm-title exwm-state exwm-window-type)
+          (exwm-workspace-rename-buffer exwm-class-name))
+        (defvar ds/exwm-previous-workspace nil
+          "Stores previous workspace when switching in exwm")
+        (defun ds/lock-screen (&rest _)
+          (interactive)
+          (start-process "" nil "slock"))
+
+        :config
+        ;; auto rename new X window buffers
+        (add-hook 'exwm-update-class-hook #'ds/exwm-set-name)
+        ;; hide the mode-line of floating X windows
+        (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+        (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+        ;; 'C-s-n': Rename buffer
+        (exwm-input-set-key (kbd "C-s-n") #'rename-buffer)
+        ;; 'C-s-r': Reset
+        (exwm-input-set-key (kbd "C-s-r") #'exwm-reset)
+        ;; 'C-s-f': Toggle Fullscreen
+        (exwm-input-set-key (kbd "C-s-f") #'exwm-layout-toggle-fullscreen)
+        ;; do xinit stuff
+        (start-process "" nil (concat user-emacs-directory "exwm/bin/xinitscript"))
+        (start-process "" nil (concat user-emacs-directory "exwm/bin/wallpaper"))
+        (start-process "" nil "compton")
+        ;; disable flycheck for exwm buffers
+        (add-hook 'exwm-mode-hook (lambda () (flycheck-mode -1)))
+        (defmacro ds/popup-thing (NAME BUFFER &rest BODY)
+          "Make a popup thing with function NAME buffer name BUFFER executing BODY to create."
+          (let* ((delete-func-sym (intern (concat (symbol-name NAME) "--delete"))))
+            `(progn
+               (defun ,delete-func-sym (&rest _)
+                 (let ((current-popup (get-buffer-window ,BUFFER)))
+                   (if (and current-popup
+                            (> (length (window-list)) 1))
+                       (delete-window current-popup))))
+               (add-function :before (symbol-function 'exwm-workspace-switch) #',delete-func-sym)
+               (defun ,NAME ()
+                 (interactive)
+                 (let* ((win (selected-window))
+                        (current-popup (or (get-buffer-window ,BUFFER t)
+                                           (get-buffer-window ,(concat " " BUFFER) t)))
+                        (popup-buf (or (get-buffer ,BUFFER)
+                                       (get-buffer ,(concat " " BUFFER))))
+                        (is-x-window (if popup-buf
+                                         (equal 'exwm-mode (with-current-buffer popup-buf major-mode)))))
+                   (if (equal win current-popup)
+                       (delete-window current-popup)
+                     (if current-popup
+                         (select-window current-popup)
+                       (if popup-buf
+                           (progn
+                             (if is-x-window
+                                 (save-window-excursion
+                                   (with-current-buffer popup-buf
+                                     (exwm-workspace-move-window exwm-workspace--current exwm--id))))
+                             (pop-to-buffer popup-buf))
+                         (progn ,@BODY)))))))))
+        (setq exwm-workspace-number 10)
+        ;; set up bindings to switch to workspaces
+        (dotimes (i 10)
+          (let* ((switch-binding (kbd (format "s-%d" i)))
+                 (move-binding (kbd (format "C-s-%d" i))))
+            ;; use s-N to switch to a workspace number
+            (exwm-input-set-key switch-binding
+                                `(lambda ()
+                                   (interactive)
+                                   (exwm-workspace-switch-create ,i)))
+            ;; use C-s-N to move the current window to a workspace
+            (exwm-input-set-key move-binding
+                                `(lambda ()
+                                   (interactive)
+                                   (exwm-workspace-move-window ,i)
+                                   (select-frame-set-input-focus exwm-workspace--current)))))
+        (defun ds/exwm-mark-previous (&rest _)
+          "Save the current EXWM workspace index to `ds/exwm-previous-workspace'."
+          (setq ds/exwm-previous-workspace exwm-workspace-current-index))
+
+        (defun ds/exwm-workspace-toggle ()
+          "Switch back to the previously active EXWM workspace."
+          (interactive)
+          (exwm-workspace-switch ds/exwm-previous-workspace))
+        ;; (remove-function (symbol-function 'exwm-workspace-switch) #'ds/exwm-mark-previous)
+        (add-function :before (symbol-function 'exwm-workspace-switch) #'ds/exwm-mark-previous)
+
+        ;; use s-tab to switch workspaces back and forth
+        (exwm-input-set-key (kbd "<s-tab>") #'ds/exwm-workspace-toggle)
+
+        ;; fix magit for this key
+        (with-eval-after-load 'magit
+          (defun ds/exwm-fix-magit-workspace-toggle ()
+            (define-key magit-status-mode-map (kbd "<s-tab>") #'ds/exwm-workspace-toggle))
+          (add-hook 'magit-status-mode-hook #'ds/exwm-fix-magit-workspace-toggle))
+        ;; 's-SPC': Launch application
+        (exwm-input-set-key (kbd "s-SPC") #'counsel-linux-app)
+        ;; 's-r': Run shell command
+        (exwm-input-set-key (kbd "s-r")
+                            (lambda (command)
+                              (interactive (list (read-shell-command "$ ")))
+                              (start-process-shell-command command nil command)))
+        (defun ds/adjust-window-leading-edge (delta dir)
+          (let ((otherwin (window-in-direction dir))
+                (otherdelta (* -1 delta)))
+            (if otherwin
+                (adjust-window-trailing-edge otherwin otherdelta (equal dir 'left)))))
+
+        (defun ds/adjust-window-trailing-edge (delta dir)
+          (adjust-window-trailing-edge (selected-window) delta (equal dir 'right)))
+
+        (defun ds/exwm-window-resize--get-delta (delta default)
+          (abs (or delta default)))
+
+        (defun ds/exwm-window-grow-above (delta)
+          (interactive "P")
+          (ds/adjust-window-leading-edge (ds/exwm-window-resize--get-delta delta 5) 'above))
+
+        (defun ds/exwm-window-shrink-above (delta)
+          (interactive "P")
+          (ds/adjust-window-leading-edge (* -1 (ds/exwm-window-resize--get-delta delta 5)) 'above))
+
+        (defun ds/exwm-window-grow-below (delta)
+          (interactive "P")
+          (ds/adjust-window-trailing-edge (ds/exwm-window-resize--get-delta delta 5) 'below))
+
+        (defun ds/exwm-window-shrink-below (delta)
+          (interactive "P")
+          (ds/adjust-window-trailing-edge (* -1 (ds/exwm-window-resize--get-delta delta 5)) 'below))
+
+        (defun ds/exwm-window-grow-left (delta)
+          (interactive "P")
+          (ds/adjust-window-leading-edge (ds/exwm-window-resize--get-delta delta 10) 'left))
+
+        (defun ds/exwm-window-shrink-left (delta)
+          (interactive "P")
+          (ds/adjust-window-leading-edge (* -1 (ds/exwm-window-resize--get-delta delta 10)) 'left))
+
+        (defun ds/exwm-window-grow-right (delta)
+          (interactive "P")
+          (ds/adjust-window-trailing-edge (ds/exwm-window-resize--get-delta delta 10) 'right))
+
+        (defun ds/exwm-window-shrink-right (delta)
+          (interactive "P")
+          (ds/adjust-window-trailing-edge (* -1 (ds/exwm-window-resize--get-delta delta 10)) 'right))
+        :config
+        (exwm-input-set-key (kbd "<C-s-up>") #'ds/exwm-window-grow-above)
+        (exwm-input-set-key (kbd "<C-M-s-up>") #'ds/exwm-window-shrink-above)
+
+        (exwm-input-set-key (kbd "<C-s-down>") #'ds/exwm-window-grow-below)
+        (exwm-input-set-key (kbd "<C-M-s-down>") #'ds/exwm-window-shrink-below)
+
+        (exwm-input-set-key (kbd "<C-s-left>") #'ds/exwm-window-grow-left)
+        (exwm-input-set-key (kbd "<C-M-s-left>") #'ds/exwm-window-shrink-left)
+
+        (exwm-input-set-key (kbd "<C-s-right>") #'ds/exwm-window-grow-right)
+        (exwm-input-set-key (kbd "<C-M-s-right>") #'ds/exwm-window-shrink-right)
+
+        ;;resize to ratio
+        (exwm-input-set-key (kbd "s-=") #'ds/set-window-ratio)
+
+        (defun ds/exwm-to-16:9 ()
+          (interactive)
+          (ds/set-window-ratio nil 16 9 t))
+
+        (exwm-input-set-key (kbd "C-s-=") #'ds/exwm-to-16:9)
+        
+        (defun ds/exwm-list-x-windows ()
+          "Get list if all EXWM managed X windows."
+          (let ((names ()))
+            (dolist (pair exwm--id-buffer-alist)
+              (with-current-buffer (cdr pair)
+                ;; (setq names (append names `(,(replace-regexp-in-string "^ " "" (buffer-name)))))))
+                (setq names (append names `(,(buffer-name))))))
+            names))
+
+        (defun ds/exwm-switch-to-x-window (buffer-or-name)
+          "Switch to EXWM managed X window BUFFER-OR-NAME."
+          (interactive (list (completing-read "Select Window: " (ds/exwm-list-x-windows) nil t)))
+          (exwm-workspace-switch-to-buffer buffer-or-name))
+
+        (defun ds/exwm-bring-window-here (buffer-or-name)
+          "Move an EXWM managed X window BUFFER-OR-NAME to the current workspace."
+          (interactive (list (completing-read "Bring Window: " (ds/exwm-list-x-windows) nil t)))
+          (with-current-buffer buffer-or-name
+            (exwm-workspace-move-window exwm-workspace--current exwm--id)
+            (switch-to-buffer (exwm--id->buffer exwm--id))))
+
+        (exwm-input-set-key (kbd "s-d") #'ds/exwm-switch-to-x-window)
+
+        (exwm-input-set-key (kbd "C-s-d") #'ds/exwm-bring-window-here)
+
+        ;; alias the C-x o binding to s-o
+        (exwm-input-set-key (kbd "s-o") #'other-window)
+        (defun ds/exwm-quit ()
+          "Close a window in EXWM.
+
+     If it is an X window, then kill the buffer.
+     If it is not an X window, delete the window unless it is the only one."
+          (interactive)
+          (if (equal major-mode 'exwm-mode)
+              (kill-buffer))
+          (if (> (length (window-list)) 1)
+              (delete-window)))
+        (exwm-input-set-key (kbd "C-s-q") #'ds/exwm-quit)
+        
+        ;; popup eshell
+        (ds/popup-thing ds/exwm-popup-shell "*Popup Shell*"
+                        (let ((eshell-buffer-name "*Popup Shell*"))
+                          (eshell t)))
+        (exwm-input-set-key (kbd "s-m") #'ds/exwm-popup-shell)
+
+        ;; rules for displaying the popup buffer
+        (ds/popup-thing-display-settings "*Popup Shell*" top -1 0.4)
+
+        ;; 's-return': Launch new eshell
+        (exwm-input-set-key (kbd "<s-return>")
+                            (lambda ()
+                              (interactive)
+                              (eshell t)))
+
+        ;; 'C-s-return': Launch new Termite window
+        (exwm-input-set-key (kbd "<C-s-return>")
+                            (lambda ()
+                              (interactive)
+                              (start-process-shell-command "termite" nil "termite")))
+        (ds/popup-thing ds/exwm-popup-telegram "TelegramDesktop"
+                        (start-process-shell-command "telegram" nil "telegram-desktop"))
+
+        (ds/popup-thing-display-settings "TelegramDesktop" right -1 135)
+
+        (exwm-input-set-key (kbd "<s-f1>") #'ds/exwm-popup-telegram)
+        (ds/popup-thing ds/exwm-popup-pavucontrol "Pavucontrol"
+                        (start-process-shell-command "pavucontrol" nil "pavucontrol"))
+
+        (ds/popup-thing-display-settings "Pavucontrol" bottom 0 30)
+
+        (exwm-input-set-key (kbd "<s-f3>") #'ds/exwm-popup-pavucontrol)
+        (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>")
+                            (lambda ()
+                              (interactive)
+                              (start-process "volume-up" nil (executable-find "pulseaudio-ctl") "up")))
+
+        (exwm-input-set-key (kbd "<XF86AudioLowerVolume>")
+                            (lambda ()
+                              (interactive)
+                              (start-process "volume-down" nil (executable-find "pulseaudio-ctl") "down")))
+
+        (exwm-input-set-key (kbd "<XF86AudioMute>")
+                            (lambda ()
+                              (interactive)
+                              (start-process "volume-mute" nil (executable-find "pulseaudio-ctl") "mute")))
+        (setq exwm-input-simulation-keys
+              '(
+                ;; movement
+                ([?\C-b] . left)
+                ([?\M-b] . C-left)
+                ([?\C-f] . right)
+                ([?\M-f] . C-right)
+                ([?\C-p] . up)
+                ([?\C-n] . down)
+                ([?\C-a] . home)
+                ([?\C-e] . end)
+                ([?\M-v] . prior)
+                ([?\C-v] . next)
+                ([?\C-d] . delete)
+                ([?\C-k] . (S-end ?\C-x))
+                ;; cut/paste.
+                ([?\C-w] . ?\C-x)
+                ([?\M-w] . ?\C-c)
+                ([?\C-y] . ?\C-v)
+                ;; undo/redo
+                ([?\C-/] . ?\C-z)
+                ([?\C-?] . ?\C-\S-z)
+                ;; search
+                ([?\C-s] . ?\C-f)))
+        (defun ds/exwm-keyrules-termite ()
+          (if (and exwm-class-name
+                   (string= exwm-class-name "Termite"))
+              (exwm-input-set-local-simulation-keys
+               '(
+                 ([?\C-b] . left)
+                 ([?\M-b] . [?\M-b])
+                 ([?\C-f] . right)
+                 ([?\M-f] . [?\M-f])
+                 ([?\C-p] . up)
+                 ([?\C-n] . down)
+                 ([?\C-a] . [?\C-a])
+                 ([?\C-e] . [?\C-e])
+                 ([?\C-d] . [?\C-d])
+                 ([?\C-w] . [?\C-\S-x])
+                 ([?\M-w] . [?\C-\S-c])
+                 ([?\C-y] . [?\C-\S-v])))))
+
+        (add-hook 'exwm-manage-finish-hook #'ds/exwm-keyrules-termite)
+        (exwm-input-set-key (kbd "s-p") #'password-store-copy)
+        (exwm-input-set-key (kbd "C-s-p") #'ds/password-store-get-otp)
+        (exwm-input-set-key (kbd "C-M-S-s-l") #'ds/lock-screen)
+        (define-key global-map (kbd "C-x C-z") #'ds/lock-screen)
+        (define-key global-map (kbd "C-z") #'ds/lock-screen)
+        
+        ;; enable pinentry
+        (setq pinentry-popup-prompt-window nil)
+        ;; start exwm
+        (exwm-enable))
+      
+      (use-package exwm-randr
+        :demand t
+        :after exwm
+        :init
+        (defun ds/display-connected-p (name)
+          "Test if display NAME is connected."
+          (let* ((test-string (format "%s connected" name))
+                 (shell-cmd (format "xrandr | grep -o '^%s' | tr -d '\n'" test-string)))
+            (equal test-string (shell-command-to-string shell-cmd))))
+
+        (defun ds/list-displays ()
+          "List all displays this machine can handle."
+          (split-string
+           (shell-command-to-string
+            "xrandr | grep -Eo '^[A-Za-z0-9-]+ (dis)?connected' | awk '{print $1}' | tr '\n' ' '")))
+
+        (defun ds/laptop-display-name ()
+          "Get laptop internal display name ."
+          (shell-command-to-string
+           "xrandr | grep -Eo '^eDP[A-Za-z0-9-]+ connected' | awk '{print $1}' | tr -d '\n'"))
+
+        (defun ds/laptop-external-display-name ()
+          "Get laptop external display name ."
+          (shell-command-to-string
+           "xrandr | grep -Eo '^[^e][A-Za-z0-9-]+ connected' | awk '{print $1}' | tr -d '\n'"))
+
+        (defun ds/restart-bar ()
+          "Restart whatever bar is being used."
+          (interactive)
+          (start-process-shell-command
+           "startpanel" nil (expand-file-name (concat user-emacs-directory "exwm/bin/start-bar"))))
+
+        (defun ds/xrandr-other-displays-off (target)
+          "Get a string to run off all displays except for the TARGET."
+          (mapconcat
+           (lambda (d)
+             (concat "--output " d " --off"))
+           (seq-filter
+            (lambda (d)
+              (not (string= d target)))
+            (ds/list-displays))
+           " "))
+
+        (defun ds/connect-laptop-external ()
+          "Connect the laptop to it's external display, no display on laptop screen"
+          (interactive)
+          (start-process-shell-command
+           "xrandr" nil (concat "xrandr --output "
+                                (ds/laptop-external-display-name)
+                                " --primary --auto "
+                                (ds/xrandr-other-displays-off (ds/laptop-external-display-name))))
+          (ds/restart-bar))
+
+        (defun ds/disconnect-laptop-external ()
+          "Connect laptop display, no external display"
+          (interactive)
+          (start-process-shell-command
+           "xrandr" nil (concat "xrandr --output "
+                                (ds/laptop-display-name)
+                                " --primary --auto "
+                                (ds/xrandr-other-displays-off (ds/laptop-display-name))))
+          (ds/restart-bar))
+
+        (defun ds/exwm-auto-screens ()
+          "Detect known display setups and set screens accordingly."
+          (interactive)
+          (let ((laptop-display (ds/display-connected-p (ds/laptop-display-name)))
+                (laptop-display-external (ds/display-connected-p (ds/laptop-external-display-name))))
+            ;; check for laptop external display
+            (if laptop-display
+                (if laptop-display-external
+                    (ds/connect-laptop-external)
+                  (ds/disconnect-laptop-external)))
+            (start-process "" nil (concat user-emacs-directory "exwm/bin/wallpaper"))))
+
+        :config
+        ;; (add-hook 'exwm-randr-screen-change-hook #'ds/powerline-set-height)
+        (add-hook 'exwm-randr-screen-change-hook #'ds/exwm-auto-screens)
+        (exwm-randr-enable))
+
+      (use-package exwm-systemtray
+        :demand t
+        :config
+        (exwm-systemtray-enable))))
+
 
 (provide 'init)
 ;;; init.el ends here

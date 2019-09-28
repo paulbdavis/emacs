@@ -40,7 +40,8 @@
         (fontawesome . "melpa")
         (lsp-mode . "melpa")
         (lsp-ui . "melpa")
-        (flycheck . "melpa")))
+        (flycheck . "melpa")
+        (exwm . "melpa")))
 
 (package-initialize)
 
