@@ -1,3 +1,6 @@
 [submodule "lib/emacs-org-dnd"]
 	path = lib/emacs-org-dnd
 	url = git@github.com:paulbdavis/emacs-org-dnd
+[submodule "lib/exwm"]
+	path = lib/exwm
+	url = https://github.com/ch11ng/exwm
