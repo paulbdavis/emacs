@@ -31,6 +31,9 @@ else
     fi
 fi
 
+export VISUAL=emacsclient
+export EDITOR="$VISUAL"
+
 # turn on numlock
 numlockx &
 
