@@ -4,7 +4,7 @@ FAIL() {
     echo "<span color='#a9a999'>0.0 b/s $SYMBOL</span>"
 }
 
-IF="$(ip addr | grep -o -E '(enp|wlp)[a-z0-9]+$')"
+IF="$(ip addr | grep -o -E '(en|wlp)[a-z0-9]+$')"
 
 
 tmpfile=/tmp/$USER-netspeed-unit
@@ -71,7 +71,7 @@ do
 
     # BPS="$(echo $BPS | sed 's/^\./0./')"
 
-    final=$final$(printf "<span font='Monospace Bold 12px'>%6.2f %-4s</span> %s" $BPS ${UNIT}${REPORT}/s $SYMBOL)" "
+    final=$final$(printf "<span>%6.2f %-4s</span> %s" $BPS ${UNIT}${REPORT}/s $SYMBOL)" "
 
 done
 

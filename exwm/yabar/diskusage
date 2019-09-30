@@ -23,10 +23,10 @@ do
         used="$(echo "$dfline" | awk '{print $3}')"
         percent="$(echo "$dfline" | awk '{print $5}')"
         color="#7f9f7f"
-        if [[ ${percent%%%} -gt 85 ]]
+        if [[ ${percent%%%} -gt 95 ]]
         then
             color="#dca3a3"
-        elif [[ ${percent%%%} -gt 75 ]]
+        elif [[ ${percent%%%} -gt 85 ]]
         then
             color="#c3bf9f"
         fi
