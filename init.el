@@ -589,8 +589,23 @@
 
 (if ds/use-exwm
     (progn
-      (use-package exwm
+      (setq load-path (cons "~/.emacs.d/lib/exwm" load-path))
+
+      (use-package xelb
+        :ensure t)
+
+      (use-package pass
         :ensure t
+        :config
+        (use-package password-store-otp
+          :ensure t
+          :init
+          (defun ds/password-store-get-otp (record)
+            (interactive (list (password-store--completing-read)))
+            (password-store-otp-token-copy record))))
+      
+      (use-package exwm
+        :demand
         :init
         (defun ds/exwm-set-name ()
           ;; (message "class: %s, instance: %s, title: %s, state: %s, type: %s" exwm-class-name exwm-instance-name exwm-title exwm-state exwm-window-type)
@@ -821,13 +836,13 @@
 
         (ds/popup-thing-display-settings "TelegramDesktop" right -1 135)
 
-        (exwm-input-set-key (kbd "<s-f1>") #'ds/exwm-popup-telegram)
+        (exwm-input-set-key (kbd "<s-f5>") #'ds/exwm-popup-telegram)
         (ds/popup-thing ds/exwm-popup-pavucontrol "Pavucontrol"
                         (start-process-shell-command "pavucontrol" nil "pavucontrol"))
 
         (ds/popup-thing-display-settings "Pavucontrol" bottom 0 30)
 
-        (exwm-input-set-key (kbd "<s-f3>") #'ds/exwm-popup-pavucontrol)
+        (exwm-input-set-key (kbd "<s-f7>") #'ds/exwm-popup-pavucontrol)
         (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>")
                             (lambda ()
                               (interactive)
@@ -974,7 +989,8 @@
         :config
         ;; (add-hook 'exwm-randr-screen-change-hook #'ds/powerline-set-height)
         (add-hook 'exwm-randr-screen-change-hook #'ds/exwm-auto-screens)
-        (exwm-randr-enable))
+        (exwm-randr-enable)
+        (ds/restart-bar))
 
       (use-package exwm-systemtray
         :demand t
