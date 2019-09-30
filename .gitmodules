@@ -4,3 +4,6 @@
 [submodule "lib/exwm"]
 	path = lib/exwm
 	url = https://github.com/ch11ng/exwm
+[submodule "lib/eosd"]
+	path = lib/eosd
+	url = https://github.com/clarete/eosd

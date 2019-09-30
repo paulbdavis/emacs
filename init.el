@@ -590,6 +590,7 @@
 (if ds/use-exwm
     (progn
       (setq load-path (cons "~/.emacs.d/lib/exwm" load-path))
+      (setq load-path (cons "~/.emacs.d/lib/eosd" load-path))
 
       (use-package xelb
         :ensure t)
@@ -616,6 +617,32 @@
           (interactive)
           (start-process "" nil "slock"))
 
+        (defun ds/exwm-refresh-notification-buffer (&rest _)
+          (if (get-buffer-window (get-buffer "*notifications*"))
+              (eosd-mode-create-or-update-buffer)))
+
+        (defun ds/exwm-notification-autopop (&rest _)
+          "Popup the notification buffer without taking focus from the current window."
+          (let ((currentbuffer (buffer-name)))
+            (if (equal currentbuffer "*notifications*")
+                (ds/exwm-refresh-notification-buffer)
+              (progn (ds/exwm-eosd)
+                     (with-current-buffer currentbuffer
+                       (select-window (get-buffer-window (buffer-name)) t))))))
+        ;; load eosd
+        (require 'eosd)
+        ;; customize notification faces
+        (eval-after-load 'zenburn-theme
+          (zenburn-with-color-variables
+            (set-face-attribute 'eosd-heading-face nil :foreground zenburn-fg-1)
+            (set-face-attribute 'eosd-title-face nil :foreground zenburn-green)
+            (set-face-attribute 'eosd-datetime-face nil :foreground zenburn-blue)
+            (set-face-attribute 'eosd-action-link-face nil :foreground zenburn-blue :background zenburn-bg+1 :box zenburn-blue :underline nil)
+            (set-face-attribute 'eosd-delete-link-face nil :foreground zenburn-red :background zenburn-bg+1 :box zenburn-red :underline nil)
+            (set-face-attribute 'eosd-text-mark-face nil :foreground zenburn-fg-1)))
+        ;; start the notification service
+        (eosd-start)
+        
         :config
         ;; auto rename new X window buffers
         (add-hook 'exwm-update-class-hook #'ds/exwm-set-name)
@@ -906,6 +933,16 @@
         (define-key global-map (kbd "C-x C-z") #'ds/lock-screen)
         (define-key global-map (kbd "C-z") #'ds/lock-screen)
         
+        ;; notifications
+        (ds/popup-thing ds/exwm-eosd "*notifications*"
+                        (eosd))
+        (ds/popup-thing-display-settings "*notifications*" right 1)
+
+        (exwm-input-set-key (kbd "s-n") #'ds/exwm-eosd)
+
+        ;; auto refresh and auto popup notifications
+        (add-function :after (symbol-function 'ds/exwm-eosd) #'ds/exwm-refresh-notification-buffer)
+
         ;; enable pinentry
         (setq pinentry-popup-prompt-window nil)
         ;; start exwm
