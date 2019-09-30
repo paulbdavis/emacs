@@ -936,8 +936,39 @@
                  ([?\C-w] . [?\C-\S-x])
                  ([?\M-w] . [?\C-\S-c])
                  ([?\C-y] . [?\C-\S-v])))))
+        
+        (defun ds/exwm-keyrules-firefox ()
+          (if (and exwm-class-name
+                   (string= exwm-class-name "firefox"))
+              (exwm-input-set-local-simulation-keys
+               '(
+                ;; movement
+                ([?\C-b] . left)
+                ([?\M-b] . C-left)
+                ([?\C-f] . right)
+                ([?\M-f] . C-right)
+                ([?\C-p] . up)
+                ([?\C-n] . down)
+                ([?\C-a] . home)
+                ([?\C-e] . end)
+                ([?\M-v] . prior)
+                ([?\C-v] . next)
+                ([?\C-d] . delete)
+                ([?\C-k] . (S-end ?\C-x))
+                ;; close tab
+                ([?\C-k] . ?\C-w)
+                ;; cut/paste.
+                ([?\C-w] . ?\C-x)
+                ([?\M-w] . ?\C-c)
+                ([?\C-y] . ?\C-v)
+                ;; undo/redo
+                ([?\C-/] . ?\C-z)
+                ([?\C-?] . ?\C-\S-z)
+                ;; search
+                ([?\C-s] . ?\C-f)))))
 
         (add-hook 'exwm-manage-finish-hook #'ds/exwm-keyrules-termite)
+        (add-hook 'exwm-manage-finish-hook #'ds/exwm-keyrules-firefox)
         (exwm-input-set-key (kbd "s-p") #'password-store-copy)
         (exwm-input-set-key (kbd "C-s-p") #'ds/password-store-get-otp)
         (exwm-input-set-key (kbd "C-M-S-s-l") #'ds/lock-screen)
