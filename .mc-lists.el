@@ -23,5 +23,6 @@
 
 (setq mc/cmds-to-run-once
       '(
+        ds/exwm-popup-shell
         projectile-compile-project
         ))

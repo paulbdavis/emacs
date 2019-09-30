@@ -581,13 +581,13 @@
 (add-to-list 'auto-mode-alist '("\\.chordpro$" . chordpro-mode))
 
 
-(defvar ds/use-exwm nil
+(defvar ds/exwm-enable nil
   "Set to t to use exwm.")
 
 (if (file-exists-p "~/.emacs.d/local.el")
     (load-file "~/.emacs.d/local.el"))
 
-(if ds/use-exwm
+(if ds/exwm-enable
     (progn
       (setq load-path (cons "~/.emacs.d/lib/exwm" load-path))
       (setq load-path (cons "~/.emacs.d/lib/eosd" load-path))
@@ -605,6 +605,15 @@
             (interactive (list (password-store--completing-read)))
             (password-store-otp-token-copy record))))
       
+      (use-package exec-path-from-shell
+        :ensure t
+        :demand
+        :config
+        (progn
+          (message "setting up exec path")
+          (exec-path-from-shell-initialize)
+          (message "set up exec path")))
+
       (use-package exwm
         :demand
         :init
@@ -659,6 +668,7 @@
         (start-process "" nil (concat user-emacs-directory "exwm/bin/xinitscript"))
         (start-process "" nil (concat user-emacs-directory "exwm/bin/wallpaper"))
         (start-process "" nil "compton")
+        (start-process "" nil "pulseaudio")
         ;; disable flycheck for exwm buffers
         (add-hook 'exwm-mode-hook (lambda () (flycheck-mode -1)))
         (defmacro ds/popup-thing (NAME BUFFER &rest BODY)
@@ -777,7 +787,7 @@
         (defun ds/exwm-window-shrink-right (delta)
           (interactive "P")
           (ds/adjust-window-trailing-edge (* -1 (ds/exwm-window-resize--get-delta delta 10)) 'right))
-        :config
+
         (exwm-input-set-key (kbd "<C-s-up>") #'ds/exwm-window-grow-above)
         (exwm-input-set-key (kbd "<C-M-s-up>") #'ds/exwm-window-shrink-above)
 
@@ -913,6 +923,7 @@
                    (string= exwm-class-name "Termite"))
               (exwm-input-set-local-simulation-keys
                '(
+                 ([?\C-c ?\C-c] . [?\C-c])
                  ([?\C-b] . left)
                  ([?\M-b] . [?\M-b])
                  ([?\C-f] . right)
@@ -945,6 +956,8 @@
 
         ;; enable pinentry
         (setq pinentry-popup-prompt-window nil)
+        ;; start the server so `emacsclient' can be used as the EDITOR
+        (server-start)
         ;; start exwm
         (exwm-enable))
       
