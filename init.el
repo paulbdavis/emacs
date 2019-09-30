@@ -834,7 +834,7 @@
         (ds/popup-thing ds/exwm-popup-telegram "TelegramDesktop"
                         (start-process-shell-command "telegram" nil "telegram-desktop"))
 
-        (ds/popup-thing-display-settings "TelegramDesktop" right -1 135)
+        (ds/popup-thing-display-settings "TelegramDesktop" left -1 100)
 
         (exwm-input-set-key (kbd "<s-f5>") #'ds/exwm-popup-telegram)
         (ds/popup-thing ds/exwm-popup-pavucontrol "Pavucontrol"
