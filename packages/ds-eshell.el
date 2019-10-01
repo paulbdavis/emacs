@@ -36,6 +36,8 @@
   :hook ((eshell-mode . ds/eshell-setup)
          (eshell-pre-command . ds/eshell-append-history)
          (eshell-post-command . eshell-read-history))
+  :bind (:map
+         eshell-mode-map ("C-l" . eshell/clear))
   :defines (eshell-history-ring
             eshell-history-file-name
             eshell-prompt-regexp
