@@ -624,6 +624,7 @@
           "Stores previous workspace when switching in exwm")
         (defun ds/lock-screen (&rest _)
           (interactive)
+          (start-process "" nil "gpg-connect-agent" "killagent" "/bye")
           (start-process "" nil "slock"))
 
         (defun ds/exwm-refresh-notification-buffer (&rest _)
