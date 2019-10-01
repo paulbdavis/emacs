@@ -940,7 +940,7 @@
         
         (defun ds/exwm-keyrules-firefox ()
           (if (and exwm-class-name
-                   (string= exwm-class-name "firefox"))
+                   (string-match-p "[Ff]irefox" exwm-class-name))
               (exwm-input-set-local-simulation-keys
                '(
                 ;; movement
