@@ -34,6 +34,8 @@ fi
 export VISUAL=emacsclient
 export EDITOR="$VISUAL"
 
+systemd --user import-environment DISPLAY
+
 # turn on numlock
 numlockx &
 
