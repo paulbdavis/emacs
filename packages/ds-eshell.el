@@ -168,7 +168,77 @@
            (pcomplete-here pcomplete-systemd-user-units))
           ((pcomplete-test "daemon-reload")
            (pcomplete-here))
-          (t (pcomplete-here pcomplete-systemd-units)))))
+          (t (pcomplete-here pcomplete-systemd-units))))
+
+  ;; ============================================================
+  ;;
+  ;; kubectl completion
+  ;;
+  ;; ============================================================
+  (defvar pcomplete-kubectl-commands
+    '("get" "delete" "log" "rollout" "describe"))
+  
+  (defvar pcomplete-kubectl-resources
+    '("deployment" "pod" "hpa" "ingress" "service" "cert" "job" "serviceaccount" "clusterrole" "role" "clusterrolebinding" "rolebinding"))
+  
+  (defvar pcomplete-kubectl-global-opts
+    '("-n" "--namespace" "--all-namespaces"))
+
+  (defvar pcomplete-kubectl-log-opts
+    '("-f" "-p" "--tail="))
+
+  (defun ds/kubectl-get-namespaces ()
+    "Get k8s namespaces."
+    (split-string (shell-command-to-string "kubectl get namespace -o go-template='{{range .items}}{{ .metadata.name }} {{ end }}'")))
+  
+  (defun ds/kubectl-get-pods (namespace)
+    "Get k8s pods in NAMESPACE."
+    (let ((ns (if (string= "--all-namespaces" namespace)
+                  namespace
+                (if namespace
+                    (format "-n %s" namespace)
+                  ""))))
+      (split-string (shell-command-to-string (format "kubectl %s get pod -o go-template='{{range .items}}{{ .metadata.name }} {{ end }}'" ns))))
+    )
+
+  (defun ds/kubectl-get-namespace-arg (args)
+    "Gets the namespace argument from ARGS."
+    (if (eq args '()) nil
+      (let ((arg (car args))
+            (rest (cdr args)))
+        (cond
+         ((or (string= arg "--namespace") (string= arg "-n"))
+          (car rest))
+         ((string= arg "--all-namespaces")
+          arg)
+         (t (ds/kubectl-get-namespace-arg rest))))))
+  
+  (defun pcomplete/kubectl ()
+    "Completion rules for the `kubectlctl' command."
+    (pcomplete-here (append pcomplete-kubectl-commands pcomplete-kubectl-global-opts))
+    (cond
+     ((pcomplete-match (regexp-opt '("-n" "--namespace")) 1)
+      (pcomplete-here (ds/kubectl-get-namespaces))
+      (pcomplete-here pcomplete-kubectl-commands))
+     (t (pcomplete-here pcomplete-kubectl-commands)))
+
+    (cond
+     ((pcomplete-match "log" 1)
+      (pcomplete-here (append pcomplete-kubectl-log-opts (ds/kubectl-get-pods (ds/kubectl-get-namespace-arg pcomplete-args)))))
+     (t (pcomplete-here pcomplete-kubectl-resources)))
+    
+    (cond
+     ((pcomplete-match "pod" 1)
+      (pcomplete-here (ds/kubectl-get-pods (ds/kubectl-get-namespace-arg pcomplete-args))))
+     ((pcomplete-match "log" 2)
+      (pcomplete-here (append pcomplete-kubectl-log-opts (ds/kubectl-get-pods (ds/kubectl-get-namespace-arg pcomplete-args)))))
+     ((pcomplete-match "log" 3)
+      (pcomplete-here (append pcomplete-kubectl-log-opts (ds/kubectl-get-pods (ds/kubectl-get-namespace-arg pcomplete-args)))))
+     ((pcomplete-match "log" 4)
+      (pcomplete-here (ds/kubectl-get-pods (ds/kubectl-get-namespace-arg pcomplete-args)))))
+    )
+
+  )
 
 
 (use-package eshell
