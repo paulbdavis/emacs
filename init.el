@@ -739,6 +739,7 @@
             (define-key magit-status-mode-map (kbd "<s-tab>") #'ds/exwm-workspace-toggle))
           (add-hook 'magit-status-mode-hook #'ds/exwm-fix-magit-workspace-toggle))
         ;; 's-SPC': Launch application
+        (setq counsel-linux-app-format-function 'counsel-linux-app-format-function-name-only)
         (exwm-input-set-key (kbd "s-SPC") #'counsel-linux-app)
         ;; 's-r': Run shell command
         (exwm-input-set-key (kbd "s-r")
