@@ -602,7 +602,7 @@
           :ensure t
           :init
           (defun ds/password-store-get-otp (record)
-            (interactive (list (password-store--completing-read)))
+            (interactive (list (completing-read "TOTP entry: " (password-store-list))))
             (password-store-otp-token-copy record))))
       
       (use-package exec-path-from-shell
