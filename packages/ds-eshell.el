@@ -36,9 +36,8 @@
   :hook ((eshell-mode . ds/eshell-setup)
          (eshell-pre-command . ds/eshell-append-history)
          (eshell-post-command . eshell-read-history))
-  :bind (:map
-         eshell-mode-map ("C-l" . eshell/clear))
-  :defines (eshell-history-ring
+  :defines (eshell-mode-map
+            eshell-history-ring
             eshell-history-file-name
             eshell-prompt-regexp
             eshell-password-prompt-regexp
@@ -74,6 +73,9 @@
   (defun ds/eshell-setup ()
     (setenv "PAGER" "cat")
     (setenv "EDITOR" "emacsclient")
+    (use-package eshell
+      :bind (:map
+             eshell-mode-map ("C-l" . eshell/clear)))
     (direnv-update-environment)
     (add-to-list 'eshell-visual-commands "ssh")
     (add-to-list 'eshell-visual-commands "tail")
@@ -111,6 +113,9 @@
 (use-package pcmpl-args
   :ensure t
   :config
+
+  (use-package pcmpl-git
+    :ensure t)
 
   ;; ============================================================
   ;;
