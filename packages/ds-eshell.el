@@ -272,7 +272,7 @@
                    (host (match-string 2 dirname)))
                (cond ((equal part 'user) user)
                      ((equal part 'host) host)
-                     ((equal part 'all) (concat user "@" host))))))))
+                     ((equal part 'all) (if (not (string= "" host)) (concat user "@" host) user))))))))
 
   (ds/eshell-section esh-tramp-status
                      ""
