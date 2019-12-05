@@ -36,12 +36,13 @@
         ("gnu"          . 10)
         ("melpa"        . 0))
       package-pinned-packages
-      '((org . "org")
-        (fontawesome . "melpa")
-        (lsp-mode . "melpa")
-        (lsp-ui . "melpa")
-        (flycheck . "melpa")
-        (exwm . "melpa")))
+      '((org           . "org")
+        (fontawesome   . "melpa")
+        (lsp-mode      . "melpa")
+        (lsp-ui        . "melpa")
+        (flycheck      . "melpa")
+        (exwm          . "melpa")
+        (edit-indirect . "melpa")))
 
 (package-initialize)
 

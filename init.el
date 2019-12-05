@@ -53,10 +53,21 @@
 
 (use-package dired-subtree
   :ensure
+  :defines dired-subtree-toggle
   :bind (:map dired-mode-map
-              ("i" . dired-subtree-t))
+              ("i" . dired-subtree-toggle))
   :config
   (setq dired-subtree-use-backgrounds nil))
+
+(setq dired-listing-switches "-AFBhl  --group-directories-first")
+
+(defun ds/apply-lc-collate (wrapped-fun &rest args)
+  "Set the env var `LC_COLLATE' to `C' and then run WRAPPED-FUN with ARGS."
+  (let ((process-environment (copy-sequence process-environment)))
+    (add-to-list 'process-environment "LC_COLLATE=C" nil 'string-equal)
+    (apply wrapped-fun args)))
+
+(advice-add 'dired-insert-directory :around #'ds/apply-lc-collate)
 
 (use-package multiple-cursors
   :ensure
@@ -127,7 +138,7 @@
   ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
   (setq ivy-use-virtual-buffers t)
   ;; recursive minibuffer
-  (setq enable-recursive-minibuffers t)
+  ;; (setq enable-recursive-minibuffers t)
   ;; count display
   (setq ivy-count-format "(%d/%d) ")
   ;; wrap
@@ -148,6 +159,17 @@
 
 (use-package ivy-hydra
   :ensure)
+
+(use-package ivy-posframe
+  :ensure
+  :config
+  (setq ivy-posframe-display-functions-alist
+        '((swiper          . nil)
+          (complete-symbol . ivy-posframe-display-at-point)
+          (completion-at-point . ivy-posframe-display-at-point)
+          (ivy-completion-in-region . ivy-posframe-display-at-point)
+          (t               . nil)))
+  (ivy-posframe-mode 1))
 
 (use-package counsel
   :ensure
@@ -333,9 +355,7 @@
 ;; golang
 (use-package go-mode
   :ensure
-  :mode ("\\go.mod\\'" . fundamental-mode)
-  :hook ((before-save . gofmt-before-save)
-         (after-save . flycheck-buffer)))
+  :mode ("\\go.mod\\'" . fundamental-mode))
 
 ;; javascript
 (defun ds/eslint-fix ()
@@ -414,37 +434,73 @@
 (use-package yasnippet
   :ensure)
 
-(defun ds/go-mode-lsp ()
-  "Enable `lsp-mode' in `go-mode' unless there is an import \"C\" statement."
-  (save-excursion
-    (with-current-buffer (current-buffer)
-      (if (not (search-forward "import \"C\"" nil t 1))
-          (lsp t)))))
-
 (use-package lsp-mode
   :ensure
   :demand
+  :defines (lsp-gopls-hover-kind lsp-gopls-env)
   ;; :disabled
-  :commands (lsp)
+  :commands (lsp lsp-deferred)
   :hook ((go-mode . ds/go-mode-lsp)
-         (js-mode . (lambda () (lsp t)))
-         (vue-mode . (lambda () (lsp t))))
+         (js-mode . ds/js-mode-lsp)
+         (vue-mode . ds/js-mode-lsp))
+  :init
+  (flycheck-define-checker go-golint-solo
+    "A golang style checker using golint that does not define any next checkers.
+
+See URL `https://github.com/golang/lint'."
+    :command ("golint" source)
+    :error-patterns
+    ((warning line-start (file-name) ":" line ":" column ": " (message) line-end))
+    :modes go-mode)
+  
+  (add-to-list 'flycheck-checkers 'go-golint-solo)
+  
+  (defun ds/go-mode-lsp ()
+    "Enable `lsp-mode' in `go-mode' unless there is an import \"C\" statement. Also set up other stuff."
+
+    (save-excursion
+      (with-current-buffer (current-buffer)
+        (if (search-forward "import \"C\"" nil t 1)
+            (setq-local lsp-gopls-env   ; set env for cgo
+                        #s(hash-table data ("CGO_ENABLED" "1" "GOBIN" ""))))))
+    
+
+    ;; experimental options not in lsp mode yet
+    (lsp-register-custom-settings
+     '(("gopls.completeUnimported" t t)
+       ("gopls.staticcheck" t t)))
+    
+    (lsp)
+    ;; (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
+    (setf (flycheck-checker-get 'lsp-ui 'next-checkers) (list 'go-golint-solo))
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  
+  (defun ds/js-mode-lsp ()
+    "Enable `lsp-mode' in `go-mode' unless there is an import \"C\" statement. Also set up other stuff."
+
+    (lsp)
+    ;; (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
+    (setf (flycheck-checker-get 'lsp-ui 'next-checkers) (list 'javascript-eslint))
+    ;; (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  
+
   :config
   (setq lsp-prefer-flymake nil)
-  
+
   ;; (lsp-register-client
   ;;  (make-lsp-client :new-connection (lsp-stdio-connection "gopls2")
   ;;                   :major-modes '(go-mode)
   ;;                   :server-id 'gopls))
-  
+
+  (setq lsp-gopls-hover-kind "FullDocumentation")
+
   (use-package lsp-ui
     :ensure
     :commands lsp-ui-mode
     :hook ((lsp-mode-hook . lsp-ui-mode))
     :config
-    
-    (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
-    (flycheck-add-next-checker 'lsp-ui 'javascript-eslint 'append)
     
     (setq lsp-ui-doc-position 'bottom)
     (setq lsp-ui-doc-delay 1)
@@ -944,30 +1000,30 @@
                    (string-match-p "[Ff]irefox" exwm-class-name))
               (exwm-input-set-local-simulation-keys
                '(
-                ;; movement
-                ([?\C-b] . left)
-                ([?\M-b] . C-left)
-                ([?\C-f] . right)
-                ([?\M-f] . C-right)
-                ([?\C-p] . up)
-                ([?\C-n] . down)
-                ([?\C-a] . home)
-                ([?\C-e] . end)
-                ([?\M-v] . prior)
-                ([?\C-v] . next)
-                ([?\C-d] . delete)
-                ([?\C-k] . (S-end ?\C-x))
-                ;; close tab
-                ([?\C-k] . ?\C-w)
-                ;; cut/paste.
-                ([?\C-w] . ?\C-x)
-                ([?\M-w] . ?\C-c)
-                ([?\C-y] . ?\C-v)
-                ;; undo/redo
-                ([?\C-/] . ?\C-z)
-                ([?\C-?] . ?\C-\S-z)
-                ;; search
-                ([?\C-s] . ?\C-f)))))
+                 ;; movement
+                 ([?\C-b] . left)
+                 ([?\M-b] . C-left)
+                 ([?\C-f] . right)
+                 ([?\M-f] . C-right)
+                 ([?\C-p] . up)
+                 ([?\C-n] . down)
+                 ([?\C-a] . home)
+                 ([?\C-e] . end)
+                 ([?\M-v] . prior)
+                 ([?\C-v] . next)
+                 ([?\C-d] . delete)
+                 ([?\C-k] . (S-end ?\C-x))
+                 ;; close tab
+                 ([?\M-k] . ?\C-w)
+                 ;; cut/paste.
+                 ([?\C-w] . ?\C-x)
+                 ([?\M-w] . ?\C-c)
+                 ([?\C-y] . ?\C-v)
+                 ;; undo/redo
+                 ([?\C-/] . ?\C-z)
+                 ([?\C-?] . ?\C-\S-z)
+                 ;; search
+                 ([?\C-s] . ?\C-f)))))
 
         (add-hook 'exwm-manage-finish-hook #'ds/exwm-keyrules-termite)
         (add-hook 'exwm-manage-finish-hook #'ds/exwm-keyrules-firefox)
@@ -1024,7 +1080,7 @@
           "Restart whatever bar is being used."
           (interactive)
           (start-process-shell-command
-           "startpanel" nil (expand-file-name (concat user-emacs-directory "exwm/bin/start-bar"))))
+           "startpanel" "*yabar*" (expand-file-name (concat user-emacs-directory "exwm/bin/start-bar"))))
 
         (defun ds/xrandr-other-displays-off (target)
           "Get a string to run off all displays except for the TARGET."

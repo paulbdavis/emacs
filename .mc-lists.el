@@ -3,9 +3,14 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-kill-sentence
+        backward-sexp
         c-electric-delete-forward
         c-electric-paren
+        c-electric-semi&comma
         complete-symbol
+        default-indent-new-line
+        delete-indentation
         ds/open-next-line
         ds/open-previous-line
         electric-newline-and-maybe-indent
@@ -15,14 +20,18 @@
         keyboard-escape-quit
         kill-region
         kill-sexp
+        markdown-outdent-or-delete
         org-self-insert-command
         sh-assignment
         yaml-electric-backspace
+        yaml-electric-bar-and-angle
         yaml-electric-dash-and-dot
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        beginning-of-buffer
         ds/exwm-popup-shell
         projectile-compile-project
+        xref-pop-marker-stack
         ))

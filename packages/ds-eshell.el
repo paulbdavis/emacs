@@ -185,7 +185,7 @@
     '("-n" "--namespace" "--all-namespaces"))
 
   (defvar pcomplete-kubectl-log-opts
-    '("-f" "-p" "--tail="))
+    '("-f" "-p" "--tail=" "--timestamps"))
 
   (defun ds/kubectl-get-namespaces ()
     "Get k8s namespaces."
