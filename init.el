@@ -31,7 +31,9 @@
 (require 'package-loader)
 
 (use-package ds-basic)
-(use-package ds-theme)
+(use-package ds-theme
+  :commands (ds/get-zenburn-color))
+
 (use-package ds-util
   :commands (ds/find-eslint-executable ds/get-zenburn-color)
   :bind (("C-c \\" . ds/indent-buffer)
@@ -40,6 +42,10 @@
 	     ("M-o" . ds/open-previous-line)))
 
 (use-package ds-eshell)
+
+(use-package vterm
+  :ensure t
+  :after ds-theme)
 
 ;; misc packages for general usability
 (use-package adaptive-wrap

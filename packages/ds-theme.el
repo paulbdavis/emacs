@@ -129,7 +129,37 @@ This overrides the colors provided by the `zenburn-theme' package.")
     (set-face-attribute 'flymake-warning nil
                         :underline `(:style wave :color ,(ds/get-zenburn-color "yellow")))
     (set-face-attribute 'flymake-note nil
-                        :underline `(:style wave :color ,(ds/get-zenburn-color "blue")))))
+                        :underline `(:style wave :color ,(ds/get-zenburn-color "blue"))))
+
+  (with-eval-after-load 'vterm
+    (set-face-attribute 'vterm-color-default nil
+                        :foreground (ds/get-zenburn-color "fg")
+                        :background (ds/get-zenburn-color "bg"))
+    (set-face-attribute 'vterm-color-black nil
+                        :foreground (ds/get-zenburn-color "bg-2")
+                        :background (ds/get-zenburn-color "bg+2"))
+    (set-face-attribute 'vterm-color-red nil
+                        :foreground (ds/get-zenburn-color "red")
+                        :background (ds/get-zenburn-color "red+1"))
+    (set-face-attribute 'vterm-color-green nil
+                        :foreground (ds/get-zenburn-color "green")
+                        :background (ds/get-zenburn-color "green+1"))
+    (set-face-attribute 'vterm-color-yellow nil
+                        :foreground (ds/get-zenburn-color "yellow")
+                        :background (ds/get-zenburn-color "yellow+1"))
+    (set-face-attribute 'vterm-color-blue nil
+                        :foreground (ds/get-zenburn-color "blue")
+                        :background (ds/get-zenburn-color "blue+1"))
+    (set-face-attribute 'vterm-color-magenta nil
+                        :foreground (ds/get-zenburn-color "magenta")
+                        :background (ds/get-zenburn-color "magenta"))
+    (set-face-attribute 'vterm-color-cyan nil
+                        :foreground (ds/get-zenburn-color "cyan")
+                        :background (ds/get-zenburn-color "cyan"))
+    (set-face-attribute 'vterm-color-white nil
+                        :foreground (ds/get-zenburn-color "fg")
+                        :background (ds/get-zenburn-color "fg+1"))
+    ))
 
 
 (use-package zenburn-theme
