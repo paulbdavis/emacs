@@ -489,7 +489,8 @@ See URL `https://github.com/golang/lint'."
     ;; (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
     (setf (flycheck-checker-get 'lsp-ui 'next-checkers) (list 'javascript-eslint))
     ;; (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+    ;; (add-hook 'before-save-hook #'lsp-organize-imports t t)
+    )
   
 
   :config
