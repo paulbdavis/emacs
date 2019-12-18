@@ -20,9 +20,11 @@
         keyboard-escape-quit
         kill-region
         kill-sexp
+        mark-sexp
         markdown-outdent-or-delete
         org-self-insert-command
         sh-assignment
+        slime-space
         yaml-electric-backspace
         yaml-electric-bar-and-angle
         yaml-electric-dash-and-dot
