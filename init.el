@@ -1143,6 +1143,7 @@ See URL `https://github.com/golang/lint'."
         :config
         (exwm-systemtray-enable))))
 
+(put 'downcase-region 'disabled nil)
 
 (provide 'init)
 ;;; init.el ends here
