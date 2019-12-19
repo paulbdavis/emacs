@@ -45,7 +45,7 @@
 
 (use-package vterm
   :ensure t
-  :commands (vterm)
+  :commands (vterm ds/vterm)
   :after ds-theme
   :config
   (defun ds/vterm (&optional name)
