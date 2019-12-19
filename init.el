@@ -45,7 +45,12 @@
 
 (use-package vterm
   :ensure t
-  :after ds-theme)
+  :commands (vterm)
+  :after ds-theme
+  :config
+  (defun ds/vterm (&optional name)
+    (interactive "MName: ")
+    (if (< 0 (length name)) (vterm name) (vterm))))
 
 ;; misc packages for general usability
 (use-package adaptive-wrap
