@@ -50,7 +50,11 @@
   :config
   (defun ds/vterm (&optional name)
     (interactive "MName: ")
-    (if (< 0 (length name)) (vterm name) (vterm))))
+    (if (< 0 (length name))
+        (if (get-buffer name)
+            (switch-to-buffer name)
+          (vterm name))
+      (vterm))))
 
 ;; misc packages for general usability
 (use-package adaptive-wrap
