@@ -26,6 +26,7 @@
 
 (setq load-path (cons "~/.emacs.d/lib" load-path))
 (setq load-path (cons "~/.emacs.d/lib/emacs-org-dnd" load-path))
+(setq load-path (cons "~/.emacs.d/lib/multi-libvterm" load-path))
 (setq load-path (cons "~/.emacs.d/packages" load-path))
 
 (require 'package-loader)
@@ -46,6 +47,10 @@
 (use-package vterm
   :ensure t
   :commands (vterm ds/vterm)
+  :bind (:map vterm-mode-map
+              ("C-c t" . 'vterm-copy-mode)
+              :map vterm-copy-mode-map
+              ("C-c t" . 'vterm-copy-mode))
   :after ds-theme
   :config
   (defun ds/vterm (&optional name)
@@ -55,6 +60,25 @@
             (switch-to-buffer name)
           (vterm name))
       (vterm))))
+
+(use-package multi-libvterm
+  :after vterm
+  :init
+  (defvar ds/multi-libvterm-map (make-sparse-keymap)
+    "Keymap for multi-libvterm commands.")
+  :commands (multi-libvterm
+             multi-libvterm-next
+             multi-libvterm-prev
+             multi-libvterm-dedicated-toggle
+             multi-libvterm-projectile)
+  :bind-keymap ("C-c C-s" . ds/multi-libvterm-map)
+  :bind (:map projectile-command-map
+              ("x s" . multi-libvterm-projectile)
+              :map ds/multi-libvterm-map
+              ("C-s" . multi-libvterm)
+              ("s" . multi-libvterm-dedicated-toggle)
+              ("n" . multi-libvterm-next)
+              ("p" . multi-libvterm-prev)))
 
 ;; misc packages for general usability
 (use-package adaptive-wrap
