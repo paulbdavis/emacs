@@ -7,3 +7,6 @@
 [submodule "lib/eosd"]
 	path = lib/eosd
 	url = https://github.com/clarete/eosd
+[submodule "lib/multi-libvterm"]
+	path = lib/multi-libvterm
+	url = https://github.com/suonlight/multi-libvterm
