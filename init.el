@@ -46,6 +46,7 @@
 
 (use-package vterm
   :ensure t
+  :demand
   :commands (vterm ds/vterm)
   :bind (:map vterm-mode-map
               ("C-c t" . 'vterm-copy-mode)
