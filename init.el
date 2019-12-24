@@ -48,8 +48,13 @@
   :ensure t
   :demand
   :commands (vterm ds/vterm)
+  :init
+  (defun ds/vterm-send-C-x ()
+    (interactive)
+    (vterm-send "C-x"))
   :bind (:map vterm-mode-map
               ("C-c t" . 'vterm-copy-mode)
+              ("C-x C-x" . 'ds/vterm-send-C-x)
               :map vterm-copy-mode-map
               ("C-c t" . 'vterm-copy-mode))
   :after ds-theme
