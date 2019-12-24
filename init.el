@@ -677,15 +677,15 @@ See URL `https://github.com/golang/lint'."
 (add-to-list 'auto-mode-alist '("\\.chopro$" . chordpro-mode))
 (add-to-list 'auto-mode-alist '("\\.chordpro$" . chordpro-mode))
 
-;; slime and stumpwm
-(use-package stumpwm-mode
-  :ensure t)
-
 (use-package slime
   :ensure t
   :config
   (setq inferior-lisp-program "sbcl")
   (setq slime-contribs '(slime-fancy)))
+
+;; slime and stumpwm
+(use-package stumpwm-mode
+  :ensure t)
 
 (defvar ds/exwm-enable nil
   "Set to t to use exwm.")
