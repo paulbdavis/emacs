@@ -63,7 +63,6 @@
       (vterm))))
 
 (use-package multi-libvterm
-  :after vterm
   :init
   (defvar ds/multi-libvterm-map (make-sparse-keymap)
     "Keymap for multi-libvterm commands.")
@@ -71,6 +70,7 @@
              multi-libvterm-next
              multi-libvterm-prev
              multi-libvterm-dedicated-toggle
+             multi-libvterm-dedicated-show
              multi-libvterm-projectile)
   :bind-keymap ("C-c C-s" . ds/multi-libvterm-map)
   :bind (:map projectile-command-map
