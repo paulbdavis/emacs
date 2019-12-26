@@ -45,7 +45,7 @@
 (use-package ds-eshell)
 
 (use-package vterm
-  :ensure t
+  :straight t
   :demand
   :commands (vterm ds/vterm)
   :init
@@ -88,7 +88,7 @@
 
 ;; misc packages for general usability
 (use-package adaptive-wrap
-  :ensure
+  :straight t
   :functions adaptive-wrap-prefix-mode
   :init
   (defvar adaptive-wrap-extra-indent 6)
@@ -97,7 +97,7 @@
   :hook (visual-line-mode . ds/wrap-on-visual-line-mode))
 
 (use-package dired-subtree
-  :ensure
+  :straight t
   :defines dired-subtree-toggle
   :bind (:map dired-mode-map
               ("i" . dired-subtree-toggle))
@@ -115,11 +115,11 @@
 (advice-add 'dired-insert-directory :around #'ds/apply-lc-collate)
 
 (use-package multiple-cursors
-  :ensure
+  :straight t
   :bind (("M-j" . mc/mark-next-like-this-symbol)))
 
 (use-package direnv
-  :ensure
+  :straight t
   :demand
   :config
   (direnv-mode)
@@ -127,7 +127,7 @@
 
 ;; syntax checking
 (use-package flycheck
-  :ensure
+  :straight t
   :demand
   :defines flycheck-add-mode
   :hook ((flycheck-mode . ds/use-eslint-from-node-modules))
@@ -141,20 +141,21 @@
   ;; set eslint executable for flycheck to use
   (defun ds/use-eslint-from-node-modules ()
     (setq-local flycheck-javascript-eslint-executable (ds/find-eslint-executable)))
-  
+  (flycheck-add-mode 'javascript-eslint 'vue-mode)
+
   (global-flycheck-mode))
 
 (use-package flycheck-pos-tip
-  :ensure
+  :straight t
   :after flycheck
   :hook (flycheck-mode . flycheck-pos-tip-mode))
 
 ;; ivy/counsel setup
 (use-package flx
-  :ensure)
+  :straight t)
 
 (use-package smex
-  :ensure
+  :straight t
   :defines smex-save-file
   :config
   (smex-initialize))
@@ -171,7 +172,7 @@
   (set-face-attribute 'ivy-minibuffer-match-face-4 nil :background nil :box (ds/get-zenburn-color "yellow-1") :underline nil))
 
 (use-package ivy
-  :ensure
+  :straight t
   :diminish (ivy-mode . "")
   :bind (("C-x C-b" . ivy-switch-buffer)
          ;; ("C-s" . swiper)
@@ -203,10 +204,11 @@
   (ds/custom-ivy-faces))
 
 (use-package ivy-hydra
-  :ensure)
+  :straight t)
 
 (use-package ivy-posframe
-  :ensure
+  :straight t
+  :disabled
   :config
   (setq ivy-posframe-display-functions-alist
         '((swiper          . nil)
@@ -217,7 +219,7 @@
   (ivy-posframe-mode 1))
 
 (use-package counsel
-  :ensure
+  :straight t
   :bind (("M-x" . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
          :map read-expression-map
@@ -225,7 +227,7 @@
 
 ;; project management
 (use-package projectile
-  :ensure
+  :straight t
   :after ivy
   :bind-keymap ("C-c p" . projectile-command-map)
   :init
@@ -241,14 +243,14 @@
   (projectile-mode +1))
 
 (use-package counsel-projectile
-  :ensure
+  :straight t
   :after projectile
   :config
   (counsel-projectile-mode))
 
 ;; git porcelean
 (use-package magit
-  :ensure
+  :straight t
   :bind (:map magit-mode-map
               ([remap previous-line] . magit-previous-line)
               ([remap next-line] . magit-next-line))
@@ -272,10 +274,10 @@
   (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package git-timemachine
-  :ensure)
+  :straight t)
 
 (use-package pdf-tools
-  :ensure
+  :straight t
   :config
   (pdf-tools-install))
 
@@ -324,7 +326,7 @@
 
 ;; highlight parens in emacs lisp mode
 (use-package highlight-parentheses
-  :ensure
+  :straight t
   :diminish highlight-parentheses-mode
   :hook (emacs-lisp-mode . highlight-parentheses-mode)
   :config
@@ -349,7 +351,7 @@
 
 ;; commenting
 (use-package evil-nerd-commenter
-  :ensure
+  :straight t
   :bind (("C-c C-/ C-/" . evilnc-comment-or-uncomment-lines)
          ("C-c C-/ C-l" . evilnc-comment-or-uncomment-to-the-line)
          ("C-c C-/ C-c" . evilnc-copy-and-comment-lines)
@@ -361,17 +363,17 @@
 
 ;; some basic modes for files I work on
 (use-package nginx-mode
-  :ensure)
+  :straight t)
 (use-package json-mode
-  :ensure)
+  :straight t)
 (use-package dockerfile-mode
-  :ensure)
+  :straight t)
 (use-package markdown-mode
-  :ensure)
+  :straight t)
 (use-package systemd
-  :ensure)
+  :straight t)
 (use-package yaml-mode
-  :ensure
+  :straight t
   :config
   (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
@@ -387,19 +389,19 @@
              '("\\.sql$" . ds/postgresql-highlight))
 
 (use-package sql-indent
-  :ensure
+  :straight t
   :hook (sql-mode . sqlind-minor-mode))
 
 ;; rest client
 (use-package restclient
-  :ensure
+  :straight t
   :config
   (ds/popup-thing-display-settings "*HTTP Response*" left 0 0.25)
   (add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode)))
 
 ;; golang
 (use-package go-mode
-  :ensure
+  :straight t
   :mode ("\\go.mod\\'" . fundamental-mode))
 
 ;; javascript
@@ -424,7 +426,7 @@
 
 ;; html/web
 (use-package web-mode
-  :ensure
+  :straight t
   :hook ((web-mode . ds/setup-eslint-fix))
   :mode ("\\.html\\'")
   :config
@@ -437,7 +439,6 @@
 (define-derived-mode vue-mode web-mode "VueJS")
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 (add-hook 'vue-mode-hook #'ds/setup-eslint-fix)
-(flycheck-add-mode 'javascript-eslint 'vue-mode)
 
 ;; protobufs
 
@@ -445,7 +446,7 @@
       c-basic-offset 4)
 
 (use-package protobuf-mode
-  :ensure
+  :straight t
   :hook (protobuf-mode . ds/protobuf-setup)
   :config
   (defun ds/protobuf-setup ()
@@ -477,11 +478,12 @@
 
 ;; LSP stuff
 (use-package yasnippet
-  :ensure)
+  :straight t)
 
 (use-package lsp-mode
-  :ensure
+  :straight t
   :demand
+  :after (flycheck)
   :defines (lsp-gopls-hover-kind lsp-gopls-env)
   ;; :disabled
   :commands (lsp lsp-deferred)
@@ -543,7 +545,7 @@ See URL `https://github.com/golang/lint'."
   (setq lsp-gopls-hover-kind "FullDocumentation")
 
   (use-package lsp-ui
-    :ensure
+    :straight t
     :commands lsp-ui-mode
     :hook ((lsp-mode-hook . lsp-ui-mode))
     :config
@@ -561,7 +563,7 @@ See URL `https://github.com/golang/lint'."
 ;; (setq load-path (cons "~/dev/emacs/eglot" load-path))
 
 (use-package eglot
-  :ensure
+  :straight t
   :disabled
   :hook ((go-mode . eglot-ensure)
          (vue-mode . eglot-ensure)
@@ -591,9 +593,8 @@ See URL `https://github.com/golang/lint'."
     (ds/expand-logbook-drawer)))
 
 (use-package org
-  :ensure org-plus-contrib
+  :straight org-plus-contrib
   :mode (("\\.org$" . org-mode))
-  :pin org
   :custom-face
   (org-mode-line-clock
    ((t (:foreground nil :background nil :underline nil :box nil))))
@@ -653,7 +654,7 @@ See URL `https://github.com/golang/lint'."
      (ditaa . t))))
 
 (use-package org-bullets
-  :ensure
+  :straight t
   :after org
   :hook (org-mode . org-bullets-mode))
 
@@ -683,14 +684,15 @@ See URL `https://github.com/golang/lint'."
 (add-to-list 'auto-mode-alist '("\\.chordpro$" . chordpro-mode))
 
 (use-package slime
-  :ensure t
+  :straight t
+  :after (highlight-parentheses)
   :config
   (setq inferior-lisp-program "sbcl")
   (setq slime-contribs '(slime-fancy)))
 
 ;; slime and stumpwm
 (use-package stumpwm-mode
-  :ensure t)
+  :straight t)
 
 (defvar ds/exwm-enable nil
   "Set to t to use exwm.")
@@ -704,20 +706,20 @@ See URL `https://github.com/golang/lint'."
       (setq load-path (cons "~/.emacs.d/lib/eosd" load-path))
 
       (use-package xelb
-        :ensure t)
+        :straight t)
 
       (use-package pass
-        :ensure t
+        :straight t
         :config
         (use-package password-store-otp
-          :ensure t
+          :straight t
           :init
           (defun ds/password-store-get-otp (record)
             (interactive (list (completing-read "TOTP entry: " (password-store-list))))
             (password-store-otp-token-copy record))))
       
       (use-package exec-path-from-shell
-        :ensure t
+        :straight t
         :demand
         :config
         (progn

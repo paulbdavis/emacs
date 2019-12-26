@@ -23,45 +23,27 @@
 
 ;;; Code:
 
-(require 'package)
 (setq package-enable-at-startup nil)
-(setq package-archives
-      '(("melpa"        . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ("gnu"          . "https://elpa.gnu.org/packages/")
-        ("org"          . "https://orgmode.org/elpa/"))
-      package-archive-priorities
-      '(("org"          . 20)
-        ("melpa-stable" . 15)
-        ("gnu"          . 10)
-        ("melpa"        . 0))
-      package-pinned-packages
-      '((org           . "org")
-        (fontawesome   . "melpa")
-        (lsp-mode      . "melpa")
-        (lsp-ui        . "melpa")
-        (flycheck      . "melpa")
-        (exwm          . "melpa")
-        (edit-indirect . "melpa")))
+(defvar bootstrap-version)
 
-(package-initialize)
+(let ((bootstrap-file (expand-file-name
+                       "straight/repos/straight.el/bootstrap.el"
+                       user-emacs-directory))
+      (bootstrap-version 5))
+  
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
 
-(unless (package-installed-p 'diminish)
-  (package-refresh-contents)
-  (package-install 'diminish))
-
-(unless (package-installed-p 'bind-key)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(require 'use-package)
-;; use-package should have these loaded
-(require 'diminish)
-(require 'bind-key)
+(straight-use-package 'use-package)
+(straight-use-package 'diminish)
+(straight-use-package 'bind-key)
 
 
 (provide 'package-loader)
