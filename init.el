@@ -76,6 +76,7 @@
              multi-libvterm-prev
              multi-libvterm-dedicated-toggle
              multi-libvterm-dedicated-show
+             multi-libvterm-dedicated-hide
              multi-libvterm-projectile)
   :bind-keymap ("C-c C-s" . ds/multi-libvterm-map)
   :bind (:map projectile-command-map
@@ -203,9 +204,11 @@
   (ds/custom-ivy-faces))
 
 (use-package ivy-hydra
+  :demand
   :ensure)
 
 (use-package ivy-posframe
+  :disabled
   :ensure
   :config
   (setq ivy-posframe-display-functions-alist
