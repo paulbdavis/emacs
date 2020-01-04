@@ -24,10 +24,10 @@
 
 ;;; Code:
 
-(setq load-path (cons "~/.emacs.d/lib" load-path))
-(setq load-path (cons "~/.emacs.d/lib/emacs-org-dnd" load-path))
-(setq load-path (cons "~/.emacs.d/lib/multi-libvterm" load-path))
-(setq load-path (cons "~/.emacs.d/packages" load-path))
+(setq load-path (cons (concat user-emacs-directory "lib") load-path))
+(setq load-path (cons (concat user-emacs-directory "lib/emacs-org-dnd") load-path))
+(setq load-path (cons (concat user-emacs-directory "lib/multi-libvterm") load-path))
+(setq load-path (cons (concat user-emacs-directory "packages") load-path))
 
 (require 'package-loader)
 
@@ -698,13 +698,13 @@ See URL `https://github.com/golang/lint'."
 (defvar ds/exwm-enable nil
   "Set to t to use exwm.")
 
-(if (file-exists-p "~/.emacs.d/local.el")
-    (load-file "~/.emacs.d/local.el"))
+(if (file-exists-p (concat user-emacs-directory "local.el"))
+    (load-file (concat user-emacs-directory "local.el")))
 
 (if ds/exwm-enable
     (progn
-      (setq load-path (cons "~/.emacs.d/lib/exwm" load-path))
-      (setq load-path (cons "~/.emacs.d/lib/eosd" load-path))
+      (setq load-path (cons (concat user-emacs-directory "lib/exwm") load-path))
+      (setq load-path (cons (concat user-emacs-directory "lib/eosd") load-path))
 
       (use-package xelb
         :ensure t)
