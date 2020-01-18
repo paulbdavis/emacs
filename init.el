@@ -71,6 +71,12 @@
   :init
   (defvar ds/multi-libvterm-map (make-sparse-keymap)
     "Keymap for multi-libvterm commands.")
+  (defun ds/multi-libvterm-create (name)
+    "Create a vterm buffer and set it's name to NAME."
+    (interactive "sName: ")
+    (let ((bufname (concat "*vterminal<" name ">*")))
+      (multi-libvterm bufname)
+      (rename-buffer bufname)))
   :commands (multi-libvterm
              multi-libvterm-next
              multi-libvterm-prev
@@ -82,10 +88,21 @@
   :bind (:map projectile-command-map
               ("x s" . multi-libvterm-projectile)
               :map ds/multi-libvterm-map
-              ("C-s" . multi-libvterm)
-              ("s" . multi-libvterm-dedicated-toggle)
+              ("C-s" . ds/multi-libvterm-create)
               ("n" . multi-libvterm-next)
               ("p" . multi-libvterm-prev)))
+
+(use-package lilypond-mode
+  :catch (lambda (_ err)
+           (message (error-message-string err))))
+
+(use-package window-purpose
+  :ensure t
+  :disabled
+  :config
+  (add-to-list 'purpose-user-mode-purposes '(LilyPond-mode . lilypond))
+  (purpose-compile-user-configuration)
+  (purpose-mode))
 
 ;; misc packages for general usability
 (use-package adaptive-wrap
@@ -400,6 +417,10 @@
   (ds/popup-thing-display-settings "*HTTP Response*" left 0 0.25)
   (add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode)))
 
+(use-package verb
+  :ensure
+  :mode ("\\.verb\\'" . verb-mode))
+
 ;; golang
 (use-package go-mode
   :ensure
@@ -487,10 +508,15 @@
   :demand
   :defines (lsp-gopls-hover-kind lsp-gopls-env)
   ;; :disabled
+  :custom ((lsp-prefer-flymake nil "Use flycheck instead.")
+           (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
+           (lsp-gopls-use-placeholders t "Insert snippets."))
   :commands (lsp lsp-deferred)
-  :hook ((go-mode . ds/go-mode-lsp)
+  :hook (
+         (go-mode . ds/go-mode-lsp)
          (js-mode . ds/js-mode-lsp)
-         (vue-mode . ds/js-mode-lsp))
+         ;; (vue-mode . ds/js-mode-lsp)
+         )
   :init
   (flycheck-define-checker go-golint-solo
     "A golang style checker using golint that does not define any next checkers.
@@ -506,6 +532,8 @@ See URL `https://github.com/golang/lint'."
   (defun ds/go-mode-lsp ()
     "Enable `lsp-mode' in `go-mode' unless there is an import \"C\" statement. Also set up other stuff."
 
+    (yas-minor-mode)
+    
     (save-excursion
       (with-current-buffer (current-buffer)
         (if (search-forward "import \"C\"" nil t 1)
@@ -525,7 +553,7 @@ See URL `https://github.com/golang/lint'."
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
   
   (defun ds/js-mode-lsp ()
-    "Enable `lsp-mode' in `go-mode' unless there is an import \"C\" statement. Also set up other stuff."
+    "Enable `lsp-mode' in `js-mode' and `vue-mode'."
 
     (lsp)
     ;; (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
@@ -536,15 +564,6 @@ See URL `https://github.com/golang/lint'."
   
 
   :config
-  (setq lsp-prefer-flymake nil)
-
-  ;; (lsp-register-client
-  ;;  (make-lsp-client :new-connection (lsp-stdio-connection "gopls2")
-  ;;                   :major-modes '(go-mode)
-  ;;                   :server-id 'gopls))
-
-  (setq lsp-gopls-hover-kind "FullDocumentation")
-
   (use-package lsp-ui
     :ensure
     :commands lsp-ui-mode
@@ -559,9 +578,8 @@ See URL `https://github.com/golang/lint'."
     (setq lsp-ui-sideline-delay 1)
     (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
     (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
-    (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg"))
-    ))
-;; (setq load-path (cons "~/dev/emacs/eglot" load-path))
+    (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg"))))
+
 
 (use-package eglot
   :ensure
