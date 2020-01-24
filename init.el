@@ -68,6 +68,7 @@
       (vterm))))
 
 (use-package multi-libvterm
+  :demand
   :init
   (defvar ds/multi-libvterm-map (make-sparse-keymap)
     "Keymap for multi-libvterm commands.")
@@ -80,7 +81,9 @@
   (defun ds/multi-libvterm-dedicated-solo ()
     "Open the multi-libvterm-dedicated buffer and make it the only window in the frame."
     (interactive)
-    (multi-libvterm-dedicated-close) (multi-libvterm-dedicated-open) (delete-other-windows))
+    (multi-libvterm-dedicated-close)
+    (multi-libvterm-dedicated-open)
+    (delete-other-windows))
   :commands (multi-libvterm
              multi-libvterm-next
              multi-libvterm-prev
