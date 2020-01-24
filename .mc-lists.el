@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        LilyPond-electric-close-paren
         backward-kill-sentence
         backward-sexp
         c-electric-delete-forward
