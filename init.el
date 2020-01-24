@@ -74,16 +74,22 @@
   (defun ds/multi-libvterm-create (name)
     "Create a vterm buffer and set it's name to NAME."
     (interactive "sName: ")
-    (let ((bufname (concat "*vterminal<" name ">*")))
+    (let ((bufname (if (< 0 (length name)) (concat "*vterminal<" name ">*"))))
       (multi-libvterm bufname)
-      (rename-buffer bufname)))
+      (if bufname (rename-buffer bufname))))
+  (defun ds/multi-libvterm-dedicated-solo ()
+    "Open the multi-libvterm-dedicated buffer and make it the only window in the frame."
+    (interactive)
+    (multi-libvterm-dedicated-close) (multi-libvterm-dedicated-open) (delete-other-windows))
   :commands (multi-libvterm
              multi-libvterm-next
              multi-libvterm-prev
              multi-libvterm-dedicated-toggle
              multi-libvterm-dedicated-open
              multi-libvterm-dedicated-close
-             multi-libvterm-projectile)
+             multi-libvterm-projectile
+             ds/multi-libvterm-create
+             ds/multi-libvterm-dedicated-solo)
   :bind-keymap ("C-c C-s" . ds/multi-libvterm-map)
   :bind (:map projectile-command-map
               ("x s" . multi-libvterm-projectile)
