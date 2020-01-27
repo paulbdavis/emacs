@@ -1,6 +1,0 @@
-[submodule "lib/emacs-org-dnd"]
-	path = lib/emacs-org-dnd
-	url = git@github.com:paulbdavis/emacs-org-dnd
-[submodule "lib/multi-libvterm"]
-	path = lib/multi-libvterm
-	url = https://github.com/suonlight/multi-libvterm
