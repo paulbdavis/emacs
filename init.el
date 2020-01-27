@@ -25,8 +25,6 @@
 ;;; Code:
 
 (setq load-path (cons (concat user-emacs-directory "lib") load-path))
-(setq load-path (cons (concat user-emacs-directory "lib/emacs-org-dnd") load-path))
-(setq load-path (cons (concat user-emacs-directory "lib/multi-libvterm") load-path))
 (setq load-path (cons (concat user-emacs-directory "packages") load-path))
 
 (require 'package-loader)
@@ -68,7 +66,9 @@
       (vterm))))
 
 (use-package multi-libvterm
+  :straight (multi-libvterm :type git :host github :repo "suonlight/multi-libvterm")
   :demand
+  :after projectile
   :init
   (defvar ds/multi-libvterm-map (make-sparse-keymap)
     "Keymap for multi-libvterm commands.")
@@ -257,6 +257,8 @@
 (use-package projectile
   :straight t
   :after ivy
+  :defines (projectile-project-p
+            projectile-project-root)
   :bind-keymap ("C-c p" . projectile-command-map)
   :init
   (defvar projectile-remember-window-configs t)
@@ -685,12 +687,14 @@ See URL `https://github.com/golang/lint'."
   :hook (org-mode . org-bullets-mode))
 
 (use-package verb
-  :ensure
+  :straight (verb :type git :host github :repo "federicotdn/verb")
   :after org
-  :config (define-key org-mode-map (kbd "C-c C-r") verb-mode-prefix-map))
+  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 ;; dnd
-(require 'ox-dnd)
+(use-package ox-dnd
+  :straight (ox-dnd :type git :host github :repo "xeals/emacs-org-dnd"
+                    :fork (:host github :repo "paulbdavis/emacs-org-dnd")))
 
 ;; chordpro mode
 
