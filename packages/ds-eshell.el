@@ -26,11 +26,11 @@
 
 (use-package dash
   :functions -reduce-from
-  :ensure t)
+  :straight t)
 
 (use-package s
   :functions s-blank
-  :ensure t)
+  :straight t)
 
 (use-package eshell
   :hook ((eshell-mode . ds/eshell-setup)
@@ -99,7 +99,7 @@
 (defvar company-require-match nil)
 (make-variable-buffer-local 'company-require-match)
 (use-package esh-autosuggest
-  :ensure t
+  :straight t
   :hook ((eshell-mode . esh-autosuggest-mode)
          (eshell-mode . ds/esh-autosuggest-setup))
   :init
@@ -111,11 +111,11 @@
 
 
 (use-package pcmpl-args
-  :ensure t
+  :straight t
   :config
 
   (use-package pcmpl-git
-    :ensure t)
+    :straight t)
 
   ;; ============================================================
   ;;
@@ -242,6 +242,7 @@
 
 
 (use-package eshell
+  :after (magit dash s)
   :init
   (require 'dash)
   (require 's)

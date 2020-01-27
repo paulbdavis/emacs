@@ -164,7 +164,7 @@ This overrides the colors provided by the `zenburn-theme' package.")
 
 
 (use-package zenburn-theme
-  :ensure t
+  :straight t
   :config
   (setq zenburn-override-colors-alist ds/zenburn-colors)
   (load-theme 'zenburn t)
