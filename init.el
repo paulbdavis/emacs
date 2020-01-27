@@ -426,10 +426,6 @@
   (ds/popup-thing-display-settings "*HTTP Response*" left 0 0.25)
   (add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode)))
 
-(use-package verb
-  :ensure
-  :mode ("\\.verb\\'" . verb-mode))
-
 ;; golang
 (use-package go-mode
   :ensure
@@ -623,6 +619,7 @@ See URL `https://github.com/golang/lint'."
 (use-package org
   :ensure org-plus-contrib
   :mode (("\\.org$" . org-mode))
+  :defines (org-mode-map)
   :pin org
   :custom-face
   (org-mode-line-clock
@@ -687,6 +684,10 @@ See URL `https://github.com/golang/lint'."
   :after org
   :hook (org-mode . org-bullets-mode))
 
+(use-package verb
+  :ensure
+  :after org
+  :config (define-key org-mode-map (kbd "C-c C-r") verb-mode-prefix-map))
 
 ;; dnd
 (require 'ox-dnd)
