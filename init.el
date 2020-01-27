@@ -554,7 +554,7 @@ See URL `https://github.com/golang/lint'."
     
     (lsp)
     ;; (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
-    (setf (flycheck-checker-get 'lsp-ui 'next-checkers) (list 'go-golint-solo))
+    ;; (setf (flycheck-checker-get 'lsp-ui 'next-checkers) (list 'go-golint-solo))
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
   
