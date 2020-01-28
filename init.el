@@ -207,6 +207,8 @@
   :straight t
   :diminish (ivy-mode . "")
   :bind (("C-x C-b" . ivy-switch-buffer)
+         ("C-c v" . ivy-push-view)
+         ("C-c V" . ivy-pop-view)
          ;; ("C-s" . swiper)
          :map ivy-minibuffer-map
          ("C-'" . ivy-avy)
