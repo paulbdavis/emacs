@@ -46,7 +46,8 @@
   :straight (vterm :type git :flavor melpa
                    :files ("*" (:exclude ".dir-locals.el" ".gitignore" ".clang-format" ".travis.yml") "vterm-pkg.el")
                    :host github :repo "akermu/emacs-libvterm"
-                   :fork (:host github :repo "paulbdavis/emacs-libvterm"))
+                   ;; :fork (:host github :repo "paulbdavis/emacs-libvterm")
+                   )
   :demand
   :commands (vterm ds/vterm)
   :init
@@ -688,7 +689,8 @@
 ;; dnd
 (use-package ox-dnd
   :straight (ox-dnd :type git :host github :repo "xeals/emacs-org-dnd"
-                    :fork (:host github :repo "paulbdavis/emacs-org-dnd")))
+                    ;; :fork (:host github :repo "paulbdavis/emacs-org-dnd")
+                    ))
 
 ;; chordpro mode
 
