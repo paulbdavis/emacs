@@ -24,6 +24,7 @@
 ;;; Code:
 
 (setq package-enable-at-startup nil)
+(defvar straght-allow-recipe-inheritance t)
 (defvar bootstrap-version)
 
 (let ((bootstrap-file (expand-file-name

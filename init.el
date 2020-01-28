@@ -43,7 +43,10 @@
 (use-package ds-eshell)
 
 (use-package vterm
-  :straight t
+  :straight (vterm :type git :flavor melpa
+                   :files ("*" (:exclude ".dir-locals.el" ".gitignore" ".clang-format" ".travis.yml") "vterm-pkg.el")
+                   :host github :repo "akermu/emacs-libvterm"
+                   :fork (:host github :repo "paulbdavis/emacs-libvterm"))
   :demand
   :commands (vterm ds/vterm)
   :init
@@ -257,6 +260,7 @@
 (use-package projectile
   :straight t
   :after ivy
+  :demand
   :defines (projectile-project-p
             projectile-project-root)
   :bind-keymap ("C-c p" . projectile-command-map)
@@ -336,6 +340,7 @@
 
 ;; compilation settings
 (use-package compile
+  :after projectile
   :config
   (define-key compilation-mode-map (kbd "q") #'delete-window)
   (ds/popup-thing-display-settings "*compilation*" right 2 104)
