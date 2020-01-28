@@ -513,7 +513,13 @@
 
 ;; LSP stuff
 (use-package yasnippet
-  :straight t)
+  :straight t
+  :commands yas-minor-mode
+  :hook (go-mode . yas-minor-mode))
+
+(use-package company-lsp
+  :straight t
+  :commands company-lsp)
 
 (use-package lsp-mode
   :straight t
@@ -524,46 +530,20 @@
   :custom ((lsp-prefer-flymake nil "Use flycheck instead.")
            (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
            (lsp-gopls-use-placeholders t "Insert snippets."))
-  :commands (lsp lsp-deferred)
+  :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook (
-         (go-mode . ds/go-mode-lsp)
+         (go-mode . lsp-deferred)
          (js-mode . ds/js-mode-lsp)
          ;; (vue-mode . ds/js-mode-lsp)
          )
   :init
-  (flycheck-define-checker go-golint-solo
-    "A golang style checker using golint that does not define any next checkers.
-
-See URL `https://github.com/golang/lint'."
-    :command ("golint" source)
-    :error-patterns
-    ((warning line-start (file-name) ":" line ":" column ": " (message) line-end))
-    :modes go-mode)
-  
-  (add-to-list 'flycheck-checkers 'go-golint-solo)
-  
   (defun ds/go-mode-lsp ()
-    "Enable `lsp-mode' in `go-mode' unless there is an import \"C\" statement. Also set up other stuff."
+    "Set up lsp hooks for `go-mode'."
 
-    (yas-minor-mode)
-    
-    (save-excursion
-      (with-current-buffer (current-buffer)
-        (if (search-forward "import \"C\"" nil t 1)
-            (setq-local lsp-gopls-env   ; set env for cgo
-                        #s(hash-table data ("CGO_ENABLED" "1" "GOBIN" ""))))))
-    
-
-    ;; experimental options not in lsp mode yet
-    (lsp-register-custom-settings
-     '(("gopls.completeUnimported" t t)
-       ("gopls.staticcheck" t t)))
-    
-    (lsp)
-    ;; (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
-    ;; (setf (flycheck-checker-get 'lsp-ui 'next-checkers) (list 'go-golint-solo))
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  
+  (add-hook 'go-mode-hook #'ds/go-mode-lsp)
   
   (defun ds/js-mode-lsp ()
     "Enable `lsp-mode' in `js-mode' and `vue-mode'."
@@ -577,21 +557,30 @@ See URL `https://github.com/golang/lint'."
   
 
   :config
-  (use-package lsp-ui
-    :straight t
-    :commands lsp-ui-mode
-    :hook ((lsp-mode-hook . lsp-ui-mode))
-    :config
-    
-    (setq lsp-ui-doc-position 'bottom)
-    (setq lsp-ui-doc-delay 1)
-    ;; (setq lsp-ui-doc-use-childframe nil)
-    (setq lsp-ui-sideline-show-code-actions nil)
-    (setq lsp-ui-sideline-show-hover nil)
-    (setq lsp-ui-sideline-delay 1)
-    (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
-    (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
-    (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg"))))
+  ;; experimental options not in lsp mode yet
+  (lsp-register-custom-settings
+   '(("gopls.completeUnimported" t t)
+     ("gopls.staticcheck" t t))))
+
+(use-package lsp-ui
+  :straight t
+  :commands lsp-ui-mode
+  :defines (lsp-ui-mode-map)
+  :hook ((lsp-mode-hook . lsp-ui-mode))
+  :custom ((lsp-ui-flycheck-enable t "Enable LSP UI flycheck")
+           (lsp-ui-doc-use-webkit nil "Use webkit widget for LSP docs")
+           (lsp-ui-doc-delay 1)
+           (lsp-ui-doc-position 'top)
+           (lsp-ui-sideline-delay 0))
+  :config
+  
+
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  
+  (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
+  (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
+  (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg")))
 
 
 (use-package eglot
