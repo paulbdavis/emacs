@@ -50,6 +50,7 @@
                    )
   :demand
   :commands (vterm ds/vterm)
+  :custom ((vterm-max-scrollback 10000))
   :init
   (defun ds/vterm-send-C-x ()
     (interactive)
