@@ -567,6 +567,9 @@
 (use-package lsp-ui
   :straight t
   :commands lsp-ui-mode
+  :after flycheck
+  :bind (:map flycheck-mode-map
+              ("C-c ! l" . lsp-ui-flycheck-list))
   :defines (lsp-ui-mode-map)
   :hook ((lsp-mode-hook . lsp-ui-mode))
   :custom ((lsp-ui-flycheck-enable t "Enable LSP UI flycheck")
