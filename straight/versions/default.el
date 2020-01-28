@@ -7,7 +7,7 @@
  ("dockerfile-mode" . "d31f7685ebc5832d957e25070a930aa42984327d")
  ("emacs-async" . "86aef2c38e7d35e8509b7feeee3e989d825eba91")
  ("emacs-direnv" . "fd0b6bbd5e3eaf6aa48bccd4a1ff3048bfb2c69b")
- ("emacs-libvterm" . "a65f1a84ab8a72c66ca92f895c1f355c44a5e0a2")
+ ("emacs-libvterm" . "40e9e10c8987965c22188a07570e622d99e411f7")
  ("emacs-org-dnd" . "e43cc25cd17b83c7e93819ce9ebca315c18fec31")
  ("emacsmirror-mirror" . "8c2ab320b0386d1d358e8070c0b7ab379259b4f7")
  ("epl" . "78ab7a85c08222cd15582a298a364774e3282ce6")
