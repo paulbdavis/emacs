@@ -735,5 +735,8 @@
 
 (put 'downcase-region 'disabled nil)
 
+(use-package frames-only-mode
+  :straight t)
+
 (provide 'init)
 ;;; init.el ends here
