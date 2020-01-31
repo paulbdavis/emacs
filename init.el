@@ -755,5 +755,7 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
   :config
   (frames-only-mode))
 
+(add-to-list 'Info-directory-list (concat (getenv "HOME") "/.local/share/info"))
+
 (provide 'init)
 ;;; init.el ends here
