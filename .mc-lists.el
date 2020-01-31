@@ -26,6 +26,7 @@
         org-self-insert-command
         sh-assignment
         slime-space
+        transpose-words
         yaml-electric-backspace
         yaml-electric-bar-and-angle
         yaml-electric-dash-and-dot
