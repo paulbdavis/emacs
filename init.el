@@ -347,7 +347,7 @@
   :after projectile
   :config
   (define-key compilation-mode-map (kbd "q") #'delete-window)
-  (ds/popup-thing-display-settings "*compilation*" right 2 104)
+  ;; (ds/popup-thing-display-settings "*compilation*" right 2 104)
 
   (setq compilation-finish-functions
         '((lambda (buf str)
@@ -728,7 +728,22 @@
 
 ;; slime and stumpwm
 (use-package stumpwm-mode
-  :straight t)
+  :straight t
+  :init
+  (defun stumpwm-connect ()
+    "Start slime and connect to the lisp image that is running the swank server.
+
+Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
+    (interactive)
+    (slime-connect "127.0.0.1"  4005))
+
+  (defun stumpwm-disconnect ()
+    "Disconnects from the swank server currently open."
+    (with-current-buffer
+        (switch-to-buffer "*sbcl-stumpwm-repl*")
+      (slime-disconnect))))
+
+
 
 (if (file-exists-p (concat user-emacs-directory "local.el"))
     (load-file (concat user-emacs-directory "local.el")))
@@ -736,7 +751,9 @@
 (put 'downcase-region 'disabled nil)
 
 (use-package frames-only-mode
-  :straight t)
+  :straight t
+  :config
+  (frames-only-mode))
 
 (provide 'init)
 ;;; init.el ends here
