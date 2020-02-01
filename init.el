@@ -757,5 +757,8 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
 
 (add-to-list 'Info-directory-list (concat (getenv "HOME") "/.local/share/info"))
 
+(use-package ledger-mode
+  :straight t)
+
 (provide 'init)
 ;;; init.el ends here
