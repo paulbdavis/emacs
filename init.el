@@ -760,5 +760,19 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
 (use-package ledger-mode
   :straight t)
 
+(use-package csv-mode
+  :straight t)
+
+(defun ds/toggle-mode-line ()
+  "Toggle the modeline on and off."
+  (interactive)
+  (setq mode-line-format
+    (if (equal mode-line-format nil)
+        (default-value 'mode-line-format)) )
+  (redraw-display))
+
+(global-set-key [M-f12] #'ds/toggle-mode-line)
+
+
 (provide 'init)
 ;;; init.el ends here
