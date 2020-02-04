@@ -773,6 +773,60 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
 
 (global-set-key [M-f12] #'ds/toggle-mode-line)
 
+(use-package lorem-ipsum
+  :straight t
+  :functions (lorem-ipsum-text))
+
+(defun ds/lorem-ipsum-overlay ()
+  "Overlay all text in current buffer with \"lorem ipsum\" text.
+When called again, remove overlays.  Useful for taking
+screenshots without revealing buffer contents."
+  (interactive)
+  (require 'lorem-ipsum)
+  (let ((ovs (overlays-in (point-min) (point-max))))
+    (if (cl-loop for ov in ovs
+                 thereis (overlay-get ov :lorem-ipsum-overlay))
+        ;; Remove overlays.
+        (dolist (ov ovs)
+          (when (overlay-get ov :lorem-ipsum-overlay)
+            (delete-overlay ov)))
+      ;; Add overlays.
+      (let ((lorem-ipsum-words (--> lorem-ipsum-text
+                                    (-flatten it) (apply #'concat it)
+                                    (split-string it (rx (or space punct)) 'omit-nulls)))
+            (case-fold-search nil))
+        (cl-labels ((overlay-match ()
+                                   (let* ((beg (match-beginning 0))
+                                          (end (match-end 0))
+                                          (replacement-word (lorem-word (match-string 0)))
+                                          (ov (make-overlay beg end)))
+                                     (when replacement-word
+                                       (overlay-put ov :lorem-ipsum-overlay t)
+                                       (overlay-put ov 'display replacement-word))))
+                    (lorem-word (word)
+                                (if-let* ((matches (lorem-matches (length word))))
+                                    (apply-case word (downcase (seq-random-elt matches)))
+                                  ;; Word too long: compose one.
+                                  (apply-case word (downcase (compose-word (length word))))))
+                    (lorem-matches (length &optional (comparator #'=))
+                                   (cl-loop for liw in lorem-ipsum-words
+                                            when (funcall comparator (length liw) length)
+                                            collect liw))
+                    (apply-case (source target)
+                                (cl-loop for sc across-ref source
+                                         for tc across-ref target
+                                         when (not (string-match-p (rx lower) (char-to-string sc)))
+                                         do (setf tc (string-to-char (upcase (char-to-string tc)))))
+                                target)
+                    (compose-word (length)
+                                  (cl-loop while (> length 0)
+                                           for word = (seq-random-elt (lorem-matches length #'<=))
+                                           concat word
+                                           do (cl-decf length (length word)))))
+          (save-excursion
+            (goto-char (point-min))
+            (while (re-search-forward (rx (1+ alpha)) nil t)
+              (overlay-match))))))))
 
 (provide 'init)
 ;;; init.el ends here
