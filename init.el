@@ -453,6 +453,8 @@
                (revert-buffer t t t))
       (message "ESLint not found."))))
 
+(use-package typescript-mode
+  :straight t)
 
 (defun ds/setup-eslint-fix ()
   "Setup eslint fixing."
@@ -537,6 +539,7 @@
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook (
          (go-mode . lsp-deferred)
+         (typescript-mode . lsp-deferred)
          (js-mode . ds/js-mode-lsp)
          ;; (vue-mode . ds/js-mode-lsp)
          )
