@@ -454,7 +454,17 @@
       (message "ESLint not found."))))
 
 (use-package typescript-mode
-  :straight t)
+  :straight t
+  :hook ((typescript-mode . ds/typescript-init))
+  :init
+
+  (defun ds/typescript-init ()
+
+    (add-hook 'before-save-hook #'lsp-format-buffer 75 t)
+    (add-hook 'before-save-hook #'lsp-organize-imports 50 t)
+
+    )
+  )
 
 (defun ds/setup-eslint-fix ()
   "Setup eslint fixing."
