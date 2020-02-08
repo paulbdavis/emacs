@@ -60,7 +60,7 @@
  ("sql-indent" . "a33df0bddba060e5e778a2a37fa47db9676cea84")
  ("straight.el" . "62ad3f9df3eae877766cd32c61e5623cdbb7f098")
  ("stumpwm" . "61a7cf27e49e0779a53c018b2342f5f1c5cc70b4")
- ("swiper" . "af51ffdb56aa4337aece6bc450e5e18123bcadc8")
+ ("swiper" . "cd634c6f51458f81898ecf2821ac3169cb65a1eb")
  ("systemd-mode" . "51c148e09a129ddf33d95276aa0e89d4ef6f8dd2")
  ("tablist" . "41a9612f51bad36d6689667c11f42f8143103bb2")
  ("transient" . "79777324858df408bd6ba7509d9f0b6987208d98")
