@@ -23,6 +23,9 @@
 
 ;;; Code:
 
+(require 'diminish)
+(require 'use-package)
+
 (setq inhibit-startup-message t)
 (setq-default create-lockfiles nil)
 
@@ -76,8 +79,9 @@
 
 (use-package ediff
   :commands (ediff-setup-windows-plain)
-  :init
-  (defvar ediff-window-setup-function #'ediff-setup-windows-plain))
+  :defines (ediff-setup-windows-plain)
+  :config
+  (setq ediff-window-setup-function #'ediff-setup-windows-plain))
 
 ;; close ansi term when exiting
 (defun ds/ansi-term-handle-close ()

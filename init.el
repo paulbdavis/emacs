@@ -441,6 +441,7 @@
 ;; golang
 (use-package go-mode
   :straight t
+  :hook ((go-mode . ds/setup-lsp-save-hooks))
   :mode ("\\go.mod\\'" . fundamental-mode))
 
 ;; javascript
@@ -455,41 +456,30 @@
 
 (use-package typescript-mode
   :straight t
-  :hook ((typescript-mode . ds/typescript-init))
-  :init
-
-  (defun ds/typescript-init ()
-
-    (add-hook 'before-save-hook #'lsp-format-buffer 75 t)
-    (add-hook 'before-save-hook #'lsp-organize-imports 50 t)
-
-    )
-  )
+  :hook ((typescript-mode . ds/setup-lsp-save-hooks)))
 
 (defun ds/setup-eslint-fix ()
   "Setup eslint fixing."
   (add-hook 'after-save-hook #'ds/eslint-fix))
 
 (use-package js
-  :hook ((js-mode . ds/setup-eslint-fix))
-  :config
-  (setq js-indent-level 2))
+  :hook ((js-mode . ds/setup-lsp-save-hooks))
+  :custom ((js-indent-level 2 "Set indent level")))
 
 ;; html/web
 (use-package web-mode
   :straight t
-  :hook ((web-mode . ds/setup-eslint-fix))
+  :hook ((web-mode . ds/setup-lsp-save-hooks))
   :mode ("\\.html\\'")
-  :config
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-part-padding 0)
-  (setq web-mode-script-padding 0)
-  (setq web-mode-style-padding 0))
+  :custom ((web-mode-code-indent-offset 2 "Set indent for code")
+           (web-mode-part-padding 0 "Set padding to 0")
+           (web-mode-script-padding 0 "Set padding to 0")
+           (web-mode-style-padding 0 "Set padding to 0")))
 
 ;; make a vue-mode that is just web mode with a different name
 (define-derived-mode vue-mode web-mode "VueJS")
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
-(add-hook 'vue-mode-hook #'ds/setup-eslint-fix)
+(add-hook 'vue-mode-hook #'ds/setup-lsp-save-hooks)
 
 ;; protobufs
 
@@ -541,38 +531,21 @@
   :straight t
   :demand
   :after (flycheck)
-  :defines (lsp-gopls-hover-kind lsp-gopls-env)
+  :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
   ;; :disabled
   :custom ((lsp-prefer-flymake nil "Use flycheck instead.")
            (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
            (lsp-gopls-use-placeholders t "Insert snippets."))
   :commands (lsp lsp-deferred lsp-register-custom-settings)
-  :hook (
-         (go-mode . lsp-deferred)
+  :hook ((go-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
-         (js-mode . ds/js-mode-lsp)
-         ;; (vue-mode . ds/js-mode-lsp)
-         )
+         (js-mode . lsp-deferred)
+         (vue-mode . lsp-deferred)
+         (web-mode . lsp-deferred))
   :init
-  (defun ds/go-mode-lsp ()
-    "Set up lsp hooks for `go-mode'."
-
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  
-  (add-hook 'go-mode-hook #'ds/go-mode-lsp)
-  
-  (defun ds/js-mode-lsp ()
-    "Enable `lsp-mode' in `js-mode' and `vue-mode'."
-
-    (lsp)
-    ;; (flycheck-add-next-checker 'lsp-ui 'go-golint 'append)
-    (setf (flycheck-checker-get 'lsp-ui 'next-checkers) (list 'javascript-eslint))
-    ;; (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    ;; (add-hook 'before-save-hook #'lsp-organize-imports t t)
-    )
-  
-
+  (defun ds/setup-lsp-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer 75 t)
+    (add-hook 'before-save-hook #'lsp-organize-imports 50 t))
   :config
   ;; experimental options not in lsp mode yet
   (lsp-register-custom-settings
@@ -602,19 +575,6 @@
   (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
   (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg")))
 
-
-(use-package eglot
-  :straight t
-  :disabled
-  :hook ((go-mode . eglot-ensure)
-         (vue-mode . eglot-ensure)
-         (js-mode . eglot-ensure))
-  :config
-  ;; (add-to-list 'eglot-server-programs '(go-mode . ("bingo")))
-  (add-to-list 'eglot-server-programs '(go-mode . ("bingo2" "-disable-func-snippet")))
-  ;; (add-to-list 'eglot-server-programs '(go-mode . ("gopls2")))
-  (add-to-list 'eglot-server-programs '(vue-mode . ("vls")))
-  (add-hook 'eglot--managed-mode-hook (lambda () (flymake-mode -1))))
 
 ;; org-mode
 
@@ -732,6 +692,7 @@
 (add-to-list 'auto-mode-alist '("\\.chopro$" . chordpro-mode))
 (add-to-list 'auto-mode-alist '("\\.chordpro$" . chordpro-mode))
 
+;; slime and stumpwm
 (use-package slime
   :straight t
   :after (highlight-parentheses)
@@ -739,7 +700,6 @@
   (setq inferior-lisp-program "sbcl")
   (setq slime-contribs '(slime-fancy)))
 
-;; slime and stumpwm
 (use-package stumpwm-mode
   :straight t
   :init
