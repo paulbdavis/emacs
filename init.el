@@ -42,6 +42,12 @@
 
 (use-package ds-eshell)
 
+(use-package which-key
+  :straight t
+  :diminish which-key-mode
+  :config
+  (which-key-mode))
+
 (use-package vterm
   :straight (vterm :type git :flavor melpa
                    :files ("*" (:exclude ".dir-locals.el" ".gitignore" ".clang-format" ".travis.yml") "vterm-pkg.el")
@@ -310,14 +316,16 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
         (format " Proj[%s]"
                 (projectile-project-name)))))
   :config
-  (setq projectile-completion-system 'ivy)
-  (projectile-mode +1))
+  (setq projectile-completion-system 'ivy))
 
 (use-package counsel-projectile
   :straight t
   :after projectile
   :config
   (counsel-projectile-mode))
+
+(use-package ibuffer-vc
+  :straight t)
 
 ;; git porcelean
 (use-package magit
