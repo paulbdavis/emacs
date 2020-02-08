@@ -65,7 +65,7 @@
  ("typescript.el" . "a0f2c3ebd4c7cde7f3c25f9cef12b679118d3351")
  ("use-package" . "42db6b3d90ee57d0f5947d3b0bf4b0010bdf7b40")
  ("verb" . "cfc8e56d5d7e6de66af17e0c5ad2955c45d8e217")
- ("web-mode" . "cd000fcfce97152f8b831b7eef4ea0d0b1eed11a")
+ ("web-mode" . "3ff506aae50a47b277f2b95ff7b7a7c596664e6a")
  ("with-editor" . "90973212cee3655746c95d0e0cae2f8f5bf3d97e")
  ("yaml-mode" . "cecf4b106b0c4236931b14919fdf87ff3546e2c9")
  ("yasnippet" . "3bf9a3b1af37174a004798b7195826af0123fa6a")
