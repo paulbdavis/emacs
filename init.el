@@ -474,7 +474,8 @@
   :custom ((web-mode-code-indent-offset 2 "Set indent for code")
            (web-mode-part-padding 0 "Set padding to 0")
            (web-mode-script-padding 0 "Set padding to 0")
-           (web-mode-style-padding 0 "Set padding to 0")))
+           (web-mode-style-padding 0 "Set padding to 0")
+           (web-mode-comment-style 2 "Set non-annowying comment style")))
 
 ;; make a vue-mode that is just web mode with a different name
 (define-derived-mode vue-mode web-mode "VueJS")
