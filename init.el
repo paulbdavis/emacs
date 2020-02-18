@@ -511,7 +511,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 (use-package web-mode
   :straight t
   :hook ((web-mode . ds/setup-lsp-save-hooks))
-  :mode ("\\.html\\'")
+  :mode ("\\.html\\'" "\\.vue\\'")
   :custom ((web-mode-code-indent-offset 2 "Set indent for code")
            (web-mode-part-padding 0 "Set padding to 0")
            (web-mode-script-padding 0 "Set padding to 0")
@@ -520,7 +520,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 
 ;; make a vue-mode that is just web mode with a different name
 (define-derived-mode vue-mode web-mode "VueJS")
-(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 (add-hook 'vue-mode-hook #'ds/setup-lsp-save-hooks)
 
 ;; protobufs
@@ -577,7 +577,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   ;; :disabled
   :custom ((lsp-prefer-flymake nil "Use flycheck instead.")
            (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
-           (lsp-gopls-use-placeholders t "Insert snippets."))
+           (lsp-gopls-use-placeholders t "Insert snippets.")
+           (lsp-javascript-format-insert-space-before-function-parenthesis t "JS formatting"))
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
@@ -617,6 +618,10 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
   (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg")))
 
+(use-package lsp-ivy
+  :straight t
+  :after (ivy lsp-mode)
+  :commands lsp-ivy-workspace-symbol)
 
 ;; org-mode
 
