@@ -565,6 +565,11 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :commands yas-minor-mode
   :hook (go-mode . yas-minor-mode))
 
+(use-package company
+  :straight t
+  :custom ((company-minimum-prefix-length 1 "For LSP")
+           (company-idle-delay 0.0 "For LSP")))
+
 (use-package company-lsp
   :straight t
   :commands company-lsp)
@@ -575,7 +580,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :after (flycheck)
   :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
   ;; :disabled
-  :custom ((lsp-prefer-flymake nil "Use flycheck instead.")
+  :custom ((lsp-prefer-capf t "Better completion caching?")
            (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
            (lsp-gopls-use-placeholders t "Insert snippets.")
            (lsp-javascript-format-insert-space-before-function-parenthesis t "JS formatting"))
@@ -849,9 +854,9 @@ screenshots without revealing buffer contents."
               (overlay-match))))))))
 
 ;; performance stuff (mainly for lsp-mode)
-(setq gc-cons-threshold 3200000)
-;; 2mb
-(setq read-process-output-max (* 2 1024 1024))
+(setq gc-cons-threshold 6400000)
+;; 4mb
+(setq read-process-output-max (* 4 1024 1024))
 
 (provide 'init)
 ;;; init.el ends here
