@@ -843,5 +843,10 @@ screenshots without revealing buffer contents."
             (while (re-search-forward (rx (1+ alpha)) nil t)
               (overlay-match))))))))
 
+;; performance stuff (mainly for lsp-mode)
+(setq gc-cons-threshold 3200000)
+;; 2mb
+(setq read-process-output-max (* 2 1024 1024))
+
 (provide 'init)
 ;;; init.el ends here
