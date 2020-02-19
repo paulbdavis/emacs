@@ -387,7 +387,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 (use-package compile
   :after projectile
   :config
-  (define-key compilation-mode-map (kbd "q") #'delete-window)
+  (define-key compilation-mode-map (kbd "q") #'delete-frame)
   ;; (ds/popup-thing-display-settings "*compilation*" right 2 104)
 
   (setq compilation-finish-functions
@@ -396,7 +396,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
             (if (eq 0 (string-match-p "^finished$" str))
                 (let ((project-root (if (projectile-project-p) (projectile-project-root) nil)))
                   (run-at-time
-                   2 nil 'delete-windows-on
+                   2 nil (lambda (buffer) (delete-frame (window-frame (get-buffer-window buffer))))
                    (get-buffer-create "*compilation*"))
                   (if project-root
                       (run-at-time
