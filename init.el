@@ -24,6 +24,11 @@
 
 ;;; Code:
 
+;; performance stuff (mainly for lsp-mode)
+(setq gc-cons-threshold 12800000)
+;; 4mb
+(setq read-process-output-max (* 4 1024 1024))
+
 (setq load-path (cons (concat user-emacs-directory "lib") load-path))
 (setq load-path (cons (concat user-emacs-directory "packages") load-path))
 
@@ -853,10 +858,6 @@ screenshots without revealing buffer contents."
             (while (re-search-forward (rx (1+ alpha)) nil t)
               (overlay-match))))))))
 
-;; performance stuff (mainly for lsp-mode)
-(setq gc-cons-threshold 6400000)
-;; 4mb
-(setq read-process-output-max (* 4 1024 1024))
 
 (provide 'init)
 ;;; init.el ends here
