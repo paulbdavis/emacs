@@ -82,10 +82,25 @@ This overrides the colors provided by the `zenburn-theme' package.")
     (if data
         (cdr data))))
 
+(defmacro ds/make-zenburn-face (name)
+  "Make a face from a color named NAME in `ds/zenburn-colors'."
+  (let* ((mapname (concat "zenburn-" (symbol-name name)))
+         (facename (make-symbol (concat "ds/" mapname)))
+         (color (cdr (assoc mapname ds/zenburn-colors)))
+         (docstring (concat "Face for " mapname ".") ))
+    `(defface ,facename
+       '((((background dark)) :foreground ,color)
+         (((background light)) :foreground ,color))
+       ,docstring)))
 
 (defun ds/setup-zenburn-faces ()
   "Set up custom faces using zenburn colors."
   (interactive)
+  ;; make faces for all the colors
+
+  (dolist (name (list 'red 'orange 'yellow 'green 'cyan 'blue 'magenta))
+    (ds/make-zenburn-face name))
+  
   ;; default face customizations
   ;; region selection
   (set-face-attribute 'region nil
@@ -110,11 +125,12 @@ This overrides the colors provided by the `zenburn-theme' package.")
                       :background (ds/get-zenburn-color "bg"))
   ;; generic highlight face
   (set-face-attribute 'highlight nil
-                      :background (ds/get-zenburn-color "bg+2")
+                      :background (ds/get-zenburn-color "bg+1")
                       :weight 'normal
                       :slant 'normal
-                      :box `(:line-width -1 :color ,(ds/get-zenburn-color "orange"))
-                      :underline nil
+                      ;; :box `(:line-width -1 :color ,(ds/get-zenburn-color "orange"))
+                      :box nil
+                      :underline (ds/get-zenburn-color "orange")
                       :overline nil
                       :foreground nil)
   ;; italic comments
