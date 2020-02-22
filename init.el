@@ -253,33 +253,33 @@
   :bind (("C-c s" . hydra-straight-helper/body))
   :config
   (defhydra hydra-straight-helper (:hint nil)
-  "
+    "
 _c_heck all       |_f_etch all     |_m_erge all      |_n_ormalize all   |p_u_sh all
 _C_heck package   |_F_etch package |_M_erge package  |_N_ormlize package|p_U_sh package
 ----------------^^+--------------^^+---------------^^+----------------^^+------------||_q_uit||
 _r_ebuild all     |_p_ull all      |_v_ersions freeze|_w_atcher start   |_g_et recipe
 _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_ build"
-  ("c" straight-check-all)
-  ("C" straight-check-package)
-  ("r" straight-rebuild-all)
-  ("R" straight-rebuild-package)
-  ("f" straight-fetch-all)
-  ("F" straight-fetch-package)
-  ("p" straight-pull-all)
-  ("P" straight-pull-package)
-  ("m" straight-merge-all)
-  ("M" straight-merge-package)
-  ("n" straight-normalize-all)
-  ("N" straight-normalize-package)
-  ("u" straight-push-all)
-  ("U" straight-push-package)
-  ("v" straight-freeze-versions)
-  ("V" straight-thaw-versions)
-  ("w" straight-watcher-start)
-  ("W" straight-watcher-quit)
-  ("g" straight-get-recipe)
-  ("e" straight-prune-build)
-  ("q" nil)))
+    ("c" straight-check-all)
+    ("C" straight-check-package)
+    ("r" straight-rebuild-all)
+    ("R" straight-rebuild-package)
+    ("f" straight-fetch-all)
+    ("F" straight-fetch-package)
+    ("p" straight-pull-all)
+    ("P" straight-pull-package)
+    ("m" straight-merge-all)
+    ("M" straight-merge-package)
+    ("n" straight-normalize-all)
+    ("N" straight-normalize-package)
+    ("u" straight-push-all)
+    ("U" straight-push-package)
+    ("v" straight-freeze-versions)
+    ("V" straight-thaw-versions)
+    ("w" straight-watcher-start)
+    ("W" straight-watcher-quit)
+    ("g" straight-get-recipe)
+    ("e" straight-prune-build)
+    ("q" nil)))
 
 (use-package ivy-hydra
   :demand
@@ -579,13 +579,92 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :straight t
   :commands company-lsp)
 
+(use-package all-the-icons
+  :straight t)
+
+(use-package company-box
+  :straight t
+  :after (company all-the-icons)
+  :hook ((company-mode . company-box-mode))
+  :config
+  (setq company-box-show-single-candidate t
+        company-box-backends-colors nil
+        company-box-max-candidates 50
+        company-box-icons-alist 'company-box-icons-all-the-icons
+        company-box-icons-functions (cons #'+company-box-icons--elisp-fn
+                                          (delq 'company-box-icons--elisp
+                                                company-box-icons-functions))
+        company-box-icons-all-the-icons
+              `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.85 :v-adjust -0.2))
+                (Text          . ,(all-the-icons-faicon   "text-width"               :height 0.8 :v-adjust -0.05))
+                (Method        . ,(all-the-icons-faicon   "cube"                     :height 0.8 :v-adjust -0.05 :face 'all-the-icons-purple))
+                (Function      . ,(all-the-icons-faicon   "cube"                     :height 0.8 :v-adjust -0.05 :face 'all-the-icons-purple))
+                (Constructor   . ,(all-the-icons-faicon   "cube"                     :height 0.8 :v-adjust -0.05 :face 'all-the-icons-purple))
+                (Field         . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'all-the-icons-lblue))
+                (Variable      . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'all-the-icons-lblue))
+                (Class         . ,(all-the-icons-material "settings_input_component" :height 0.85 :v-adjust -0.2 :face 'all-the-icons-orange))
+                (Interface     . ,(all-the-icons-material "share"                    :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                (Module        . ,(all-the-icons-material "view_module"              :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                (Property      . ,(all-the-icons-faicon   "wrench"                   :height 0.8 :v-adjust -0.05))
+                (Unit          . ,(all-the-icons-material "settings_system_daydream" :height 0.85 :v-adjust -0.2))
+                (Value         . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                (Enum          . ,(all-the-icons-material "storage"                  :height 0.85 :v-adjust -0.2 :face 'all-the-icons-orange))
+                (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.85 :v-adjust -0.2))
+                (Snippet       . ,(all-the-icons-material "format_align_center"      :height 0.85 :v-adjust -0.2))
+                (Color         . ,(all-the-icons-material "palette"                  :height 0.85 :v-adjust -0.2))
+                (File          . ,(all-the-icons-faicon   "file-o"                   :height 0.85 :v-adjust -0.05))
+                (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.85 :v-adjust -0.2))
+                (Folder        . ,(all-the-icons-faicon   "folder-open"              :height 0.85 :v-adjust -0.05))
+                (EnumMember    . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                (Constant      . ,(all-the-icons-faicon   "square-o"                 :height 0.85 :v-adjust -0.1))
+                (Struct        . ,(all-the-icons-material "settings_input_component" :height 0.85 :v-adjust -0.2 :face 'all-the-icons-orange))
+                (Event         . ,(all-the-icons-octicon  "zap"                      :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
+                (Operator      . ,(all-the-icons-material "control_point"            :height 0.85 :v-adjust -0.2))
+                (TypeParameter . ,(all-the-icons-faicon   "arrows"                   :height 0.8 :v-adjust -0.05))
+                (Template      . ,(all-the-icons-material "format_align_left"        :height 0.85 :v-adjust -0.2)))))
+        ;; company-box-icons-all-the-icons (let ((all-the-icons-scale-factor 1.1))
+        ;;                                   `((Unknown       . ,(all-the-icons-material "find_in_page"             :face 'all-the-icons-purple))
+        ;;                                     (Text          . ,(all-the-icons-material "text_fields"              :face 'all-the-icons-green))
+        ;;                                     (Method        . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+        ;;                                     (Function      . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+        ;;                                     (Constructor   . ,(all-the-icons-faicon   "cube"                     :face 'all-the-icons-red))
+        ;;                                     (Field         . ,(all-the-icons-octicon  "tag"                      :face 'all-the-icons-red))
+        ;;                                     (Variable      . ,(all-the-icons-material "adjust"                   :face 'all-the-icons-blue))
+        ;;                                     (Class         . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
+        ;;                                     (Interface     . ,(all-the-icons-material "settings_input_component" :face 'all-the-icons-red))
+        ;;                                     (Module        . ,(all-the-icons-material "view_module"              :face 'all-the-icons-red))
+        ;;                                     (Property      . ,(all-the-icons-material "settings"                 :face 'all-the-icons-red))
+        ;;                                     (Unit          . ,(all-the-icons-material "straighten"               :face 'all-the-icons-red))
+        ;;                                     (Value         . ,(all-the-icons-material "filter_1"                 :face 'all-the-icons-red))
+        ;;                                     (Enum          . ,(all-the-icons-material "plus_one"                 :face 'all-the-icons-red))
+        ;;                                     (Keyword       . ,(all-the-icons-material "filter_center_focus"      :face 'all-the-icons-red))
+        ;;                                     (Snippet       . ,(all-the-icons-material "short_text"               :face 'all-the-icons-red))
+        ;;                                     (Color         . ,(all-the-icons-material "color_lens"               :face 'all-the-icons-red))
+        ;;                                     (File          . ,(all-the-icons-material "insert_drive_file"        :face 'all-the-icons-red))
+        ;;                                     (Reference     . ,(all-the-icons-material "collections_bookmark"     :face 'all-the-icons-red))
+        ;;                                     (Folder        . ,(all-the-icons-material "folder"                   :face 'all-the-icons-red))
+        ;;                                     (EnumMember    . ,(all-the-icons-material "people"                   :face 'all-the-icons-red))
+        ;;                                     (Constant      . ,(all-the-icons-material "pause_circle_filled"      :face 'all-the-icons-red))
+        ;;                                     (Struct        . ,(all-the-icons-material "streetview"               :face 'all-the-icons-red))
+        ;;                                     (Event         . ,(all-the-icons-material "event"                    :face 'all-the-icons-red))
+        ;;                                     (Operator      . ,(all-the-icons-material "control_point"            :face 'all-the-icons-red))
+        ;;                                     (TypeParameter . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
+        ;;                                     (Template      . ,(all-the-icons-material "short_text"               :face 'all-the-icons-green))
+        ;;                                     (ElispFunction . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
+        ;;                                     (ElispVariable . ,(all-the-icons-material "check_circle"             :face 'all-the-icons-blue))
+        ;;                                     (ElispFeature  . ,(all-the-icons-material "stars"                    :face 'all-the-icons-orange))
+        ;;                                     (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))))
+
+
 (use-package lsp-mode
   :straight t
   :demand
-  :after (flycheck)
+  :bind-keymap ("C-c l" . lsp-command-map)
+  :after (flycheck which-key)
   :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
   ;; :disabled
   :custom ((lsp-prefer-capf t "Better completion caching?")
+           (lsp-enable-snippet nil "No snippets please.")
            (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
            (lsp-gopls-use-placeholders t "Insert snippets.")
            (lsp-javascript-format-insert-space-before-function-parenthesis t "JS formatting"))
@@ -594,7 +673,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
          (typescript-mode . lsp-deferred)
          (js-mode . lsp-deferred)
          (vue-mode . lsp-deferred)
-         (web-mode . lsp-deferred))
+         (web-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
   :init
   (defun ds/setup-lsp-save-hooks ()
     (add-hook 'before-save-hook #'lsp-format-buffer 75 t)
@@ -797,8 +877,8 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
   "Toggle the modeline on and off."
   (interactive)
   (setq mode-line-format
-    (if (equal mode-line-format nil)
-        (default-value 'mode-line-format)) )
+        (if (equal mode-line-format nil)
+            (default-value 'mode-line-format)) )
   (redraw-display))
 
 (global-set-key [M-f12] #'ds/toggle-mode-line)
