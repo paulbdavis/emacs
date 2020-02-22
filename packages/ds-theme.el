@@ -108,6 +108,15 @@ This overrides the colors provided by the `zenburn-theme' package.")
                       :underline nil)
   (set-face-attribute 'fringe nil
                       :background (ds/get-zenburn-color "bg"))
+  ;; generic highlight face
+  (set-face-attribute 'highlight nil
+                      :background (ds/get-zenburn-color "bg+2")
+                      :weight 'normal
+                      :slant 'normal
+                      :box `(:line-width -1 :color ,(ds/get-zenburn-color "orange"))
+                      :underline nil
+                      :overline nil
+                      :foreground nil)
   ;; italic comments
   (set-face-attribute 'font-lock-comment-face nil
                       :slant 'italic)
@@ -124,6 +133,12 @@ This overrides the colors provided by the `zenburn-theme' package.")
                       :foreground (ds/get-zenburn-color "fg-1")
                       :background (ds/get-zenburn-color "bg"))
 
+  (with-eval-after-load 'lsp-mode
+    (set-face-attribute 'lsp-face-highlight-read nil
+                        :weight 'extra-bold)
+    (set-face-attribute 'lsp-face-highlight-write nil
+                        :weight 'light))
+  
   (with-eval-after-load 'flymake
     (set-face-attribute 'flymake-error nil
                         :underline `(:style wave :color ,(ds/get-zenburn-color "red")))
