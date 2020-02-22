@@ -582,9 +582,30 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 (use-package all-the-icons
   :straight t)
 
+(use-package nerd-fonts
+  :straight (nerd-fonts :type git
+                        :host github
+                        :repo "twlz0ne/nerd-fonts.el")
+  :config
+  (defun ds/nerd-font-icon (name &rest args)
+    (let ((icon (nerd-fonts name))
+          (other-face (plist-get args :face))
+          (height (or (plist-get args :height) 1.0))
+          (v-adjust (or (plist-get args :v-adjust) 0.0)))
+      (unless icon
+        (error (format "Invalid nerd font icon `%s'" name)))
+      (let ((face (if other-face
+                      `(:height ,height :inherit ,other-face)
+                    `(:height ,height))))
+        (propertize icon
+                    'face face
+                    'font-lock-face face
+                    'display `(raise ,v-adjust)
+                    'rear-nonsticky t)))))
+
 (use-package company-box
   :straight t
-  :after (company all-the-icons)
+  :after (company nerd-fonts)
   :hook ((company-mode . company-box-mode))
   :config
   (setq company-box-show-single-candidate t
@@ -595,16 +616,16 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
                                           (delq 'company-box-icons--elisp
                                                 company-box-icons-functions))
         company-box-icons-all-the-icons
-              `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.85 :v-adjust -0.2))
-                (Text          . ,(all-the-icons-faicon   "text-width"               :height 0.8 :v-adjust -0.05))
-                (Method        . ,(all-the-icons-faicon   "cube"                     :height 0.8 :v-adjust -0.05 :face 'all-the-icons-purple))
-                (Function      . ,(all-the-icons-faicon   "cube"                     :height 0.8 :v-adjust -0.05 :face 'all-the-icons-purple))
-                (Constructor   . ,(all-the-icons-faicon   "cube"                     :height 0.8 :v-adjust -0.05 :face 'all-the-icons-purple))
+              `((Unknown       . ,(ds/nerd-font-icon      "mdi-file-find"))
+                (Text          . ,(ds/nerd-font-icon      "fa-text-width"))
+                (Method        . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'all-the-icons-purple))
+                (Function      . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'all-the-icons-red))
+                (Constructor   . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'all-the-icons-yellow))
                 (Field         . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'all-the-icons-lblue))
-                (Variable      . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'all-the-icons-lblue))
+                (Variable      . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
                 (Class         . ,(all-the-icons-material "settings_input_component" :height 0.85 :v-adjust -0.2 :face 'all-the-icons-orange))
                 (Interface     . ,(all-the-icons-material "share"                    :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
-                (Module        . ,(all-the-icons-material "view_module"              :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
+                (Module        . ,(ds/nerd-font-icon      "mdi-view-module"          :face 'all-the-icons-lblue))
                 (Property      . ,(all-the-icons-faicon   "wrench"                   :height 0.8 :v-adjust -0.05))
                 (Unit          . ,(all-the-icons-material "settings_system_daydream" :height 0.85 :v-adjust -0.2))
                 (Value         . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
