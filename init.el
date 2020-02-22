@@ -572,8 +572,9 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 
 (use-package company
   :straight t
-  :custom ((company-minimum-prefix-length 1 "For LSP")
-           (company-idle-delay 0.0 "For LSP")))
+  :diminish company-mode
+  :custom ((company-minimum-prefix-length 2 "For LSP")
+           (company-idle-delay 0.75 "For LSP")))
 
 (use-package company-lsp
   :straight t
@@ -605,6 +606,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 
 (use-package company-box
   :straight t
+  :diminish company-box-mode
   :after (company nerd-fonts)
   :hook ((company-mode . company-box-mode))
   :config
@@ -638,43 +640,11 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
                 (Folder        . ,(all-the-icons-faicon   "folder-open"              :height 0.85 :v-adjust -0.05))
                 (EnumMember    . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'all-the-icons-lblue))
                 (Constant      . ,(all-the-icons-faicon   "square-o"                 :height 0.85 :v-adjust -0.1))
-                (Struct        . ,(all-the-icons-material "settings_input_component" :height 0.85 :v-adjust -0.2 :face 'all-the-icons-orange))
+                (Struct        . ,(ds/nerd-font-icon      "mdi-code-braces"          :face 'all-the-icons-orange))
                 (Event         . ,(all-the-icons-octicon  "zap"                      :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
                 (Operator      . ,(all-the-icons-material "control_point"            :height 0.85 :v-adjust -0.2))
                 (TypeParameter . ,(all-the-icons-faicon   "arrows"                   :height 0.8 :v-adjust -0.05))
                 (Template      . ,(all-the-icons-material "format_align_left"        :height 0.85 :v-adjust -0.2)))))
-        ;; company-box-icons-all-the-icons (let ((all-the-icons-scale-factor 1.1))
-        ;;                                   `((Unknown       . ,(all-the-icons-material "find_in_page"             :face 'all-the-icons-purple))
-        ;;                                     (Text          . ,(all-the-icons-material "text_fields"              :face 'all-the-icons-green))
-        ;;                                     (Method        . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-        ;;                                     (Function      . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-        ;;                                     (Constructor   . ,(all-the-icons-faicon   "cube"                     :face 'all-the-icons-red))
-        ;;                                     (Field         . ,(all-the-icons-octicon  "tag"                      :face 'all-the-icons-red))
-        ;;                                     (Variable      . ,(all-the-icons-material "adjust"                   :face 'all-the-icons-blue))
-        ;;                                     (Class         . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
-        ;;                                     (Interface     . ,(all-the-icons-material "settings_input_component" :face 'all-the-icons-red))
-        ;;                                     (Module        . ,(all-the-icons-material "view_module"              :face 'all-the-icons-red))
-        ;;                                     (Property      . ,(all-the-icons-material "settings"                 :face 'all-the-icons-red))
-        ;;                                     (Unit          . ,(all-the-icons-material "straighten"               :face 'all-the-icons-red))
-        ;;                                     (Value         . ,(all-the-icons-material "filter_1"                 :face 'all-the-icons-red))
-        ;;                                     (Enum          . ,(all-the-icons-material "plus_one"                 :face 'all-the-icons-red))
-        ;;                                     (Keyword       . ,(all-the-icons-material "filter_center_focus"      :face 'all-the-icons-red))
-        ;;                                     (Snippet       . ,(all-the-icons-material "short_text"               :face 'all-the-icons-red))
-        ;;                                     (Color         . ,(all-the-icons-material "color_lens"               :face 'all-the-icons-red))
-        ;;                                     (File          . ,(all-the-icons-material "insert_drive_file"        :face 'all-the-icons-red))
-        ;;                                     (Reference     . ,(all-the-icons-material "collections_bookmark"     :face 'all-the-icons-red))
-        ;;                                     (Folder        . ,(all-the-icons-material "folder"                   :face 'all-the-icons-red))
-        ;;                                     (EnumMember    . ,(all-the-icons-material "people"                   :face 'all-the-icons-red))
-        ;;                                     (Constant      . ,(all-the-icons-material "pause_circle_filled"      :face 'all-the-icons-red))
-        ;;                                     (Struct        . ,(all-the-icons-material "streetview"               :face 'all-the-icons-red))
-        ;;                                     (Event         . ,(all-the-icons-material "event"                    :face 'all-the-icons-red))
-        ;;                                     (Operator      . ,(all-the-icons-material "control_point"            :face 'all-the-icons-red))
-        ;;                                     (TypeParameter . ,(all-the-icons-material "class"                    :face 'all-the-icons-red))
-        ;;                                     (Template      . ,(all-the-icons-material "short_text"               :face 'all-the-icons-green))
-        ;;                                     (ElispFunction . ,(all-the-icons-material "functions"                :face 'all-the-icons-red))
-        ;;                                     (ElispVariable . ,(all-the-icons-material "check_circle"             :face 'all-the-icons-blue))
-        ;;                                     (ElispFeature  . ,(all-the-icons-material "stars"                    :face 'all-the-icons-orange))
-        ;;                                     (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink))))))
 
 
 (use-package lsp-mode
