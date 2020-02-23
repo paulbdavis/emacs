@@ -574,7 +574,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :straight t
   :diminish company-mode
   :custom ((company-minimum-prefix-length 2 "For LSP")
-           (company-idle-delay 0.75 "For LSP")))
+           (company-idle-delay 0.1 "For LSP")))
 
 (use-package company-lsp
   :straight t
