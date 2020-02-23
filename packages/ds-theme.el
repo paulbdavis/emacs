@@ -85,7 +85,7 @@ This overrides the colors provided by the `zenburn-theme' package.")
 (defmacro ds/make-zenburn-face (name)
   "Make a face from a color named NAME in `ds/zenburn-colors'."
   (let* ((mapname (concat "zenburn-" (symbol-name name)))
-         (facename (make-symbol (concat "ds/" mapname)))
+         (facename (intern (concat "ds/" mapname)))
          (color (cdr (assoc mapname ds/zenburn-colors)))
          (docstring (concat "Face for " mapname ".") ))
     `(defface ,facename
@@ -98,8 +98,13 @@ This overrides the colors provided by the `zenburn-theme' package.")
   (interactive)
   ;; make faces for all the colors
 
-  (dolist (name (list 'red 'orange 'yellow 'green 'cyan 'blue 'magenta))
-    (ds/make-zenburn-face name))
+  (ds/make-zenburn-face red)
+  (ds/make-zenburn-face orange)
+  (ds/make-zenburn-face yellow)
+  (ds/make-zenburn-face green)
+  (ds/make-zenburn-face cyan)
+  (ds/make-zenburn-face blue)
+  (ds/make-zenburn-face magenta)
   
   ;; default face customizations
   ;; region selection
