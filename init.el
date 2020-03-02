@@ -654,7 +654,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :custom ((lsp-prefer-capf t "Better completion caching?")
            (lsp-enable-snippet nil "No snippets please.")
            (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
-           (lsp-gopls-use-placeholders t "Insert snippets.")
+           (lsp-gopls-use-placeholders nil "Don't insert snippets.")
            (lsp-javascript-format-insert-space-before-function-parenthesis t "JS formatting"))
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-mode . lsp-deferred)
