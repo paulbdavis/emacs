@@ -852,6 +852,9 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
 
 (use-package frames-only-mode
   :straight t
+  :custom ((frames-only-mode-kill-frame-when-buffer-killed-buffer-list
+            ;; '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*" "*HTTP Response*" "*HTTP Headers*")))
+            '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*" "*HTTP Headers*" "*Compilation*")))
   :config
   (frames-only-mode))
 
