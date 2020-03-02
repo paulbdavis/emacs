@@ -40,10 +40,10 @@
 
 (use-package ds-util
   :commands (ds/find-eslint-executable ds/get-zenburn-color)
-  :bind (("C-c \\" . ds/indent-buffer)
-	     ("C-c _" . ds/toggle-camelcase-underscores)
-	     ("C-o" . ds/open-next-line)
-	     ("M-o" . ds/open-previous-line)))
+  :bind (("C-c _" . ds/toggle-camelcase-underscores)
+         ("C-o" . ds/open-next-line)
+         ("C-c n" . ds/indent-buffer)
+         ("M-o" . ds/open-previous-line)))
 
 (use-package ds-eshell)
 
@@ -141,7 +141,7 @@
 
 (use-package dired-subtree
   :straight t
-  :defines dired-subtree-toggle
+  :commands (dired-subtree-toggle)
   :bind (:map dired-mode-map
               ("i" . dired-subtree-toggle))
   :config
@@ -244,7 +244,7 @@
                                 (t . ivy--regex-fuzzy)))
 
   (setq ivy-display-functions-alist '())
-  
+
   (ivy-mode 1)
   (ds/custom-ivy-faces))
 
@@ -343,7 +343,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   (setq global-magit-file-mode        t
         magit-log-highlight-keywords  t
         magit-diff-highlight-keywords t)
-  
+
   (setq magit-repolist-columns
         '(("Name" 25 magit-repolist-column-ident nil)
           ("Branch" 25 magit-repolist-column-branch nil)
@@ -615,33 +615,33 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
         company-box-max-candidates 50
         company-box-icons-alist 'company-box-icons-all-the-icons
         company-box-icons-all-the-icons
-              `((Unknown       . ,(ds/nerd-font-icon      "mdi-file-find"))
-                (Text          . ,(ds/nerd-font-icon      "fa-text-width"))
-                (Method        . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-magenta))
-                (Function      . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-red))
-                (Constructor   . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-yellow))
-                (Field         . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-blue))
-                (Variable      . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-orange))
-                (Class         . ,(all-the-icons-material "settings_input_component" :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-orange))
-                (Interface     . ,(all-the-icons-material "share"                    :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
-                (Module        . ,(ds/nerd-font-icon      "mdi-view-module"          :face 'ds/zenburn-blue))
-                (Property      . ,(all-the-icons-faicon   "wrench"                   :height 0.8 :v-adjust -0.05))
-                (Unit          . ,(all-the-icons-material "settings_system_daydream" :height 0.85 :v-adjust -0.2))
-                (Value         . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
-                (Enum          . ,(all-the-icons-material "storage"                  :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-orange))
-                (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.85 :v-adjust -0.2))
-                (Snippet       . ,(all-the-icons-material "format_align_center"      :height 0.85 :v-adjust -0.2))
-                (Color         . ,(all-the-icons-material "palette"                  :height 0.85 :v-adjust -0.2))
-                (File          . ,(all-the-icons-faicon   "file-o"                   :height 0.85 :v-adjust -0.05))
-                (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.85 :v-adjust -0.2))
-                (Folder        . ,(all-the-icons-faicon   "folder-open"              :height 0.85 :v-adjust -0.05))
-                (EnumMember    . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
-                (Constant      . ,(all-the-icons-faicon   "square-o"                 :height 0.85 :v-adjust -0.1))
-                (Struct        . ,(ds/nerd-font-icon      "mdi-code-braces"          :face 'ds/zenburn-orange))
-                (Event         . ,(all-the-icons-octicon  "zap"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-orange))
-                (Operator      . ,(all-the-icons-material "control_point"            :height 0.85 :v-adjust -0.2))
-                (TypeParameter . ,(all-the-icons-faicon   "arrows"                   :height 0.8 :v-adjust -0.05))
-                (Template      . ,(all-the-icons-material "format_align_left"        :height 0.85 :v-adjust -0.2)))))
+        `((Unknown       . ,(ds/nerd-font-icon      "mdi-file-find"))
+          (Text          . ,(ds/nerd-font-icon      "fa-text-width"))
+          (Method        . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-magenta))
+          (Function      . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-red))
+          (Constructor   . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-yellow))
+          (Field         . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-blue))
+          (Variable      . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-orange))
+          (Class         . ,(all-the-icons-material "settings_input_component" :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-orange))
+          (Interface     . ,(all-the-icons-material "share"                    :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
+          (Module        . ,(ds/nerd-font-icon      "mdi-view-module"          :face 'ds/zenburn-blue))
+          (Property      . ,(all-the-icons-faicon   "wrench"                   :height 0.8 :v-adjust -0.05))
+          (Unit          . ,(all-the-icons-material "settings_system_daydream" :height 0.85 :v-adjust -0.2))
+          (Value         . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
+          (Enum          . ,(all-the-icons-material "storage"                  :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-orange))
+          (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.85 :v-adjust -0.2))
+          (Snippet       . ,(all-the-icons-material "format_align_center"      :height 0.85 :v-adjust -0.2))
+          (Color         . ,(all-the-icons-material "palette"                  :height 0.85 :v-adjust -0.2))
+          (File          . ,(all-the-icons-faicon   "file-o"                   :height 0.85 :v-adjust -0.05))
+          (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.85 :v-adjust -0.2))
+          (Folder        . ,(all-the-icons-faicon   "folder-open"              :height 0.85 :v-adjust -0.05))
+          (EnumMember    . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
+          (Constant      . ,(all-the-icons-faicon   "square-o"                 :height 0.85 :v-adjust -0.1))
+          (Struct        . ,(ds/nerd-font-icon      "mdi-code-braces"          :face 'ds/zenburn-orange))
+          (Event         . ,(all-the-icons-octicon  "zap"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-orange))
+          (Operator      . ,(all-the-icons-material "control_point"            :height 0.85 :v-adjust -0.2))
+          (TypeParameter . ,(all-the-icons-faicon   "arrows"                   :height 0.8 :v-adjust -0.05))
+          (Template      . ,(all-the-icons-material "format_align_left"        :height 0.85 :v-adjust -0.2)))))
 
 
 (use-package lsp-mode
@@ -687,11 +687,11 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
            (lsp-ui-doc-position 'top)
            (lsp-ui-sideline-delay 0))
   :config
-  
+
 
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
-  
+
   (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
   (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
   (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg")))
@@ -715,7 +715,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   (interactive)
   (message "State changed")
   (when (eq ds/drawer-curr-state "all")
-    
+
     (ds/expand-logbook-drawer)))
 
 (use-package org
@@ -774,7 +774,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   (setq org-todo-keywords
         '((sequence "TODO(t)" "IN-PROGRESS(i!)" "WAITING(w@)" "|" "WILL-NOT-IMPLEMENT(k@)" "DONE(d)")
           (sequence "BUG(b)" "RESOLVING(r!)" "|" "NON-ISSUE(n@)" "PATCHED(p)")))
-  
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)
@@ -787,6 +787,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 
 (use-package verb
   :straight (verb :type git :host github :repo "federicotdn/verb")
+  :custom ((verb-auto-kill-response-buffers t)
+           (verb-auto-show-headers-buffer nil))
   :after org
   :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
@@ -930,6 +932,15 @@ screenshots without revealing buffer contents."
 (use-package kubernetes
   :straight t
   :commands (kubernetes-overview))
+
+(use-package haskell-mode
+  :straight t)
+
+(use-package crux
+  :straight t)
+
+(use-package mustache-mode
+  :straight t)
 
 (provide 'init)
 ;;; init.el ends here

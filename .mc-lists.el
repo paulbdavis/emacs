@@ -36,6 +36,7 @@
       '(
         beginning-of-buffer
         ds/exwm-popup-shell
+        handle-switch-frame
         projectile-compile-project
         xref-pop-marker-stack
         ))
