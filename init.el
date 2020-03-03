@@ -856,7 +856,31 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
             ;; '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*" "*HTTP Response*" "*HTTP Headers*")))
             '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*" "*HTTP Headers*" "*Compilation*")))
   :config
-  (frames-only-mode))
+  (frames-only-mode)
+  (with-eval-after-load 'vterm
+    (defun ds/frames-only-mode-kill-frame-if-current-buffer-is-vterm ()
+      "Kill frames as well when certain buffers are closed.
+
+Only if there is only a single window in the frame, helps stop some
+packages spamming frames."
+      (when (and (one-window-p)
+                 (eq major-mode 'vterm-mode))
+        (delete-frame)))
+
+
+    (defun ds/frames-only-mode-advice-delete-vterm-frame-on-bury (orig-fun &rest args)
+      "Delete the frame when burying certain buffers.
+
+Only if there are no other windows in the frame, and if the buffer is in frames-only-mode-kill-frame-when-buffer-killed-buffer-list."
+      ;; Store the buffer name now because we can't get it after burying the buffer
+      (let ((buffer-to-bury (buffer-name)))
+        (apply orig-fun args)
+        (when (and (one-window-p)
+                   (eq major-mode 'vterm-mode))
+          (delete-frame))))
+
+    (add-hook 'kill-buffer-hook #'ds/frames-only-mode-kill-frame-if-current-buffer-is-vterm)
+    (advice-add #'bury-buffer :around #'ds/frames-only-mode-advice-delete-vterm-frame-on-bury)))
 
 (add-to-list 'Info-directory-list (concat (getenv "HOME") "/.local/share/info"))
 
