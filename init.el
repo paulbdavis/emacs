@@ -969,5 +969,8 @@ screenshots without revealing buffer contents."
 (use-package mustache-mode
   :straight t)
 
+(use-package lua-mode
+  :straight t)
+
 (provide 'init)
 ;;; init.el ends here
