@@ -91,9 +91,12 @@
   (defun ds/multi-libvterm-create (name)
     "Create a vterm buffer and set it's name to NAME."
     (interactive "sName: ")
-    (let ((bufname (if (< 0 (length name)) (concat "*vterminal<" name ">*"))))
-      (multi-libvterm bufname)
-      (if bufname (rename-buffer bufname))))
+    (let* ((bufname (if (< 0 (length name)) (concat "*vterminal<" name ">*")))
+           (existing-buf (get-buffer bufname)))
+      (if (buffer-live-p existing-buf)
+          (switch-to-buffer existing-buf)
+        (progn (multi-libvterm bufname)
+               (if bufname (rename-buffer bufname))))))
   (defun ds/multi-libvterm-dedicated-solo ()
     "Open the multi-libvterm-dedicated buffer and make it the only window in the frame."
     (interactive)
