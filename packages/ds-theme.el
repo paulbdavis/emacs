@@ -118,7 +118,7 @@ This overrides the colors provided by the `zenburn-theme' package.")
   (set-face-attribute 'mode-line nil
                       :background (ds/get-zenburn-color "bg")
                       :box `(:line-width 4 :color ,(ds/get-zenburn-color "bg"))
-                      :overline (ds/get-zenburn-color "bg+1")
+                      :overline (ds/get-zenburn-color "green")
                       :underline nil)
   (set-face-attribute 'mode-line-inactive nil
                       :foreground (ds/get-zenburn-color "bg+3")
