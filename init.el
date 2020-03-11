@@ -491,7 +491,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 (use-package go-mode
   :straight t
   :hook ((go-mode . ds/setup-lsp-save-hooks))
-  :mode ("\\go.mod\\'" . fundamental-mode))
+  :mode ("\\go.mod\\'" . go-dot-mod-mode))
 
 ;; javascript
 (defun ds/eslint-fix ()
