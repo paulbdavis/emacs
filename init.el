@@ -852,6 +852,7 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
     (load-file (concat user-emacs-directory "local.el")))
 
 (put 'downcase-region 'disabled nil)
+(put 'list-timers 'disabled nil)
 
 (use-package frames-only-mode
   :straight t
@@ -977,3 +978,4 @@ screenshots without revealing buffer contents."
 
 (provide 'init)
 ;;; init.el ends here
+
