@@ -82,7 +82,7 @@
       (vterm))))
 
 (use-package multi-libvterm
-  :straight (multi-libvterm :type git :host github :repo "suonlight/multi-libvterm")
+  :straight (multi-libvterm :type git :host github :repo "paulbdavis/multi-libvterm")
   :demand
   :after projectile
   :init
