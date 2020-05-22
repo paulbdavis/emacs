@@ -668,8 +668,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
          (lsp-mode . lsp-enable-which-key-integration))
   :init
   (defun ds/setup-lsp-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer 75 t)
-    (add-hook 'before-save-hook #'lsp-organize-imports 50 t))
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
   :config
   ;; experimental options not in lsp mode yet
   (lsp-register-custom-settings
