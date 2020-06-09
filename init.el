@@ -38,6 +38,13 @@
 (use-package ds-theme
   :commands (ds/get-zenburn-color))
 
+(use-package tts-editor
+  :straight (tts-editor :type git
+                        :host github
+                        :repo "dangersalad/emacs-tts-editor")
+  :commands (tts-editor/listen-start
+             tts-editor/listen-stop))
+
 (use-package ds-util
   :commands (ds/find-eslint-executable ds/get-zenburn-color)
   :bind (("C-c _" . ds/toggle-camelcase-underscores)
