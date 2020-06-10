@@ -17,6 +17,7 @@
  ("emacs-lorem-ipsum" . "da75c155da327c7a7aedb80f5cfe409984787049")
  ("emacs-memoize" . "51b075935ca7070f62fae1d69fe0ff7d8fa56fdd")
  ("emacs-org-dnd" . "0ef6d893f3e2c47d22c70750cde74e4fb148c7d7")
+ ("emacs-tts-editor" . "942f483b21613e83561f98486b59f1b0ba992a0c")
  ("emacs-which-key" . "8b49ae978cceca65967f3544c236f32964ddbed0")
  ("emacsmirror-mirror" . "4852da87a7df70871642678d3cd53145691bc9e5")
  ("epl" . "78ab7a85c08222cd15582a298a364774e3282ce6")
