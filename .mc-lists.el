@@ -10,6 +10,7 @@
         c-electric-paren
         c-electric-semi&comma
         complete-symbol
+        dabbrev-expand
         default-indent-new-line
         delete-indentation
         ds/open-next-line
@@ -23,6 +24,7 @@
         kill-sexp
         mark-sexp
         markdown-outdent-or-delete
+        nxml-electric-slash
         org-self-insert-command
         sh-assignment
         slime-space
@@ -36,7 +38,9 @@
       '(
         beginning-of-buffer
         ds/exwm-popup-shell
+        end-of-buffer
         handle-switch-frame
         projectile-compile-project
+        tts-editor/save-and-play
         xref-pop-marker-stack
         ))
