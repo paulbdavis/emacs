@@ -410,9 +410,9 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
             (message "compilation %s" str)
             (if (eq 0 (string-match-p "^finished$" str))
                 (let ((project-root (if (projectile-project-p) (projectile-project-root) nil)))
-                  (run-at-time
-                   2 nil (lambda (buffer) (delete-frame (window-frame (get-buffer-window (get-buffer-create "*compilation*")))))
-                   (get-buffer-create "*compilation*"))
+                  ;; (run-at-time
+                  ;;  2 nil (lambda (buffer) (delete-frame (window-frame (get-buffer-window (get-buffer-create "*compilation*")))))
+                  ;;  (get-buffer-create "*compilation*"))
                   (if project-root
                       (run-at-time
                        2.01 nil 'projectile-vc project-root)))))))
