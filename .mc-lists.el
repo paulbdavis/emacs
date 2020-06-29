@@ -25,6 +25,8 @@
         mark-sexp
         markdown-outdent-or-delete
         nxml-electric-slash
+        org-end-of-line
+        org-fill-paragraph
         org-self-insert-command
         sh-assignment
         slime-space
