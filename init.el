@@ -519,14 +519,14 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   (add-hook 'after-save-hook #'ds/eslint-fix))
 
 (use-package js
-  :hook ((js-mode . ds/setup-lsp-save-hooks))
+  :hook ((js-mode . ds/setup-eslint-fix))
   :custom ((js-indent-level 2 "Set indent level")))
 
 ;; html/web
 (use-package web-mode
   :straight t
-  :hook ((web-mode . ds/setup-lsp-save-hooks))
-  :mode ("\\.html\\'" "\\.vue\\'")
+  :hook ((web-mode . ds/setup-eslint-fix))
+  :mode ("\\.html\\'")
   :custom ((web-mode-code-indent-offset 2 "Set indent for code")
            (web-mode-part-padding 0 "Set padding to 0")
            (web-mode-script-padding 0 "Set padding to 0")
@@ -535,8 +535,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 
 ;; make a vue-mode that is just web mode with a different name
 (define-derived-mode vue-mode web-mode "VueJS")
-;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
-(add-hook 'vue-mode-hook #'ds/setup-lsp-save-hooks)
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+(add-hook 'vue-mode-hook #'ds/setup-eslint-fix)
 
 ;; protobufs
 
@@ -669,9 +669,9 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
-         (js-mode . lsp-deferred)
-         (vue-mode . lsp-deferred)
-         (web-mode . lsp-deferred)
+         ;; (js-mode . lsp-deferred)
+         ;; (vue-mode . lsp-deferred)
+         ;; (web-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :init
   (defun ds/setup-lsp-save-hooks ()
