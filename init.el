@@ -657,7 +657,6 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 (use-package lsp-mode
   :straight t
   :demand
-  :bind-keymap ("C-c l" . lsp-command-map)
   :after (flycheck which-key)
   :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
   ;; :disabled
@@ -674,6 +673,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
          ;; (web-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :init
+  (setq lsp-keymap-prefix "C-c l")
   (defun ds/setup-lsp-save-hooks ()
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
@@ -686,7 +686,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 (use-package lsp-ui
   :straight t
   :commands lsp-ui-mode
-  :after flycheck
+  :after (flycheck lsp-mode)
   :bind (:map flycheck-mode-map
               ("C-c ! l" . lsp-ui-flycheck-list))
   :defines (lsp-ui-mode-map)
@@ -705,6 +705,11 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
   (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
   (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg")))
+
+(use-package lsp-treemacs
+  :straight t
+  :after (lsp-mode)
+  :commands lsp-treemacs-errors-list)
 
 (use-package lsp-ivy
   :straight t
@@ -982,6 +987,11 @@ screenshots without revealing buffer contents."
 
 (use-package lua-mode
   :straight t)
+
+(use-package fluentd-mode
+  :straight (fluentd-mode :type git
+                        :host github
+                        :repo "syohex/emacs-fluentd-mode"))
 
 (provide 'init)
 ;;; init.el ends here
