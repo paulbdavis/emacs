@@ -351,6 +351,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :config
   (setq magit-merge-arguments '("--no-ff"))
   (setq global-magit-file-mode        t
+        magit-display-buffer-function 'display-buffer
         magit-log-highlight-keywords  t
         magit-diff-highlight-keywords t)
 
