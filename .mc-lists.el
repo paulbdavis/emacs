@@ -17,6 +17,7 @@
         ds/open-previous-line
         electric-newline-and-maybe-indent
         electric-pair-delete-pair
+        evilnc-comment-or-uncomment-lines
         forward-sexp
         indent-for-tab-command
         keyboard-escape-quit
