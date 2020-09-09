@@ -529,6 +529,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :hook ((web-mode . ds/setup-eslint-fix))
   :mode ("\\.html\\'")
   :custom ((web-mode-code-indent-offset 2 "Set indent for code")
+           (web-mode-markup-indent-offset 2 "Set indent for markup")
+           (web-mode-enable-auto-indentation nil "Disable auto indent")
            (web-mode-part-padding 0 "Set padding to 0")
            (web-mode-script-padding 0 "Set padding to 0")
            (web-mode-style-padding 0 "Set padding to 0")
