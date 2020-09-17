@@ -531,6 +531,11 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :custom ((web-mode-code-indent-offset 2 "Set indent for code")
            (web-mode-markup-indent-offset 2 "Set indent for markup")
            (web-mode-enable-auto-indentation nil "Disable auto indent")
+           (web-mode-comment-formats '(("java" . "/*")
+                                       ("javascript" . "//")
+                                       ("typescript" . "//")
+                                       ("php" . "/*")
+                                       ("css" . "/*")))
            (web-mode-part-padding 0 "Set padding to 0")
            (web-mode-script-padding 0 "Set padding to 0")
            (web-mode-style-padding 0 "Set padding to 0")
@@ -539,7 +544,11 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 ;; make a vue-mode that is just web mode with a different name
 (define-derived-mode vue-mode web-mode "VueJS")
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+(defun ds/vue-mode-auto-pairs ()
+  "Set less annoying auto pairs for vue tags."
+  (setq web-mode-auto-pairs '(("<!-" . "- | -->"))))
 (add-hook 'vue-mode-hook #'ds/setup-eslint-fix)
+(add-hook 'vue-mode-hook #'ds/vue-mode-auto-pairs)
 
 ;; protobufs
 
@@ -993,8 +1002,8 @@ screenshots without revealing buffer contents."
 
 (use-package fluentd-mode
   :straight (fluentd-mode :type git
-                        :host github
-                        :repo "syohex/emacs-fluentd-mode"))
+                          :host github
+                          :repo "syohex/emacs-fluentd-mode"))
 
 (provide 'init)
 ;;; init.el ends here
