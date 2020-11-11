@@ -506,7 +506,9 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   "Format the current file with ESLint."
   (interactive)
   (let ((eslint (ds/find-eslint-executable)))
-    (if eslint
+    (if (and eslint (or (string= major-mode "js-mode")
+                        (string= major-mode "web-mode")
+                        (string= major-mode "vue-mode")))
         (progn (call-process eslint nil "*ESLint Errors*" nil "--fix" buffer-file-name)
                (revert-buffer t t t))
       (message "ESLint not found."))))
