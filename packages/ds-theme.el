@@ -169,9 +169,6 @@ This overrides the colors provided by the `zenburn-theme' package.")
                         :underline `(:style wave :color ,(ds/get-zenburn-color "blue"))))
 
   (with-eval-after-load 'vterm
-    (set-face-attribute 'vterm-color-default nil
-                        :foreground (ds/get-zenburn-color "fg")
-                        :background (ds/get-zenburn-color "bg"))
     (set-face-attribute 'vterm-color-black nil
                         :foreground (ds/get-zenburn-color "bg-2")
                         :background (ds/get-zenburn-color "bg+2"))
