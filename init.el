@@ -1006,6 +1006,15 @@ screenshots without revealing buffer contents."
   :straight (fluentd-mode :type git
                           :host github
                           :repo "syohex/emacs-fluentd-mode"))
+(use-package rcirc
+  :commands (irc)
+  :init
+  (defun ds/rcirc-setup ()
+    (rcirc-track-minor-mode 1)
+    (rcirc-omit-mode))
+  :hook (rcirc . ds/rcirc-setup)
+  :config
+  (setq rcirc-omit-responses '("JOIN" "PART" "QUIT" "NICK" "AWAY")))
 
 (provide 'init)
 ;;; init.el ends here
