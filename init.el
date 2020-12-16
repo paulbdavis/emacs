@@ -874,9 +874,6 @@ Must have \"(require 'swank) (swank:create-server)\" in your .stumpwmrc "
 
 
 
-(if (file-exists-p (concat user-emacs-directory "local.el"))
-    (load-file (concat user-emacs-directory "local.el")))
-
 (put 'downcase-region 'disabled nil)
 (put 'list-timers 'disabled nil)
 
@@ -1015,6 +1012,9 @@ screenshots without revealing buffer contents."
   :hook (rcirc . ds/rcirc-setup)
   :config
   (setq rcirc-omit-responses '("JOIN" "PART" "QUIT" "NICK" "AWAY")))
+
+(if (file-exists-p (concat user-emacs-directory "local.el"))
+    (load-file (concat user-emacs-directory "local.el")))
 
 (provide 'init)
 ;;; init.el ends here
