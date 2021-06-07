@@ -748,7 +748,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
     (ds/expand-logbook-drawer)))
 
 (use-package org
-  :straight org-plus-contrib
+  :straight org-mode
   :mode (("\\.org$" . org-mode))
   :defines (org-mode-map)
   :custom-face
