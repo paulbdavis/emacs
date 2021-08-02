@@ -1026,6 +1026,9 @@ screenshots without revealing buffer contents."
   :straight (fluentd-mode :type git
                           :host github
                           :repo "syohex/emacs-fluentd-mode"))
+(use-package pomodoro
+  :straight t)
+
 (use-package rcirc
   :commands (irc)
   :init
@@ -1038,6 +1041,9 @@ screenshots without revealing buffer contents."
 
 (if (file-exists-p (concat user-emacs-directory "local.el"))
     (load-file (concat user-emacs-directory "local.el")))
+
+(use-package solidity-mode
+  :straight t)
 
 (provide 'init)
 ;;; init.el ends here
