@@ -50,7 +50,9 @@
   :bind (("C-c _" . ds/toggle-camelcase-underscores)
          ("C-o" . ds/open-next-line)
          ("C-c n" . ds/indent-buffer)
-         ("M-o" . ds/open-previous-line)))
+         ("M-o" . ds/open-previous-line)
+         ("<mouse-8>" . previous-buffer)
+         ("<mouse-9>" . next-buffer)))
 
 (use-package ds-eshell)
 
@@ -348,9 +350,11 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :bind (:map magit-mode-map
               ([remap previous-line] . magit-previous-line)
               ([remap next-line] . magit-next-line))
+  :defines (magit-merge-arguments
+            magit-defines-global-keybinds)
   :config
   (setq magit-merge-arguments '("--no-ff"))
-  (setq global-magit-file-mode        t
+  (setq magit-defines-global-keybinds t
         magit-display-buffer-function 'display-buffer
         magit-log-highlight-keywords  t
         magit-diff-highlight-keywords t)
@@ -425,8 +429,10 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :straight t
   :diminish highlight-parentheses-mode
   :hook (emacs-lisp-mode . highlight-parentheses-mode)
+  :defines (highlight-parentheses-background-colors
+            highlight-parentheses-colors)
   :config
-  (setq hl-paren-background-colors
+  (setq highlight-parentheses-background-colors
         `(,(ds/get-zenburn-color "bg-2")
           ,(ds/get-zenburn-color "bg-1")
           ,(ds/get-zenburn-color "bg-05")
@@ -435,7 +441,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
           ,(ds/get-zenburn-color "bg+2")
           ,(ds/get-zenburn-color "bg+3")
           ,(ds/get-zenburn-color "fg-1")))
-  (setq hl-paren-colors
+  (setq highlight-parentheses-colors
         `(,(ds/get-zenburn-color "red-2")
           ,(ds/get-zenburn-color "green")
           ,(ds/get-zenburn-color "orange")
@@ -598,7 +604,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :straight t
   :diminish company-mode
   :custom ((company-minimum-prefix-length 2 "For LSP")
-           (company-idle-delay 0.1 "For LSP")))
+           (company-idle-delay 0.3 "For LSP")))
 
 (use-package company-lsp
   :straight t
@@ -636,7 +642,6 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :config
   (setq company-box-show-single-candidate t
         company-box-backends-colors nil
-        company-box-max-candidates 50
         company-box-icons-alist 'company-box-icons-all-the-icons
         company-box-icons-all-the-icons
         `((Unknown       . ,(ds/nerd-font-icon      "mdi-file-find"))
@@ -900,7 +905,7 @@ packages spamming frames."
 
 Only if there are no other windows in the frame, and if the buffer is in frames-only-mode-kill-frame-when-buffer-killed-buffer-list."
       ;; Store the buffer name now because we can't get it after burying the buffer
-      (let ((buffer-to-bury (buffer-name)))
+      (let ()
         (apply orig-fun args)
         (when (and (one-window-p)
                    (eq major-mode 'vterm-mode))
