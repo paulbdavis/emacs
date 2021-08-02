@@ -755,12 +755,22 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 (use-package org
   :straight org-mode
   :mode (("\\.org$" . org-mode))
-  :defines (org-mode-map)
+  :bind-keymap ("C-c a" . ds/org-agenda-map)
+  :bind (:map ds/org-agenda-map
+              ("c" . org-capture)
+              ("l" . org-agenda))
+  :defines (org-mode-map
+            ds/org-agenda-map
+            org-agenda-include-diary
+            org-capture-templates
+            org-refile-targets)
   :custom-face
   (org-mode-line-clock
    ((t (:foreground nil :background nil :underline nil :box nil))))
   :hook (org-cycle . ds/org-logbook-cycle-hook)
   :init
+  (defvar ds/org-agenda-map (make-sparse-keymap)
+    "Keymap for org-agenda commands.")
   (defvar org-directory "~/org" "Directory for org files.")
   (defvar org-time-clocksum-format "%d:%.02d")
   (defvar org-clock-idle-time 15)
@@ -785,11 +795,19 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   (defvar org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
   (defvar org-agenda-directory "~/org/agenda" "Directory for org files.")
   :config
+  (setq org-agenda-include-diary t)
   (setq org-agenda-file-regexp "\\([^.].*\\.org\\)\\|\\([0-9]+\\)")
+  
   (defun org-agenda-reload ()
     "Reset org agenda files by rescanning the org directory."
     (interactive)
-    (setq org-agenda-files (directory-files-recursively org-agenda-directory "\\.org\\|[0-9]\\{8\\}"))
+    (setq org-default-notes-file (concat org-directory "/inbox.org"))
+    (setq org-capture-templates
+          `(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
+             "* TODO %?\n%i\n%a")
+            ("j" "Journal" entry (file+olp+datetree ,(concat org-directory "/journal.org"))
+             "* %?\nEntered on %T\n%i\n%a")))
+    (setq org-agenda-files  (append `(,(concat org-directory "/journal.org") ,org-default-notes-file) (directory-files-recursively org-agenda-directory "\\.org\\|[0-9]\\{8\\}")))
     (setq org-refile-targets '((org-agenda-files . (:level . 1)))))
 
   (org-agenda-reload)
@@ -814,10 +832,10 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
    '((shell . t)
      (ditaa . t))))
 
-(use-package org-bullets
-  :straight t
-  :after org
-  :hook (org-mode . org-bullets-mode))
+;; (use-package org-bullets
+;;   :straight t
+;;   :after org
+;;   :hook (org-mode . org-bullets-mode))
 
 (use-package verb
   :straight (verb :type git :host github :repo "federicotdn/verb")
