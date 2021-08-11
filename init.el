@@ -827,6 +827,41 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
         '((sequence "TODO(t)" "IN-PROGRESS(i!)" "WAITING(w@)" "|" "WILL-NOT-IMPLEMENT(k@)" "DONE(d)")
           (sequence "BUG(b)" "RESOLVING(r!)" "|" "NON-ISSUE(n@)" "PATCHED(p)")))
 
+  (defun ds/org-add-note (func &rest args)
+    "Advisor function to go around `org-add-note'.  Takes optional
+  count (c-u) and sets ds/org-log-into-drawer to be used by
+  `ds/org-store-log-note'.
+
+  The usage is thus:
+
+  (advice-add 'org-log-into-drawer :around #'ds/org-log-into-drawer)
+  (advice-add 'org-add-note :around #'ds/org-add-note)
+
+  When you do not want to log note into a draw use C-u C-c C-z.
+  Otherwise use C-c C-z as normal and it should log note as per
+  standard `org-log-into-drawer'.
+  "
+    (interactive "P")
+    (setq ds/org-log-into-drawer (car args))
+    (funcall func))
+
+  (defun ds/org-log-into-drawer (func)
+    "Advisor function to go around `org-log-into-drawer'.
+  Reads value of ds/org-log-into-drawer, as set by
+  `ds/org-add-note', and if set returns nil meaning do not log
+  into drawer.  Otherwise returns value from call to
+  `org-log-into-draw'.  Before returning resets
+  ds/org-log-into-drawer for subsequent calls."
+    (let ((ret
+    (if (not ds/org-log-into-drawer)
+        (funcall func)
+      nil)))
+      (setq ds/org-log-into-drawer nil)
+      ret))
+  (setq ds/org-log-into-drawer nil)
+  (advice-add 'org-log-into-drawer :around #'ds/org-log-into-drawer)
+  (advice-add 'org-add-note :around #'ds/org-add-note)
+  
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)
