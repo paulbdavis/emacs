@@ -1080,6 +1080,9 @@ screenshots without revealing buffer contents."
 (use-package solidity-mode
   :straight t)
 
+(use-package kotlin-mode
+  :straight t)
+
 (provide 'init)
 ;;; init.el ends here
 
