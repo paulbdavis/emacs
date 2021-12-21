@@ -34,7 +34,7 @@
 (if (boundp 'scroll-bar-mode)
     (scroll-bar-mode -1))
 
-(add-to-list 'default-frame-alist '(font . "Monospace-10"))
+(add-to-list 'default-frame-alist '(font . "Monospace-8"))
 
 ;; setup backup and temp file directories
 (defvar ds/backup-directory
