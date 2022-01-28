@@ -687,6 +687,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
+         (svelte-mode . lsp-deferred)
          ;; (js-mode . lsp-deferred)
          ;; (vue-mode . lsp-deferred)
          ;; (web-mode . lsp-deferred)
@@ -1081,6 +1082,9 @@ screenshots without revealing buffer contents."
   :straight t)
 
 (use-package kotlin-mode
+  :straight t)
+
+(use-package svelte-mode
   :straight t)
 
 (provide 'init)
