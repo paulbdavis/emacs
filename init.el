@@ -529,6 +529,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 
 (use-package js
   :hook ((js-mode . ds/setup-eslint-fix))
+  :mode ("\\.mjs\\'" . js-mode)
   :custom ((js-indent-level 2 "Set indent level")))
 
 ;; html/web
