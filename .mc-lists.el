@@ -32,6 +32,7 @@
         sh-assignment
         slime-space
         transpose-words
+        upcase-region
         yaml-electric-backspace
         yaml-electric-bar-and-angle
         yaml-electric-dash-and-dot
