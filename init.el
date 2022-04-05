@@ -341,6 +341,9 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :config
   (counsel-projectile-mode))
 
+(use-package ag
+  :straight t)
+
 (use-package ibuffer-vc
   :straight t)
 
