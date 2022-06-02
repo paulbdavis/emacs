@@ -686,8 +686,9 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   ;; :disabled
   :custom ((lsp-prefer-capf t "Better completion caching?")
            (lsp-enable-snippet nil "No snippets please.")
-           (lsp-gopls-hover-kind "FullDocumentation" "Full docs on hover.")
-           (lsp-gopls-use-placeholders nil "Don't insert snippets.")
+           (lsp-go-hover-kind "NoDocumentation" "Hover docs.")
+           (lsp-go-use-placeholders nil "Don't insert snippets.")
+           (lsp-go-goimports-local "gitlab.btm.private" "Local imports.")
            (lsp-javascript-format-insert-space-before-function-parenthesis t "JS formatting"))
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-mode . lsp-deferred)
@@ -706,7 +707,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   ;; experimental options not in lsp mode yet
   (lsp-register-custom-settings
    '(("gopls.completeUnimported" t t)
-     ("gopls.staticcheck" t t))))
+     ("gopls.staticcheck" t t)
+     ("gopls.templateExtensions" ["tmpl"]))))
 
 (use-package lsp-ui
   :straight t
