@@ -511,6 +511,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :hook ((go-mode . ds/setup-lsp-save-hooks))
   :mode ("\\go.mod\\'" . go-dot-mod-mode))
 
+(use-package go-template-mode)
+
 ;; javascript
 (defun ds/eslint-fix ()
   "Format the current file with ESLint."
