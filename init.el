@@ -375,8 +375,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
           ("Path" 99 magit-repolist-column-path nil)))
   (setq magit-completing-read-function 'ivy-completing-read))
 
-(use-package git-timemachine
-  :straight t)
+;; (use-package git-timemachine
+;;   :straight t)
 
 (use-package pdf-tools
   :straight t
