@@ -1096,6 +1096,9 @@ screenshots without revealing buffer contents."
 (use-package svelte-mode
   :straight t)
 
+(use-package scad-mode
+  :straight t)
+
 (provide 'init)
 ;;; init.el ends here
 
