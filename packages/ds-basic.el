@@ -133,7 +133,8 @@
 (defvar tramp-ssh-controlmaster-options
   (concat
    "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
-   "-o ControlMaster=auto -o ControlPersist=yes"))
+   "-o ControlMaster=auto -o ControlPersist=yes "
+   "-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa"))
 
 (add-hook 'prog-mode-hook #'electric-pair-local-mode)
 
