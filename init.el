@@ -1099,6 +1099,15 @@ screenshots without revealing buffer contents."
 (use-package scad-mode
   :straight t)
 
+(use-package gba-debug
+  :straight (gba-debug :type git
+                        :host github
+                        :repo "themkat/emacs-gba-debug")
+  :custom ((gba-debug-mgba-path "/usr/bin/mgba-qt"))
+  :commands (gba-debug-program))
+
+
+
 (provide 'init)
 ;;; init.el ends here
 
