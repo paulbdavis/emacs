@@ -1106,6 +1106,12 @@ screenshots without revealing buffer contents."
   :custom ((gba-debug-mgba-path "/usr/bin/mgba-qt"))
   :commands (gba-debug-program))
 
+(use-package nvm
+  :straight t
+  :commands (nvm-use)
+  :config
+  (nvm-use "20"))
+
 
 
 (provide 'init)
