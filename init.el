@@ -527,6 +527,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
 
 (use-package typescript-mode
   :straight t
+  :custom ((typescript-indent-level 4 "Set indent to match default VSCode"))
   :hook ((typescript-mode . ds/setup-lsp-save-hooks)))
 
 (defun ds/setup-eslint-fix ()
@@ -690,8 +691,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
            (lsp-enable-snippet nil "No snippets please.")
            (lsp-go-hover-kind "NoDocumentation" "Hover docs.")
            (lsp-go-use-placeholders nil "Don't insert snippets.")
-           (lsp-go-goimports-local "gitlab.btm.private" "Local imports.")
-           (lsp-javascript-format-insert-space-before-function-parenthesis t "JS formatting"))
+           (lsp-javascript-format-insert-space-before-function-parenthesis t "JS formatting")
+           (lsp-clients-typescript-prefer-use-project-ts-server t "Use local typescript LSP conf"))
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
