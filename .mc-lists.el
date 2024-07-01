@@ -5,6 +5,7 @@
       '(
         LilyPond-electric-close-paren
         backward-kill-sentence
+        backward-kill-sexp
         backward-sexp
         c-electric-delete-forward
         c-electric-paren
