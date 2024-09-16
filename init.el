@@ -534,8 +534,14 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   "Setup eslint fixing."
   (add-hook 'after-save-hook #'ds/eslint-fix))
 
+(defun ds/set-js-lsp-indent ()
+  "Setup indent for javascipt LSP."
+  (setq indent-tabs-mode nil))
+
 (use-package js
-  :hook ((js-mode . ds/setup-eslint-fix))
+  :hook ((js-mode . ds/setup-eslint-fix)
+         (js-mode . ds/set-js-lsp-indent)
+         (js-mode . ds/setup-lsp-save-hooks))
   :mode ("\\.mjs\\'" . js-mode)
   :custom ((js-indent-level 2 "Set indent level")))
 
@@ -697,7 +703,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :hook ((go-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
          (svelte-mode . lsp-deferred)
-         ;; (js-mode . lsp-deferred)
+         (js-mode . lsp-deferred)
          ;; (vue-mode . lsp-deferred)
          ;; (web-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
