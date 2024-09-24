@@ -1120,8 +1120,8 @@ screenshots without revealing buffer contents."
   (nvm-use "20"))
 
 
+(put 'upcase-region 'disabled nil)
 
 (provide 'init)
 ;;; init.el ends here
 
-(put 'upcase-region 'disabled nil)
