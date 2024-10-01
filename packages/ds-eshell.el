@@ -96,19 +96,6 @@
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t))))))
 
-(defvar company-require-match nil)
-(make-variable-buffer-local 'company-require-match)
-(use-package esh-autosuggest
-  :straight t
-  :hook ((eshell-mode . esh-autosuggest-mode)
-         (eshell-mode . ds/esh-autosuggest-setup))
-  :init
-  (require 'subr-x)
-  (defun ds/esh-autosuggest-setup ()
-    (set (make-local-variable 'company-minimum-prefix-length) 1)
-    (set (make-local-variable 'company-require-match) nil)
-    (face-remap-add-relative 'company-preview-common 'ds/esh-autosuggest-face)))
-
 
 (use-package pcmpl-args
   :straight t

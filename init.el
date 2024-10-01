@@ -611,16 +611,6 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   :commands yas-minor-mode
   :hook (go-mode . yas-minor-mode))
 
-(use-package company
-  :straight t
-  :diminish company-mode
-  :custom ((company-minimum-prefix-length 2 "For LSP")
-           (company-idle-delay 0.3 "For LSP")))
-
-(use-package company-lsp
-  :straight t
-  :commands company-lsp)
-
 (use-package all-the-icons
   :straight t)
 
@@ -645,44 +635,13 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
                     'display `(raise ,v-adjust)
                     'rear-nonsticky t)))))
 
-(use-package company-box
-  :straight t
-  :diminish company-box-mode
-  :after (company nerd-fonts)
-  :hook ((company-mode . company-box-mode))
-  :config
-  (setq company-box-show-single-candidate t
-        company-box-backends-colors nil
-        company-box-icons-alist 'company-box-icons-all-the-icons
-        company-box-icons-all-the-icons
-        `((Unknown       . ,(ds/nerd-font-icon      "mdi-file-find"))
-          (Text          . ,(ds/nerd-font-icon      "fa-text-width"))
-          (Method        . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-magenta))
-          (Function      . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-red))
-          (Constructor   . ,(ds/nerd-font-icon      "mdi-cube-outline"         :face 'ds/zenburn-yellow))
-          (Field         . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-blue))
-          (Variable      . ,(all-the-icons-octicon  "tag"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-orange))
-          (Class         . ,(all-the-icons-material "settings_input_component" :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-orange))
-          (Interface     . ,(all-the-icons-material "share"                    :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
-          (Module        . ,(ds/nerd-font-icon      "mdi-view-module"          :face 'ds/zenburn-blue))
-          (Property      . ,(all-the-icons-faicon   "wrench"                   :height 0.8 :v-adjust -0.05))
-          (Unit          . ,(all-the-icons-material "settings_system_daydream" :height 0.85 :v-adjust -0.2))
-          (Value         . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
-          (Enum          . ,(all-the-icons-material "storage"                  :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-orange))
-          (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.85 :v-adjust -0.2))
-          (Snippet       . ,(all-the-icons-material "format_align_center"      :height 0.85 :v-adjust -0.2))
-          (Color         . ,(all-the-icons-material "palette"                  :height 0.85 :v-adjust -0.2))
-          (File          . ,(all-the-icons-faicon   "file-o"                   :height 0.85 :v-adjust -0.05))
-          (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.85 :v-adjust -0.2))
-          (Folder        . ,(all-the-icons-faicon   "folder-open"              :height 0.85 :v-adjust -0.05))
-          (EnumMember    . ,(all-the-icons-material "format_align_right"       :height 0.85 :v-adjust -0.2 :face 'ds/zenburn-blue))
-          (Constant      . ,(all-the-icons-faicon   "square-o"                 :height 0.85 :v-adjust -0.1))
-          (Struct        . ,(ds/nerd-font-icon      "mdi-code-braces"          :face 'ds/zenburn-orange))
-          (Event         . ,(all-the-icons-octicon  "zap"                      :height 0.8 :v-adjust 0 :face 'ds/zenburn-orange))
-          (Operator      . ,(all-the-icons-material "control_point"            :height 0.85 :v-adjust -0.2))
-          (TypeParameter . ,(all-the-icons-faicon   "arrows"                   :height 0.8 :v-adjust -0.05))
-          (Template      . ,(all-the-icons-material "format_align_left"        :height 0.85 :v-adjust -0.2)))))
 
+(use-package corfu
+  :straight t
+  :demand
+  :custom ((corfu-auto t))
+  :init
+  (global-corfu-mode))
 
 (use-package lsp-mode
   :straight t
