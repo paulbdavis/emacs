@@ -54,8 +54,6 @@
          ("<mouse-8>" . previous-buffer)
          ("<mouse-9>" . next-buffer)))
 
-(use-package ds-eshell)
-
 (use-package which-key
   :straight t
   :diminish which-key-mode
@@ -177,8 +175,7 @@
   :straight t
   :demand
   :config
-  (direnv-mode)
-  :hook ((eshell-directory-change . direnv-update-directory-environment)))
+  (direnv-mode))
 
 ;; syntax checking
 (use-package flycheck
