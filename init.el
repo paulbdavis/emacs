@@ -1075,6 +1075,9 @@ screenshots without revealing buffer contents."
   :config
   (nvm-use "20"))
 
+(use-package zig-mode
+  :straight t)
+
 
 (put 'upcase-region 'disabled nil)
 
