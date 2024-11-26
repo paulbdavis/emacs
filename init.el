@@ -195,8 +195,7 @@
           ("B>U" 3 magit-repolist-column-unpushed-to-upstream
            ((:right-align t)
             (:help-echo "Local changes not in upstream")))
-          ("Path" 99 magit-repolist-column-path nil)))
-  (setq magit-completing-read-function 'ivy-completing-read))
+          ("Path" 99 magit-repolist-column-path nil))))
 
 (use-package pdf-tools
   :straight t
