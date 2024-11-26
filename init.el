@@ -361,7 +361,7 @@
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
-)
+  )
 
 ;; minibuffer completion stuff
 ;; Enable vertico
@@ -405,21 +405,28 @@
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
-(use-package fussy
+(use-package orderless
   :straight t
   :ensure t
   :custom
-  (completion-styles '(fussy partial-completion basic))
+  (completion-styles '(orderless partial-completion basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+  (completion-category-overrides '((file (styles basic-remote orderless partial-completion))))
+  (orderless-matching-styles '(orderless-flex
+                               orderless-literal
+                               orderless-prefixes
+                               orderless-initialism
+                               orderless-regexp)))
+
+
 
 (use-package corfu
   :straight t
+  :custom ((corfu-auto t))
   :init
   (global-corfu-mode)
   :config
-  (setq corfu-auto t
-        corfu-quit-no-match 'separator))
+  (setq corfu-quit-no-match 'separator))
 
 (use-package emacs
   :custom
@@ -483,7 +490,7 @@
   
   (defun ds/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(fussy)))
+          '(orderless)))
   :config
   ;; experimental options not in lsp mode yet
   (lsp-register-custom-settings
