@@ -411,7 +411,7 @@
   :custom
   (completion-styles '(orderless partial-completion basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic-remote orderless partial-completion))))
+  (completion-category-overrides '((file (styles orderless partial-completion))))
   (orderless-matching-styles '(orderless-flex
                                orderless-literal
                                orderless-prefixes
