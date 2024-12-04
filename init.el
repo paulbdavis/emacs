@@ -350,7 +350,8 @@
    consult--source-bookmark consult--source-file-register
    consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key "M-."
-   :preview-key '(:debounce 0.4 any))
+   :preview-key '(:debounce 0.4 any)
+   consult-buffer-other-window :preview-key '(:debounce 0.4 "M-."))
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
