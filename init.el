@@ -632,7 +632,6 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
 ;; html/web
 (use-package web-mode
   :straight t
-  :hook ((web-mode . ds/setup-eslint-fix))
   :mode ("\\.html\\'")
   :custom ((web-mode-code-indent-offset 2 "Set indent for code")
            (web-mode-markup-indent-offset 2 "Set indent for markup")
