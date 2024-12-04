@@ -605,7 +605,11 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
 ;; golang
 (use-package go-mode
   :straight t
-  :hook ((go-ts-mode . ds/setup-lsp-save-hooks))
+  :init
+  (defun ds/go-ts-mode-setup ()
+    (setq go-ts-mode-indent-offset 4))
+  :hook ((go-ts-mode . ds/setup-lsp-save-hooks)
+         (go-ts-mode . ds/go-ts-mode-setup))
   :mode (("\\go.mod\\'" . go-dot-mod-mode)))
 
 ;; javascript
