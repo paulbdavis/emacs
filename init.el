@@ -497,7 +497,9 @@
   (lsp-register-custom-settings
    '(("gopls.completeUnimported" t t)
      ("gopls.staticcheck" t t)
-     ("gopls.templateExtensions" ["tmpl"]))))
+     ("gopls.templateExtensions" ["tmpl"])))
+  ;; custom yaml tags
+  (setq lsp-yaml-custom-tags ["!Ref"]))
 
 (use-package lsp-ui
   :straight t
