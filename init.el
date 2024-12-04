@@ -480,6 +480,7 @@
   :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-ts-mode . lsp-deferred)
+         (yaml-ts-mode . lsp-deferred)
          (typescript-ts-mode . lsp-deferred)
          (js-ts-mode . lsp-deferred)
          (lsp-completion-mode . ds/lsp-mode-setup-completion))
