@@ -259,6 +259,14 @@
   :init
   (vertico-mode))
 
+;; avy for jumping around
+(use-package avy
+  :straight t
+  :custom ((avy-keys '(?t ?n ?h ?e ?s ?o ?a ?i ?g ?y)))
+  :bind (:map goto-map
+              ("j" . avy-goto-word-0)
+              ("M-j" . avy-goto-word-1)))
+
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :straight t
