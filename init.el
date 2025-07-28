@@ -542,6 +542,9 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
 (use-package zig-mode
   :straight t)
 
+;; searching
+(use-package rg :straight t)
+
 (put 'downcase-region 'disabled nil)
 (put 'list-timers 'disabled nil)
 (put 'upcase-region 'disabled nil)
