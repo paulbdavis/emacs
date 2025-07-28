@@ -304,20 +304,9 @@
                                orderless-initialism
                                orderless-regexp)))
 
+(use-package company
+  :straight t)
 
-
-(use-package corfu
-  :straight t
-  :custom ((corfu-auto t))
-  :init
-  (global-corfu-mode)
-  :config
-  (setq corfu-quit-no-match 'separator))
-
-(use-package emacs
-  :custom
-  (tab-always-indent 'complete)
-  (read-extended-command-predicate #'command-completion-default-include-p))
 
 (use-package treesit-auto
   :straight t
@@ -358,8 +347,7 @@
 
 (use-package lsp-mode
   :straight t
-  :demand
-  :custom ((lsp-completion-provider :none "Using corfu.")
+  :demand :custom (
            (lsp-enable-snippet nil "No snippets please.")
            (lsp-go-use-placeholders nil "Don't insert snippets."))
   :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
