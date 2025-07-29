@@ -542,6 +542,19 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
 (use-package zig-mode
   :straight t)
 
+(use-package pico8-mode
+  :straight (tts-editor :type git
+                        :host github
+                        :repo "Kaali/pico8-mode")
+  :init
+  (defun ds/setup-pico8-mode ()
+    "Setup pico8-mode"
+    (setq-local lua-indent-level 1
+                indent-tabs-mode 'only
+                tab-width 1))
+  :hook ((pico8-mode . ds/setup-pico8-mode)))
+
+
 ;; searching
 (use-package rg :straight t)
 
