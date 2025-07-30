@@ -156,7 +156,8 @@
 ;; git porcelean
 (use-package magit
   :straight t
-  :bind (:map magit-mode-map
+  :bind (("C-x p v" . magit-status)
+         :map magit-mode-map
               ([remap previous-line] . magit-previous-line)
               ([remap next-line] . magit-next-line))
   :defines (magit-merge-arguments
