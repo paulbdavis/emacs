@@ -231,7 +231,6 @@
   :straight t
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
-         ("C-s" . consult-line)
          ("C-c M-x" . consult-mode-command)
          ("C-c h" . consult-history)
          ("C-c k" . consult-kmacro)
@@ -245,6 +244,7 @@
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ;; project.el rebinds
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
          ("C-x p g" . consult-ripgrep)
          ;; Custom M-# bindings for fast register access
@@ -325,6 +325,8 @@
    consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any)
+   consult-buffer :preview-key '(:debounce 1 any)
+   consult-man :preview-key nil
    consult-buffer-other-window :preview-key '(:debounce 0.4 "M-."))
 
   ;; Optionally configure the narrowing key.
