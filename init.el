@@ -458,64 +458,34 @@
                     'display `(raise ,v-adjust)
                     'rear-nonsticky t)))))
 
-(use-package lsp-mode
-  :straight t
-  :demand
-  :custom ((lsp-completion-provider :none "Using corfu.")
-           (lsp-enable-snippet nil "No snippets please.")
-           (lsp-go-use-placeholders nil "Don't insert snippets."))
-  :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
-  :commands (lsp lsp-deferred lsp-register-custom-settings)
-  :hook ((go-ts-mode . lsp-deferred)
-         (python-ts-mode . lsp-deferred)
-         (yaml-ts-mode . lsp-deferred)
-         (typescript-ts-mode . lsp-deferred)
-         (js-ts-mode . lsp-deferred)
-         (lsp-completion-mode . ds/lsp-mode-setup-completion))
+(use-package eglot
+  :defines (ds/eglot-format-buffer-before-save
+            eglot-ensure)
   :init
-  (setq lsp-keymap-prefix "C-c l")
-  (defun ds/setup-lsp-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  
-  (defun ds/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless)))
+  (defun ds/setup-eglot-save-hooks ()
+    (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
+    (add-hook 'before-save-hook
+              (lambda ()
+                (call-interactively 'eglot-code-action-organize-imports))
+              nil t))
   :config
-  ;; experimental options not in lsp mode yet
-  (lsp-register-custom-settings
-   '(("gopls.completeUnimported" t t)
-     ("gopls.staticcheck" t t)
-     ("gopls.templateExtensions" ["tmpl"])))
-  ;; custom yaml tags
-  (setq lsp-yaml-custom-tags ["!Ref"]))
+  (setq-default eglot-workspace-configuration
+                '((:gopls .
+                          ((staticcheck . t)
+                           (completeUnimported . t)
+                           (templateExtensions . ["tmpl" "html"])))))
+  :hook ((go-ts-mode . eglot-ensure)
+         (python-ts-mode . eglot-ensure)
+         (yaml-ts-mode . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure)
+         (js-ts-mode . eglot-ensure)
+         ; ensure save hooks are set up for some
+         (go-ts-mode . ds/setup-eglot-save-hooks)
+         (typescript-ts-mode . ds/setup-eglot-save-hooks)
+         (js-ts-mode . ds/setup-eglot-save-hooks))
+  )
 
-(use-package lsp-ui
-  :straight t
-  :commands lsp-ui-mode
-  :after (lsp-mode)
-  :defines (lsp-ui-mode-map)
-  :hook ((lsp-mode-hook . lsp-ui-mode))
-  :custom ((lsp-ui-doc-use-webkit nil "Use webkit widget for LSP docs")
-           (lsp-ui-doc-delay 1)
-           (lsp-ui-doc-position 'top)
-           (lsp-ui-sideline-delay 0))
-  :config
-
-
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
-
-  (set-face-background 'lsp-ui-doc-background (ds/get-zenburn-color "bg"))
-  (set-face-background 'lsp-ui-doc-header (ds/get-zenburn-color "bg"))
-  (set-face-foreground 'lsp-ui-doc-header (ds/get-zenburn-color "fg")))
-
-(use-package lsp-treemacs
-  :straight t
-  :after (lsp-mode)
-  :commands lsp-treemacs-errors-list)
-
-
+;; frames only
 (use-package frames-only-mode
   :straight t
   :custom ((frames-only-mode-kill-frame-when-buffer-killed-buffer-list
@@ -597,24 +567,22 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
   :init
   (defun ds/go-ts-mode-setup ()
     (setq go-ts-mode-indent-offset 4))
-  :hook ((go-ts-mode . ds/setup-lsp-save-hooks)
-         (go-ts-mode . ds/go-ts-mode-setup))
+  :hook ((go-ts-mode . ds/go-ts-mode-setup))
   :mode (("\\go.mod\\'" . go-dot-mod-mode)))
 
 ;; javascript
 (use-package typescript-mode
   :straight t
-  :custom ((typescript-indent-level 4 "Set indent to match default VSCode"))
-  :hook ((typescript-mode . ds/setup-lsp-save-hooks)))
+  :custom ((typescript-indent-level 4 "Set indent to match default VSCode")))
 
-(defun ds/set-js-lsp-indent ()
-  "Setup indent for javascipt LSP."
-  (setq indent-tabs-mode nil))
 
 (use-package js
-  :hook ((js-mode . ds/set-js-lsp-indent)
-         (js-mode . ds/setup-lsp-save-hooks))
-  :mode ("\\.mjs\\'" . js-mode)
+  :init
+  (defun ds/set-js-lsp-indent ()
+    "Setup indent for javascipt LSP."
+    (setq indent-tabs-mode nil))
+  :hook ((js-ts-mode . ds/set-js-lsp-indent))
+  :mode ("\\.mjs\\'" . js-ts-mode)
   :custom ((js-indent-level 2 "Set indent level")))
 
 ;; html/web
