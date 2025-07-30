@@ -106,8 +106,13 @@
              multi-vterm-project
              ds/multi-vterm-create
              ds/multi-vterm-dedicated-solo)
-  :bind (:map project-prefix-map
-              ("s" . multi-vterm-project))
+  :bind (
+         :map project-prefix-map
+         ("s" . multi-vterm-project)
+         :map ds/multi-vterm-map
+         ("C-s" . ds/multi-vterm-create)
+         ("n" . multi-vterm-next)
+         ("p" . multi-vterm-prev))
   :bind-keymap ("C-c C-s" . ds/multi-vterm-map))
 
 ;; misc packages for general usability
