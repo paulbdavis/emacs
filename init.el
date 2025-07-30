@@ -232,6 +232,10 @@
          ("C-c C-_ C-c" . evilnc-copy-and-comment-lines)
          ("C-c C-_ C-p" . evilnc-comment-or-uncomment-paragraphs)))
 
+;; project management
+(use-package project
+  :custom ((project-switch-commands 'project-find-file)))
+
 ;; search
 (use-package consult
   :straight t
