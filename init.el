@@ -79,7 +79,6 @@
 (use-package multi-vterm
   :straight t
   :demand
-  :after projectile
   :init
   (defvar ds/multi-vterm-map (make-sparse-keymap)
     "Keymap for multi-vterm commands.")
@@ -107,13 +106,14 @@
              multi-vterm-project
              ds/multi-vterm-create
              ds/multi-vterm-dedicated-solo)
-  :bind-keymap ("C-c C-s" . ds/multi-vterm-map)
-  :bind (:map projectile-command-map
-              ("x s" . multi-vterm-project)
-              :map ds/multi-vterm-map
-              ("C-s" . ds/multi-vterm-create)
-              ("n" . multi-vterm-next)
-              ("p" . multi-vterm-prev)))
+  :bind (
+         :map project-prefix-map
+         ("s" . multi-vterm-project)
+         :map ds/multi-vterm-map
+         ("C-s" . ds/multi-vterm-create)
+         ("n" . multi-vterm-next)
+         ("p" . multi-vterm-prev))
+  :bind-keymap ("C-c C-s" . ds/multi-vterm-map))
 
 ;; misc packages for general usability
 (use-package adaptive-wrap
@@ -153,23 +153,6 @@
   :config
   (direnv-mode))
 
-;; project management
-(use-package projectile
-  :straight t
-  :demand
-  :defines (projectile-project-p
-            projectile-project-root)
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :init
-  (defvar projectile-remember-window-configs t)
-  (defvar projectile-mode-line
-    '(:eval
-      (if (file-remote-p default-directory)
-          " NoProj"
-        (format " Proj[%s]"
-                (projectile-project-name)))))
-  (projectile-mode +1))
-
 ;; git porcelean
 (use-package magit
   :straight t
@@ -204,7 +187,6 @@
 
 ;; compilation settings
 (use-package compile
-  :after projectile
   :config
   (define-key compilation-mode-map (kbd "q") #'delete-frame)
   (setq compilation-finish-functions nil)
@@ -252,10 +234,8 @@
 ;; search
 (use-package consult
   :straight t
-  :after projectile
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
-         ("C-s" . consult-line)
          ("C-c M-x" . consult-mode-command)
          ("C-c h" . consult-history)
          ("C-c k" . consult-kmacro)
@@ -269,7 +249,9 @@
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ;; project.el rebinds
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ("C-x p g" . consult-ripgrep)
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
@@ -306,10 +288,7 @@
          ;; Minibuffer history
          :map minibuffer-local-map
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history)
-         :map projectile-command-map               ;; orig. previous-matching-history-element
-         ("s s" . consult-ripgrep)
-         ("f"   . consult-find))
+         ("M-r" . consult-history))
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
@@ -351,13 +330,13 @@
    consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any)
+   consult-buffer :preview-key '(:debounce 1 any)
+   consult-man :preview-key nil
    consult-buffer-other-window :preview-key '(:debounce 0.4 "M-."))
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
-
-  (setq consult-project-function (lambda (_) (projectile-project-root)))
 
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
@@ -373,6 +352,14 @@
               ("C-e" . vertico-insert))
   :init
   (vertico-mode))
+
+;; avy for jumping around
+(use-package avy
+  :straight t
+  :custom ((avy-keys '(?t ?n ?h ?e ?s ?o ?a ?i ?g ?y)))
+  :bind (:map goto-map
+              ("j" . avy-goto-word-0)
+              ("M-j" . avy-goto-word-1)))
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
@@ -480,6 +467,7 @@
   :defines (lsp-gopls-hover-kind lsp-gopls-env ds/setup-lsp-save-hooks)
   :commands (lsp lsp-deferred lsp-register-custom-settings)
   :hook ((go-ts-mode . lsp-deferred)
+         (python-ts-mode . lsp-deferred)
          (yaml-ts-mode . lsp-deferred)
          (typescript-ts-mode . lsp-deferred)
          (js-ts-mode . lsp-deferred)
@@ -660,6 +648,26 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
 
 (use-package zig-mode
   :straight t)
+
+(use-package pico8-mode
+  :straight (pico8-mode :type git
+                        :host github
+                        :repo "Kaali/pico8-mode")
+  :init
+  (defun ds/setup-pico8-mode ()
+    "Setup pico8-mode"
+    (setq-local lua-indent-level 1
+                indent-tabs-mode 'only
+                tab-width 1))
+  :hook ((pico8-mode . ds/setup-pico8-mode)))
+
+
+(use-package structurizr-mode
+  :straight (strucurizr-mode :type git
+                             :host github
+                             :repo "gilesp/structurizr-mode"))
+;; searching
+(use-package rg :straight t)
 
 (put 'downcase-region 'disabled nil)
 (put 'list-timers 'disabled nil)
