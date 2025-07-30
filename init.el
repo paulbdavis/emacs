@@ -79,7 +79,6 @@
 (use-package multi-vterm
   :straight t
   :demand
-  :after projectile
   :init
   (defvar ds/multi-vterm-map (make-sparse-keymap)
     "Keymap for multi-vterm commands.")
@@ -107,13 +106,9 @@
              multi-vterm-project
              ds/multi-vterm-create
              ds/multi-vterm-dedicated-solo)
-  :bind-keymap ("C-c C-s" . ds/multi-vterm-map)
-  :bind (:map projectile-command-map
-              ("x s" . multi-vterm-project)
-              :map ds/multi-vterm-map
-              ("C-s" . ds/multi-vterm-create)
-              ("n" . multi-vterm-next)
-              ("p" . multi-vterm-prev)))
+  :bind (:map project-prefix-map
+              ("s" . multi-vterm-project))
+  :bind-keymap ("C-c C-s" . ds/multi-vterm-map))
 
 ;; misc packages for general usability
 (use-package adaptive-wrap
@@ -153,23 +148,6 @@
   :config
   (direnv-mode))
 
-;; project management
-(use-package projectile
-  :straight t
-  :demand
-  :defines (projectile-project-p
-            projectile-project-root)
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :init
-  (defvar projectile-remember-window-configs t)
-  (defvar projectile-mode-line
-    '(:eval
-      (if (file-remote-p default-directory)
-          " NoProj"
-        (format " Proj[%s]"
-                (projectile-project-name)))))
-  (projectile-mode +1))
-
 ;; git porcelean
 (use-package magit
   :straight t
@@ -204,7 +182,6 @@
 
 ;; compilation settings
 (use-package compile
-  :after projectile
   :config
   (define-key compilation-mode-map (kbd "q") #'delete-frame)
   (setq compilation-finish-functions nil)
@@ -252,7 +229,6 @@
 ;; search
 (use-package consult
   :straight t
-  :after projectile
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-s" . consult-line)
@@ -270,6 +246,7 @@
          ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ("C-x p g" . consult-ripgrep)
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
@@ -306,10 +283,7 @@
          ;; Minibuffer history
          :map minibuffer-local-map
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history)
-         :map projectile-command-map               ;; orig. previous-matching-history-element
-         ("s s" . consult-ripgrep)
-         ("f"   . consult-find))
+         ("M-r" . consult-history))
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
@@ -356,8 +330,6 @@
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
-
-  (setq consult-project-function (lambda (_) (projectile-project-root)))
 
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
