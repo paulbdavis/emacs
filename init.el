@@ -429,6 +429,14 @@
 (use-package treesit-auto
   :straight t
   :custom ((treesit-auto-install 'prompt))
+  :init
+  (defun ds/go-ts-mode-setup ()
+    (setq go-ts-mode-indent-offset 4))
+  (defun ds/set-js-lsp-indent ()
+    "Setup indent for javascipt LSP."
+    (setq indent-tabs-mode nil))
+  :hook ((go-ts-mode . ds/go-ts-mode-setup)
+         (js-ts-mode . ds/set-js-lsp-indent))
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
@@ -484,6 +492,7 @@
          (yaml-ts-mode . eglot-ensure)
          (typescript-ts-mode . eglot-ensure)
          (js-ts-mode . eglot-ensure)
+         (bash-ts-mode . eglot-ensure)
          ; ensure save hooks are set up for some
          (go-ts-mode . ds/setup-eglot-save-hooks)
          (typescript-ts-mode . ds/setup-eglot-save-hooks)
@@ -566,29 +575,6 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
   :straight t
   :hook (sql-mode . sqlind-minor-mode))
 
-;; golang
-(use-package go-mode
-  :straight t
-  :init
-  (defun ds/go-ts-mode-setup ()
-    (setq go-ts-mode-indent-offset 4))
-  :hook ((go-ts-mode . ds/go-ts-mode-setup))
-  :mode (("\\go.mod\\'" . go-dot-mod-mode)))
-
-;; javascript
-(use-package typescript-mode
-  :straight t
-  :custom ((typescript-indent-level 4 "Set indent to match default VSCode")))
-
-
-(use-package js
-  :init
-  (defun ds/set-js-lsp-indent ()
-    "Setup indent for javascipt LSP."
-    (setq indent-tabs-mode nil))
-  :hook ((js-ts-mode . ds/set-js-lsp-indent))
-  :mode ("\\.mjs\\'" . js-ts-mode)
-  :custom ((js-indent-level 2 "Set indent level")))
 
 ;; html/web
 (use-package web-mode
