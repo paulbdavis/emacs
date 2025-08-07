@@ -445,6 +445,8 @@
 (use-package yasnippet
   :straight t
   :commands yas-minor-mode
+  :config
+  (set-face-attribute 'yas-field-highlight-face nil :inherit nil)
   :hook (go-ts-mode . yas-minor-mode))
 
 (use-package all-the-icons
