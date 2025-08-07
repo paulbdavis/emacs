@@ -489,14 +489,14 @@
                           ((staticcheck . t)
                            (completeUnimported . t)
                            (templateExtensions . ["tmpl" "html"])
-                           (hints . (:assignVariableTypes t
-                                                          :compositeLiteralFields t
-                                                          :compositeLiteralTypes t
-                                                          :constantValues t
-                                                          :functionTypeParameters t
-                                                          :ignoredError t
-                                                          :parameterNames t
-                                                          :rangeVariableTypes t))))))
+                           (hints . (:assignVariableTypes :json-false
+                                                          :compositeLiteralFields :json-false
+                                                          :compositeLiteralTypes :json-false
+                                                          :constantValues :json-false
+                                                          :functionTypeParameters :json-false
+                                                          :ignoredError :json-false
+                                                          :parameterNames :json-false
+                                                          :rangeVariableTypes :json-false))))))
   :hook ((go-ts-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
          (yaml-ts-mode . eglot-ensure)
