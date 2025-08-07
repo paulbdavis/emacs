@@ -486,7 +486,15 @@
                 '((:gopls .
                           ((staticcheck . t)
                            (completeUnimported . t)
-                           (templateExtensions . ["tmpl" "html"])))))
+                           (templateExtensions . ["tmpl" "html"])
+                           (hints . (:assignVariableTypes t
+                                                          :compositeLiteralFields t
+                                                          :compositeLiteralTypes t
+                                                          :constantValues t
+                                                          :functionTypeParameters t
+                                                          :ignoredError t
+                                                          :parameterNames t
+                                                          :rangeVariableTypes t))))))
   :hook ((go-ts-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
          (yaml-ts-mode . eglot-ensure)
