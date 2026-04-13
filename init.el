@@ -158,8 +158,8 @@
   :straight t
   :bind (("C-x p v" . magit-status)
          :map magit-mode-map
-              ([remap previous-line] . magit-previous-line)
-              ([remap next-line] . magit-next-line))
+         ([remap previous-line] . magit-previous-line)
+         ([remap next-line] . magit-next-line))
   :defines (magit-merge-arguments
             magit-defines-global-keybinds)
   :config
@@ -503,7 +503,7 @@
          (typescript-ts-mode . eglot-ensure)
          (js-ts-mode . eglot-ensure)
          (bash-ts-mode . eglot-ensure)
-         ; ensure save hooks are set up for some
+                                        ; ensure save hooks are set up for some
          (go-ts-mode . ds/setup-eglot-save-hooks)
          (typescript-ts-mode . ds/setup-eglot-save-hooks)
          (js-ts-mode . ds/setup-eglot-save-hooks))
