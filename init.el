@@ -34,6 +34,12 @@
 
 (require 'package-loader)
 
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :straight t
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package ds-basic)
 (use-package ds-theme
   :commands (ds/get-zenburn-color))
@@ -53,6 +59,7 @@
          ("M-o" . ds/open-previous-line)))
 
 (use-package vterm
+  :if (not (memq window-system '(mac ns)))
   :straight t
   :demand
   :commands (vterm ds/vterm)
@@ -78,6 +85,7 @@
 
 (use-package multi-vterm
   :straight t
+  :if (not (memq window-system '(mac ns)))
   :demand
   :init
   (defvar ds/multi-vterm-map (make-sparse-keymap)
@@ -182,6 +190,7 @@
           ("Path" 99 magit-repolist-column-path nil))))
 
 (use-package pdf-tools
+  :if (not (memq window-system '(mac ns)))
   :straight t
   :config
   (pdf-tools-install))
@@ -511,6 +520,7 @@
 
 ;; frames only
 (use-package frames-only-mode
+  :if (not (memq window-system '(mac ns)))
   :straight t
   :custom ((frames-only-mode-kill-frame-when-buffer-killed-buffer-list
             ;; '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*" "*HTTP Response*" "*HTTP Headers*")))
