@@ -58,6 +58,8 @@
          ("C-c n" . ds/indent-buffer)
          ("M-o" . ds/open-previous-line)))
 
+(use-package ds-eshell)
+
 (use-package vterm
   :if (not (memq window-system '(mac ns)))
   :straight t
