@@ -279,15 +279,15 @@
         pwd)))  ;; Otherwise, we just return the PWD
 
   (ds/eshell-section esh-dir
-                     (ds/with-face "" `(:foreground ,(ds/get-zenburn-color "fg-1") :weight bold))
+                     (ds/with-face "" `(:foreground ,(ds/get-zenburn-color "fg-05") :weight bold))
                      (let* ((dirparts (ds/split-directory-prompt (ds/pwd-shorten-dirs (abbreviate-file-name (eshell/pwd)))))
                             (parent (car dirparts))
                             (dirname (cadr dirparts)))
-                       (concat (ds/with-face parent `(:foreground ,(ds/get-zenburn-color "bg+3")))
-                               (ds/with-face dirname `(:foreground ,(ds/get-zenburn-color "fg-1") :weight bold)))))
+                       (concat (ds/with-face parent `(:foreground ,(ds/get-zenburn-color "fg-1")))
+                               (ds/with-face dirname `(:foreground ,(ds/get-zenburn-color "fg-05") :weight bold)))))
 
   (ds/eshell-section esh-git
-                     (ds/with-face "" `(:foreground ,(ds/get-zenburn-color "orange")))
+                     (ds/with-face "" `(:foreground ,(ds/get-zenburn-color "orange")))
                      (let* ((unstaged-count (length (magit-unstaged-files)))
                             (staged-count (length (magit-staged-files)))
                             (untracked-count (length (magit-untracked-files)))
@@ -311,7 +311,7 @@
                                                  `(:foreground ,(ds/get-zenburn-color "blue")))
                                    staged unstaged untracked)
                          nil)))
-
+  
   (ds/eshell-section esh-last-command-status
                      ""
                      (if (eq eshell-last-command-status 0)
