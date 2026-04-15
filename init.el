@@ -38,6 +38,8 @@
   :if (memq window-system '(mac ns))
   :straight t
   :config
+  (dolist (var '("GOPATH" "GOBIN"))
+    (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
 (use-package ds-basic)
