@@ -145,7 +145,12 @@
   :config
   (setq dired-subtree-use-backgrounds nil))
 
-(setq dired-listing-switches "-AFBhl  --group-directories-first")
+(if (memq window-system '(mac ns))
+    (setq insert-directory-program "gls"
+          dired-use-ls-dired t
+          dired-listing-switches "-al --group-directories-first")
+  (setq dired-listing-switches "-AFBhl  --group-directories-first"))
+
 
 (defun ds/apply-lc-collate (wrapped-fun &rest args)
   "Set the env var `LC_COLLATE' to `C' and then run WRAPPED-FUN with ARGS."
