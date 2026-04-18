@@ -503,18 +503,20 @@
               nil t))
   :config
   (setq-default eglot-workspace-configuration
-                '((:gopls .
-                          ((staticcheck . t)
-                           (completeUnimported . t)
-                           (templateExtensions . ["tmpl" "html"])
-                           (hints . (:assignVariableTypes :json-false
-                                                          :compositeLiteralFields :json-false
-                                                          :compositeLiteralTypes :json-false
-                                                          :constantValues :json-false
-                                                          :functionTypeParameters :json-false
-                                                          :ignoredError :json-false
-                                                          :parameterNames :json-false
-                                                          :rangeVariableTypes :json-false))))))
+                '(:gopls
+                  ((staticcheck . t)
+                   (completeUnimported . t)
+                   (templateExtensions . ["tmpl" "html"])
+                   (hints . (:assignVariableTypes :json-false
+                                                  :compositeLiteralFields :json-false
+                                                  :compositeLiteralTypes :json-false
+                                                  :constantValues :json-false
+                                                  :functionTypeParameters :json-false
+                                                  :ignoredError :json-false
+                                                  :parameterNames :json-false
+                                                  :rangeVariableTypes :json-false)))
+                  :typescript (:format (:indentSize 2 :tabSize 2))
+                  :javascript (:format (:indentSize 2 :tabSize 2))))
   :hook ((go-ts-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
          (yaml-ts-mode . eglot-ensure)
@@ -636,6 +638,9 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
 (use-package zig-mode
   :straight t)
 
+(use-package pyvenv
+  :straight t)
+
 (use-package pico8-mode
   :straight (pico8-mode :type git
                         :host github
@@ -653,12 +658,22 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
   :straight (strucurizr-mode :type git
                              :host github
                              :repo "gilesp/structurizr-mode"))
+
+(use-package jupyter
+  :straight t)
+
+(use-package code-cells
+  :straight t)
+
 ;; searching
 (use-package rg :straight t)
 
 (put 'downcase-region 'disabled nil)
 (put 'list-timers 'disabled nil)
 (put 'upcase-region 'disabled nil)
+
+;; enable editorconfig variables
+(editorconfig-mode)
 
 (provide 'init)
 ;;; init.el ends here
