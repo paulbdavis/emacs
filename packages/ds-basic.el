@@ -34,8 +34,9 @@
 (if (boundp 'scroll-bar-mode)
     (scroll-bar-mode -1))
 
-(if (memq window-system '(mac ns))
-    (add-to-list 'default-frame-alist '(font . "Monospace-12"))
+(if (eq system-type 'darwin)
+    (dolist (var '((font . "Monospace-12") (undecorated-round . t)))
+      (add-to-list 'default-frame-alist var))
   (add-to-list 'default-frame-alist '(font . "Monospace-8")))
 
 

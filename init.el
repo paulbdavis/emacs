@@ -35,7 +35,7 @@
 (require 'package-loader)
 
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
+  :if (eq system-type 'darwin)
   :straight t
   :config
   (dolist (var '("GOPATH" "GOBIN"))
@@ -63,7 +63,7 @@
 (use-package ds-eshell)
 
 (use-package vterm
-  :if (not (memq window-system '(mac ns)))
+  :if (not (eq system-type 'darwin))
   :straight t
   :demand
   :commands (vterm ds/vterm)
@@ -89,7 +89,7 @@
 
 (use-package multi-vterm
   :straight t
-  :if (not (memq window-system '(mac ns)))
+  :if (not (eq system-type 'darwin))
   :demand
   :init
   (defvar ds/multi-vterm-map (make-sparse-keymap)
@@ -145,7 +145,7 @@
   :config
   (setq dired-subtree-use-backgrounds nil))
 
-(if (memq window-system '(mac ns))
+(if (eq system-type 'darwin)
     (setq insert-directory-program "gls"
           dired-use-ls-dired t
           dired-listing-switches "-al --group-directories-first")
@@ -199,7 +199,7 @@
           ("Path" 99 magit-repolist-column-path nil))))
 
 (use-package pdf-tools
-  :if (not (memq window-system '(mac ns)))
+  :if (not (eq system-type 'darwin))
   :straight t
   :config
   (pdf-tools-install))
@@ -529,7 +529,6 @@
 
 ;; frames only
 (use-package frames-only-mode
-  :if (not (memq window-system '(mac ns)))
   :straight t
   :custom ((frames-only-mode-kill-frame-when-buffer-killed-buffer-list
             ;; '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*" "*HTTP Response*" "*HTTP Headers*")))
