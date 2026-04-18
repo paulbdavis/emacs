@@ -62,6 +62,8 @@
 
 (use-package ds-eshell)
 
+(use-package ds-erc)
+
 (use-package vterm
   :if (not (eq system-type 'darwin))
   :straight t
