@@ -639,8 +639,10 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
 (use-package nvm
   :straight t
   :commands (nvm-use)
+  :custom
+  (nvm-dir (concat (getenv "HOME") "/.local/share/nvm"))
   :config
-  (nvm-use "20"))
+  (nvm-use "24"))
 
 (use-package zig-mode
   :straight t)
