@@ -455,8 +455,12 @@
   (defun ds/set-js-lsp-indent ()
     "Setup indent for javascipt LSP."
     (setq indent-tabs-mode nil))
+  (defun ds/set-js-lsp-indent ()
+    "Setup indent for json LSP."
+    (setq-local js-indent-level 2))
   :hook ((go-ts-mode . ds/go-ts-mode-setup)
-         (js-ts-mode . ds/set-js-lsp-indent))
+         (js-ts-mode . ds/set-js-lsp-indent)
+         (json-ts-mode . ds/set-json-lsp-indent))
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
@@ -524,6 +528,7 @@
          (yaml-ts-mode . eglot-ensure)
          (typescript-ts-mode . eglot-ensure)
          (js-ts-mode . eglot-ensure)
+         (json-ts-mode . eglot-ensure)
          (bash-ts-mode . eglot-ensure)
                                         ; ensure save hooks are set up for some
          (go-ts-mode . ds/setup-eglot-save-hooks)
