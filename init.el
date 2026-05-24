@@ -38,7 +38,7 @@
   :if (eq system-type 'darwin)
   :straight t
   :config
-  (dolist (var '("GOPATH" "GOBIN"))
+  (dolist (var '("GOPATH" "GOBIN" "PYENV_ROOT"))
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
@@ -254,7 +254,8 @@
 
 ;; project management
 (use-package project
-  :custom ((project-switch-commands 'project-find-file)))
+  :custom ((project-switch-commands 'project-find-file)
+           (project-vc-extra-root-markers '("requirements.txt" "go.mod" "package.json"))))
 
 ;; search
 (use-package consult
@@ -648,7 +649,15 @@ Only if there are no other windows in the frame, and if the buffer is in frames-
   :straight t)
 
 (use-package pyvenv
-  :straight t)
+  :straight t
+  :commands (pyvenv-mode)
+  :config
+  (pyvenv-mode))
+
+(use-package pyenv
+  :straight (:host github :repo "aiguofer/pyenv.el")
+  :config
+  (global-pyenv-mode))
 
 (use-package pico8-mode
   :straight (pico8-mode :type git
