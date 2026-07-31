@@ -255,7 +255,7 @@
 ;; project management
 (use-package project
   :custom ((project-switch-commands 'project-find-file)
-           (project-vc-extra-root-markers '("requirements.txt" "go.mod" "package.json"))))
+           (project-vc-extra-root-markers '("requirements.txt" "go.mod" "package.json" "Chart.yaml"))))
 
 ;; search
 (use-package consult
