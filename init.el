@@ -502,12 +502,21 @@
   :defines (ds/eglot-format-buffer-before-save
             eglot-ensure)
   :init
+  (define-prefix-command 'ds/eglot-mode-map)
   (defun ds/setup-eglot-save-hooks ()
     (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
     (add-hook 'before-save-hook
               (lambda ()
                 (call-interactively 'eglot-code-action-organize-imports))
               nil t))
+  :bind (
+         :map eglot-mode-map
+              ("C-c l" . ds/eglot-mode-map)
+              :map ds/eglot-mode-map
+              ("a" . eglot-code-actions)
+              ("i" . eglot-find-implementation)
+              ("r" . eglot-rename)
+              ("R" . eglot-reconnect))
   :config
   (setq-default eglot-workspace-configuration
                 '(:gopls
