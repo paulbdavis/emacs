@@ -515,6 +515,8 @@
               :map ds/eglot-mode-map
               ("a" . eglot-code-actions)
               ("i" . eglot-find-implementation)
+              ("d" . eglot-find-typeDefinition)
+              ("q" . eglot-code-action-quickfix)
               ("r" . eglot-rename)
               ("R" . eglot-reconnect))
   :config
