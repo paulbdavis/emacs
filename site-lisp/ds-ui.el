@@ -61,7 +61,6 @@
 
 (use-package frames-only-mode
   :ensure t
-  :vc (:url "https://github.com/davidshepherd7/frames-only-mode" :branch "master" :rev :newest)
   :custom ((frames-only-mode-kill-frame-when-buffer-killed-buffer-list
             '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*" "*HTTP Headers*" "*Compilation*")))
   :config

@@ -23,6 +23,9 @@
 
 ;;; Code:
 
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://releases.melpa.org/packages/") t)
+
 (use-package ds-basic
   :load-path "site-lisp/")
 

@@ -126,13 +126,8 @@
          (typescript-ts-mode . ds/setup-eglot-save-hooks)
          (js-ts-mode . ds/setup-eglot-save-hooks)))
 
-;; nvm needs these, but other stuff commonly does too...
-(use-package s :vc (:url "https://github.com/magnars/s.el"))
-(use-package f :vc (:url "https://github.com/rejeep/f.el"))
-
 (use-package nvm
   :ensure t
-  :vc (:url "https://github.com/rejeep/nvm.el" :branch "master" :rev :newest)
   :commands (nvm-use)
   :custom
   (nvm-dir (or (getenv "NVM_DIR") (concat (getenv "HOME") "/.local/share/nvm")))
@@ -141,7 +136,6 @@
 
 (use-package pyvenv
   :ensure t
-  :vc (:url "https://github.com/jorgenschaefer/pyvenv" :branch "master" :rev :newest)
   :commands (pyvenv-mode)
   :config
   (pyvenv-mode))
@@ -153,8 +147,7 @@
   (global-pyenv-mode))
 
 (use-package rg
-  :ensure t
-  :vc (:url "https://github.com/dajva/rg.el" :branch "master" :rev :newest))
+  :ensure t)
 
 (provide 'ds-coding)
 ;; ds-coding.el ends here
