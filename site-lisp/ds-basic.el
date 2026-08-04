@@ -1,6 +1,6 @@
 ;;; ds-basic.el --- basic emacs customizations       -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019 Paul B Davis
+;; Copyright (C) 2026 Paul B Davis
 
 ;; Author:  <paul@dangersalad.com>
 
@@ -19,26 +19,28 @@
 
 ;;; Commentary:
 
-;; 
+;; most basic emacs settings
 
 ;;; Code:
 
-(require 'diminish)
-(require 'use-package)
+;; performance stuff (mainly for lsp-mode)
+(setq gc-cons-threshold 12800000)
+(setq read-process-output-max (* 4 1024 1024)) ; 4MiB
 
+;; basic settings
 (setq inhibit-startup-message t)
 (setq-default create-lockfiles nil)
 
+;; minimal UI decoration
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(if (boundp 'scroll-bar-mode)
-    (scroll-bar-mode -1))
+(scroll-bar-mode -1)
 
+;; set font (and window borders on macos
 (if (eq system-type 'darwin)
     (dolist (var '((font . "Monospace-12") (undecorated-round . t)))
       (add-to-list 'default-frame-alist var))
   (add-to-list 'default-frame-alist '(font . "Monospace-8")))
-
 
 ;; setup backup and temp file directories
 (defvar ds/backup-directory
@@ -77,53 +79,61 @@
 
 (show-paren-mode)
 
+;; enable "advanced" commands
 (put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'list-timers 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
-(defvar erc-hide-list '("JOIN" "PART" "QUIT"))
+;; dired settings
+(if (eq system-type 'darwin)
+    (setq insert-directory-program "gls"
+          dired-use-ls-dired t
+          dired-listing-switches "-al --group-directories-first")
+  (setq dired-listing-switches "-AFBhl  --group-directories-first"))
 
-(use-package ediff
-  :commands (ediff-setup-windows-plain)
-  :defines (ediff-setup-windows-plain)
-  :config
-  (setq ediff-window-setup-function #'ediff-setup-windows-plain))
+(defun ds/apply-lc-collate (wrapped-fun &rest args)
+  "Set the env var `LC_COLLATE' to `C' and then run WRAPPED-FUN with ARGS."
+  (let ((process-environment (copy-sequence process-environment)))
+    (add-to-list 'process-environment "LC_COLLATE=C" nil 'string-equal)
+    (apply wrapped-fun args)))
 
-;; close ansi term when exiting
-(defun ds/ansi-term-handle-close ()
-  "Close current term buffer when `exit' from term buffer."
-  (when (ignore-errors (get-buffer-process (current-buffer)))
-    (set-process-sentinel (get-buffer-process (current-buffer))
-                          (lambda (proc change)
-                            (when (string-match "\\(finished\\|exited\\)" change)
-                              (kill-buffer (process-buffer proc))
-                              (if (not (= (length (window-list)) 1))
-                                  (delete-window)))))))
+(advice-add 'dired-insert-directory :around #'ds/apply-lc-collate)
 
-(add-hook 'term-mode-hook #'ds/ansi-term-handle-close)
+;; Add prompt indicator to `completing-read-multiple'.
+;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+(defun crm-indicator (args)
+  (cons (format "[CRM%s] %s"
+                (replace-regexp-in-string
+                 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                 crm-separator)
+                (car args))
+        (cdr args)))
+(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
-;; more highlighting in sh-mode
-(defun sh-script-extra-font-lock-match-var-in-double-quoted-string (limit)
-  "Search for variables in double-quoted strings with LIMIT."
-  (let (res)
-    (while
-        (and (setq res (progn (if (eq (get-byte) ?$) (backward-char))
-                              (re-search-forward
-                               "[^\\]\\$\\({#?\\)?\\([[:alpha:]_][[:alnum:]_]*\\|[-#?@!]\\|[[:digit:]]+\\)"
-                               limit t)))
-             (not (eq (nth 3 (syntax-ppss)) ?\")))) res))
+;; Do not allow the cursor in the minibuffer prompt
+(setq minibuffer-prompt-properties
+      '(read-only t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-(defvar sh-script-extra-font-lock-keywords
-  '((sh-script-extra-font-lock-match-var-in-double-quoted-string
-     (2 font-lock-variable-name-face prepend))))
+(use-package emacs
+  :custom
+  (enable-recursive-minibuffers t)
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  (tab-always-indent 'complete))
 
-(defun sh-script-extra-font-lock-activate ()
-  "Activate extra font locking for shell scripts."
-  (interactive)
-  (font-lock-add-keywords nil sh-script-extra-font-lock-keywords)
-  (if (fboundp 'font-lock-flush)
-      (font-lock-flush)
-    (when font-lock-mode (with-no-warnings (font-lock-fontify-buffer)))))
+(defun ds/go-ts-mode-setup ()
+  (setq go-ts-mode-indent-offset 4))
+(defun ds/set-js-lsp-indent ()
+  "Setup indent for javascipt LSP."
+  (setq indent-tabs-mode nil))
+(defun ds/set-js-lsp-indent ()
+  "Setup indent for json LSP."
+  (setq-local js-indent-level 2))
 
-(add-hook 'sh-mode-hook 'sh-script-extra-font-lock-activate)
+(add-hook 'go-ts-mode-hook 'ds/go-ts-mode-setup)
+(add-hook 'js-ts-mode-hook 'ds/set-js-lsp-indent)
+(add-hook 'json-ts-mode 'ds/set-json-lsp-indent)
 
 (add-to-list 'auto-mode-alist '("PKGBUILD$" . sh-mode))
 (add-to-list 'auto-mode-alist '("zshrc$" . sh-mode))
@@ -145,17 +155,17 @@
 (global-auto-revert-mode)
 (global-subword-mode)
 (winner-mode)
-(diminish 'abbrev-mode)
-(diminish 'subword-minor-mode)
-(diminish 'eldoc-minor-mode)
-(diminish 'subword-mode)
-(diminish 'eldoc-mode)
-
-
-(setq dired-listing-switches "-lha --group-directories-first")
+;; (diminish 'abbrev-mode)
+;; (diminish 'subword-minor-mode)
+;; (diminish 'eldoc-minor-mode)
+;; (diminish 'subword-mode)
+;; (diminish 'eldoc-mode)
 
 (use-package uniquify
   :custom (uniquify-buffer-name-style 'forward))
 
+;; enable editorconfig variables
+(editorconfig-mode)
+
 (provide 'ds-basic)
-;;; ds-basic.el ends here
+;; ds-basic.el ends here
