@@ -29,6 +29,10 @@
 ;; 4mb
 (setq read-process-output-max (* 4 1024 1024))
 
+(unless (fboundp 'set-local)
+ (defun set-local (sym val)
+   (set (make-local-variable sym) val)))
+
 (setq load-path (cons (concat user-emacs-directory "lib") load-path))
 (setq load-path (cons (concat user-emacs-directory "packages") load-path))
 
@@ -520,6 +524,8 @@
               ("r" . eglot-rename)
               ("R" . eglot-reconnect))
   :config
+  (add-to-list 'eglot-server-programs
+               '((typescript-mode typescript-ts-mode tsx-ts-mode) . ("tsc" "--lsp" "--stdio")))
   (setq-default eglot-workspace-configuration
                 '(:gopls
                   ((staticcheck . t)
