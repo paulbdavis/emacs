@@ -23,6 +23,26 @@
 
 ;;; Code:
 
+;; setup hooks for some languages
+(defun ds/go-ts-mode-setup ()
+  (setq go-ts-mode-indent-offset 4))
+
+(defun ds/set-js-lsp-indent ()
+  "Setup indent for js/ts/json LSP."
+  (setq-local tab-width 2)
+  (setq-local indent-tabs-mode nil)
+  (setq-local js-indent-level 2))
+
+(add-hook 'go-ts-mode-hook 'ds/go-ts-mode-setup)
+(add-hook 'js-ts-mode-hook 'ds/set-js-lsp-indent)
+(add-hook 'typescript-ts-mode-hook 'ds/set-js-lsp-indent)
+(add-hook 'json-ts-mode 'ds/set-json-lsp-indent)
+
+(add-to-list 'auto-mode-alist '("PKGBUILD$" . sh-mode))
+(add-to-list 'auto-mode-alist '("zshrc$" . sh-mode))
+(add-to-list 'auto-mode-alist '("zshenv$" . sh-mode))
+(add-to-list 'auto-mode-alist '("zprofile$" . sh-mode))
+
 (use-package magit
   :ensure t
   :bind (("C-x p v" . magit-status)
