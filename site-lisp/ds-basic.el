@@ -155,11 +155,6 @@
 (global-auto-revert-mode)
 (global-subword-mode)
 (winner-mode)
-;; (diminish 'abbrev-mode)
-;; (diminish 'subword-minor-mode)
-;; (diminish 'eldoc-minor-mode)
-;; (diminish 'subword-mode)
-;; (diminish 'eldoc-mode)
 
 (use-package uniquify
   :custom (uniquify-buffer-name-style 'forward))

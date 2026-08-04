@@ -23,6 +23,17 @@
 
 ;;; Code:
 
+
+(use-package diminish
+  :ensure t
+  :config
+  (diminish 'abbrev-mode)
+  (diminish 'subword-minor-mode)
+  (diminish 'eldoc-minor-mode)
+  (diminish 'subword-mode)
+  (diminish 'eldoc-mode))
+
+
 (use-package multiple-cursors
   :ensure t
   :bind (("M-j" . mc/mark-next-like-this-symbol)))
