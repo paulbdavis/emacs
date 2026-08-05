@@ -85,6 +85,8 @@
   :custom
   (display-buffer-base-action '(ds/display-buffer-direction))
   :config
+  ;; open other files in frames instead of windows
+  (define-key global-map (kbd "C-x 4") #'ctl-x-5-prefix)
   (setq display-buffer-alist '(("^magit:" . (display-buffer-full-frame))
                                ("*info*" . (display-buffer-pop-up-frame)))))
 
