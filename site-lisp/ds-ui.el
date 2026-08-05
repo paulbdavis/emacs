@@ -85,7 +85,8 @@
   :custom
   (display-buffer-base-action '(ds/display-buffer-direction))
   :config
-  (setq display-buffer-alist '(("^magit:" . (display-buffer-full-frame)))))
+  (setq display-buffer-alist '(("^magit:" . (display-buffer-full-frame))
+                               ("*info*" . (display-buffer-pop-up-frame)))))
 
 (provide 'ds-ui)
 ;; ds-ui.el ends here
