@@ -72,13 +72,20 @@
 
 (use-package emacs
   :init
-  (defun ds/get-buffer-side(buf alist)
+  (defun ds/display-buffer-side(buf alist)
     (let ((side 'bottom))
       (if (> (frame-pixel-width) (* 1.5 (frame-pixel-height)))
               (setq side 'right))
       (display-buffer-in-side-window buf `((side . ,side) (window-width . 0.5) (window-height . 0.5)))))
+  (defun ds/display-buffer-direction(buf alist)
+    (let ((side 'bottom))
+      (if (> (frame-pixel-width) (* 1.5 (frame-pixel-height)))
+              (setq side 'right))
+      (display-buffer-in-direction buf `((direction . ,side) (window-width . 0.5) (window-height . 0.5)))))
   :custom
-  (display-buffer-base-action '(ds/get-buffer-side)))
+  (display-buffer-base-action '(ds/display-buffer-direction))
+  :config
+  (setq display-buffer-alist '(("^magit:" . (display-buffer-full-frame)))))
 
 (provide 'ds-ui)
 ;; ds-ui.el ends here
