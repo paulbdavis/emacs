@@ -1,9 +1,8 @@
 ;;; ds-theme.el --- customize and set up theming        -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019 Paul B Davis
+;; Copyright (C) 2026 Paul B Davis
 
-;; Author:  <paul@sputnik>
-;; Keywords: faces
+;; Author:  <paul@dangersalad.com>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,7 +19,7 @@
 
 ;;; Commentary:
 
-;; 
+;; loads zenburn theme with customizations
 
 ;;; Code:
 
@@ -146,62 +145,13 @@ This overrides the colors provided by the `zenburn-theme' package.")
                       :foreground (ds/get-zenburn-color "blue-1"))
   ;; set the verticle border color
   (set-face-attribute 'vertical-border nil
-                      :foreground (ds/get-zenburn-color "bg+1"))
-
-  ;; auto suggest face for eshell
-  (make-face 'ds/esh-autosuggest-face)
-  (set-face-attribute 'ds/esh-autosuggest-face nil
-                      :foreground (ds/get-zenburn-color "fg-1")
-                      :background (ds/get-zenburn-color "bg"))
-
-  (with-eval-after-load 'lsp-mode
-    (set-face-attribute 'lsp-face-highlight-read nil
-                        :weight 'extra-bold)
-    (set-face-attribute 'lsp-face-highlight-write nil
-                        :weight 'light))
-  
-  (with-eval-after-load 'flymake
-    (set-face-attribute 'flymake-error nil
-                        :underline `(:style wave :color ,(ds/get-zenburn-color "red")))
-    (set-face-attribute 'flymake-warning nil
-                        :underline `(:style wave :color ,(ds/get-zenburn-color "yellow")))
-    (set-face-attribute 'flymake-note nil
-                        :underline `(:style wave :color ,(ds/get-zenburn-color "blue"))))
-
-  (with-eval-after-load 'vterm
-    (set-face-attribute 'vterm-color-black nil
-                        :foreground (ds/get-zenburn-color "bg-2")
-                        :background (ds/get-zenburn-color "bg+2"))
-    (set-face-attribute 'vterm-color-red nil
-                        :foreground (ds/get-zenburn-color "red-1")
-                        :background (ds/get-zenburn-color "red"))
-    (set-face-attribute 'vterm-color-green nil
-                        :foreground (ds/get-zenburn-color "green-1")
-                        :background (ds/get-zenburn-color "green"))
-    (set-face-attribute 'vterm-color-yellow nil
-                        :foreground (ds/get-zenburn-color "yellow-1")
-                        :background (ds/get-zenburn-color "yellow"))
-    (set-face-attribute 'vterm-color-blue nil
-                        :foreground (ds/get-zenburn-color "blue-1")
-                        :background (ds/get-zenburn-color "blue"))
-    (set-face-attribute 'vterm-color-magenta nil
-                        :foreground (ds/get-zenburn-color "magenta-1")
-                        :background (ds/get-zenburn-color "magenta"))
-    (set-face-attribute 'vterm-color-cyan nil
-                        :foreground (ds/get-zenburn-color "orange")
-                        :background (ds/get-zenburn-color "orange"))
-    (set-face-attribute 'vterm-color-white nil
-                        :foreground (ds/get-zenburn-color "fg")
-                        :background (ds/get-zenburn-color "fg+1"))
-    ))
-
+                      :foreground (ds/get-zenburn-color "bg+1")))
 
 (use-package zenburn-theme
-  :straight t
+  :ensure t
   :config
   (setq zenburn-override-colors-alist ds/zenburn-colors)
-  (load-theme 'zenburn t)
-  (ds/setup-zenburn-faces))
+  (load-theme 'zenburn t))
 
 
 (provide 'ds-theme)
