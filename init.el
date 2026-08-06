@@ -70,10 +70,39 @@
           (if (buffer-live-p vbuf)
               (display-buffer vbuf)
             (vterm bname)))))
+
+  (defun ds/kill-frame-if-current-buffer-is-vterm ()
+    "Kill frames as well when certain buffers are closed.
+
+Only if there is only a single window in the frame, helps stop some
+packages spamming frames."
+    (when (and (one-window-p)
+               (eq major-mode 'vterm-mode))
+      (delete-frame)))
+
+
+  (defun ds/advice-delete-vterm-frame-on-bury (orig-fun &rest args)
+    "Delete the frame when burying certain buffers.
+
+Only if there are no other windows in the frame, and if the buffer is in
+kill-frame-when-buffer-killed-buffer-list."
+    (let ((buf (buffer-name)))
+      (apply orig-fun args)
+      (with-current-buffer buf
+        (when (and (one-window-p)
+                   (eq major-mode 'vterm-mode))
+          (delete-frame)))))
+
+  :config
+  (advice-add #'bury-buffer :around #'ds/advice-delete-vterm-frame-on-bury)
+  ;; (advice-remove #'bury-buffer #'ds/advice-delete-vterm-frame-on-bury)
+
   :bind (:map project-prefix-map
               ("s" . ds/project-vterm))
+  
   :hook ((vterm-mode . ds/remap-vterm-mode-map)
-         (vterm-copy-mode . ds/remap-vterm-copy-mode-map)))
+         (vterm-copy-mode . ds/remap-vterm-copy-mode-map)
+         (kill-buffer . ds/kill-frame-if-current-buffer-is-vterm)))
 
 (use-package project
   :custom ((project-switch-commands 'project-find-file)
