@@ -23,6 +23,22 @@
 
 ;;; Code:
 
+;; map file extensions to the treesitter modes
+(add-to-list 'auto-mode-alist '("PKGBUILD$" . sh-mode))
+(add-to-list 'auto-mode-alist '("zshrc$" . sh-mode))
+(add-to-list 'auto-mode-alist '("zshenv$" . sh-mode))
+(add-to-list 'auto-mode-alist '("zprofile$" . sh-mode))
+
+(setq major-mode-remap-alist
+      '((javascript-mode . js-ts-mode)
+        (python-mode . python-ts-mode)
+        (js-json-mode . json-ts-mode)))
+
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
+
+
 ;; setup hooks for some languages
 (defun ds/go-ts-mode-setup ()
   (setq go-ts-mode-indent-offset 4))
@@ -37,11 +53,6 @@
 (add-hook 'js-ts-mode-hook 'ds/set-js-lsp-indent)
 (add-hook 'typescript-ts-mode-hook 'ds/set-js-lsp-indent)
 (add-hook 'json-ts-mode 'ds/set-json-lsp-indent)
-
-(add-to-list 'auto-mode-alist '("PKGBUILD$" . sh-mode))
-(add-to-list 'auto-mode-alist '("zshrc$" . sh-mode))
-(add-to-list 'auto-mode-alist '("zshenv$" . sh-mode))
-(add-to-list 'auto-mode-alist '("zprofile$" . sh-mode))
 
 (use-package magit
   :ensure t
