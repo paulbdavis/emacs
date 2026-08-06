@@ -89,7 +89,10 @@
   (define-key global-map (kbd "C-x 4") #'ctl-x-5-prefix)
   (setq display-buffer-alist '(("^magit:" . (display-buffer-full-frame))
                                ("^magit-log:" . (display-buffer-pop-up-frame))
-                               ("*info*" . (display-buffer-pop-up-frame)))))
+                               ("*info*" . (display-buffer-pop-up-frame))
+                               ("\\*vterm" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
+                                   . ((inhibit-same-window . t)
+                                      (reusable-frames . t)))))))
 
 (provide 'ds-ui)
 ;; ds-ui.el ends here

@@ -50,6 +50,31 @@
 (use-package ds-coding
   :load-path "site-lisp/")
 
+(use-package vterm
+  :ensure t
+  :commands (vterm ds/project-vterm)
+  :init
+  (defun ds/remap-vterm-mode-map ()
+    (keymap-set vterm-mode-map "C-c t" #'vterm-copy-mode))
+  (defun ds/remap-vterm-copy-mode-map ()
+    (keymap-set vterm-copy-mode-map "C-c t" #'vterm-copy-mode))
+  (defun ds/project-vterm-name (pname)
+    (format "*vterm - %s*" pname))
+  (defun ds/project-vterm ()
+    "Open a vterm buffer for a project"
+    (interactive)
+    (if (project-current)
+        (let* ((pname (project-name (project-current)))
+               (bname (ds/project-vterm-name pname))
+               (vbuf (get-buffer bname)))
+          (if (buffer-live-p vbuf)
+              (display-buffer vbuf)
+            (vterm bname)))))
+  :bind (:map project-prefix-map
+              ("s" . ds/project-vterm))
+  :hook ((vterm-mode . ds/remap-vterm-mode-map)
+         (vterm-copy-mode . ds/remap-vterm-copy-mode-map)))
+
 (use-package project
   :custom ((project-switch-commands 'project-find-file)
            (project-vc-extra-root-markers '("requirements.txt" "go.mod" "package.json" "Chart.yaml"))))
