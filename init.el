@@ -26,15 +26,9 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://releases.melpa.org/packages/") t)
 
+;; stuff with no remote package dependencies
 (use-package ds-basic
   :load-path "site-lisp/")
-
-(use-package ds-theme
-  :load-path "site-lisp/"
-  :demand t
-  :commands (ds/get-zenburn-color ds/setup-zenburn-faces)
-  :config
-  (ds/setup-zenburn-faces))
 
 (use-package ds-util
   :load-path "site-lisp/"
@@ -44,12 +38,26 @@
          ("M-o" . ds/open-previous-line)
          ("M-<f12>" . ds/toggle-mode-line)))
 
+;; this *only* imports the zenburn theme, though I could probably
+;; replace that
+(use-package ds-theme
+  :load-path "site-lisp/"
+  :demand t
+  :commands (ds/get-zenburn-color ds/setup-zenburn-faces)
+  :config
+  (ds/setup-zenburn-faces))
+
+;;; packages that group together (mostly) remote packages
+
+;; ui configuration and enhancement
 (use-package ds-ui
   :load-path "site-lisp/")
 
+;; stuff for coding
 (use-package ds-coding
   :load-path "site-lisp/")
 
+;; stuff that doesn't really fit into one of the above packages
 (use-package vterm
   :ensure t
   :commands (vterm ds/project-vterm)
