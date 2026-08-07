@@ -28,6 +28,7 @@
 (add-to-list 'auto-mode-alist '("zshrc$" . sh-mode))
 (add-to-list 'auto-mode-alist '("zshenv$" . sh-mode))
 (add-to-list 'auto-mode-alist '("zprofile$" . sh-mode))
+(add-to-list 'auto-mode-alist '("\\(?:Dockerfile\\(?:\\..*\\)?\\|\\.[Dd]ockerfile\\)\\'" . dockerfile-ts-mode))
 
 (setq major-mode-remap-alist
       '((javascript-mode . js-ts-mode)
