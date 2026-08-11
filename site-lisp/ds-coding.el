@@ -23,22 +23,16 @@
 
 ;;; Code:
 
-;; map file extensions to the treesitter modes
+;; map some shell file names
 (add-to-list 'auto-mode-alist '("PKGBUILD$" . sh-mode))
 (add-to-list 'auto-mode-alist '("zshrc$" . sh-mode))
 (add-to-list 'auto-mode-alist '("zshenv$" . sh-mode))
 (add-to-list 'auto-mode-alist '("zprofile$" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\(?:Dockerfile\\(?:\\..*\\)?\\|\\.[Dd]ockerfile\\)\\'" . dockerfile-ts-mode))
 
-(setq major-mode-remap-alist
-      '((javascript-mode . js-ts-mode)
-        (python-mode . python-ts-mode)
-        (js-json-mode . json-ts-mode)))
 
-(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
-
+(use-package emacs
+  :custom ((treesit-auto-install-grammar 'always)
+           (treesit-enabled-modes t)))
 
 ;; setup hooks for some languages
 (defun ds/go-ts-mode-setup ()
