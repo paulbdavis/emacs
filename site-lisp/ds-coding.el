@@ -91,14 +91,6 @@
          ("C-c C-_ C-c" . evilnc-copy-and-comment-lines)
          ("C-c C-_ C-p" . evilnc-comment-or-uncomment-paragraphs)))
 
-(use-package corfu
-  :ensure t
-  :custom ((corfu-auto t))
-  :init
-  (global-corfu-mode)
-  :config
-  (setq corfu-quit-no-match 'separator))
-
 (use-package eglot
   :defines (ds/eglot-format-buffer-before-save
             eglot-ensure)
