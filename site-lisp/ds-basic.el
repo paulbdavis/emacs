@@ -120,7 +120,10 @@
   :custom
   (enable-recursive-minibuffers t)
   (read-extended-command-predicate #'command-completion-default-include-p)
-  (tab-always-indent 'complete))
+  (tab-always-indent 'complete)
+  (delete-pair-push-mark t)
+  (kill-region-dwim 'emacs-word)
+  (ibuffer-human-readable-size t))
 
 ;; set mark for accidental scroll fixing
 (add-function :before (symbol-function 'scroll-down-command) #'push-mark)
