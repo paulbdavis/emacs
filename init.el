@@ -127,3 +127,8 @@ kill-frame-when-buffer-killed-buffer-list."
 (use-package csv-mode
   :ensure t)
 
+(use-package markdown-ts-mode
+  :ensure nil
+  :commands (markdown-ts-mode)
+  :defer t)
+
