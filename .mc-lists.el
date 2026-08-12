@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         kill-region
+        kill-sexp
         ))
 
 (setq mc/cmds-to-run-once
