@@ -80,17 +80,6 @@
             (:help-echo "Local changes not in upstream")))
           ("Path" 99 magit-repolist-column-path nil))))
 
-(use-package evil-nerd-commenter
-  :ensure t
-  :bind (("C-c C-/ C-/" . evilnc-comment-or-uncomment-lines)
-         ("C-c C-/ C-l" . evilnc-comment-or-uncomment-to-the-line)
-         ("C-c C-/ C-c" . evilnc-copy-and-comment-lines)
-         ("C-c C-/ C-p" . evilnc-comment-or-uncomment-paragraphs)
-         ("C-c C-_ C-_" . evilnc-comment-or-uncomment-lines)
-         ("C-c C-_ C-l" . evilnc-comment-or-uncomment-to-the-line)
-         ("C-c C-_ C-c" . evilnc-copy-and-comment-lines)
-         ("C-c C-_ C-p" . evilnc-comment-or-uncomment-paragraphs)))
-
 (use-package eglot
   :defines (ds/eglot-format-buffer-before-save
             eglot-ensure)
