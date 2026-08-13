@@ -111,9 +111,7 @@ STRING, TABLE, PRED and POINT are the usual `try-completion' args."
   
   :bind (:map minibuffer-visible-completions-up-down-map
               ("C-n" . minibuffer-next-completion)
-              ("C-p" . minibuffer-previous-completion)
-              :map minibuffer-mode-map
-              ("C-e" . minibuffer-complete))
+              ("C-p" . minibuffer-previous-completion))
   :hook ((minibuffer-setup . cursor-intangible-mode)
          (minibuffer-setup . ds/minibuffer-truncate-lines))
   :custom
@@ -132,7 +130,7 @@ STRING, TABLE, PRED and POINT are the usual `try-completion' args."
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
   (minibuffer-prompt-properties
-   '(read-only t intangible t cursor-intangible t face minibufer-prompt))
+   '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
   (minibuffer-depth-indicate-mode t)
   (minibuffer-electric-default-mode t)
   :config
