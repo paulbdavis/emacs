@@ -43,6 +43,7 @@
     ("zenburn-red-3"     . "#9C6363")
     ("zenburn-red-4"     . "#8C5353")
     ("zenburn-orange"    . "#DFAF8F")
+    ("zenburn-orange+1"  . "#EFBF9F")
     ("zenburn-yellow"    . "#F0DFAF")
     ("zenburn-yellow-1"  . "#E0CF9F")
     ("zenburn-yellow-2"  . "#D0BF8F")
@@ -145,7 +146,58 @@ This overrides the colors provided by the `zenburn-theme' package.")
                       :foreground (ds/get-zenburn-color "blue-1"))
   ;; set the verticle border color
   (set-face-attribute 'vertical-border nil
-                      :foreground (ds/get-zenburn-color "bg+1")))
+                      :foreground (ds/get-zenburn-color "bg+1"))
+
+  ;; customize vterm colors
+  (with-eval-after-load 'vterm
+    (set-face-attribute 'vterm-color-black nil
+                        :foreground (ds/get-zenburn-color "bg-2")
+                        :background (ds/get-zenburn-color "bg+2"))
+    (set-face-attribute 'vterm-color-bright-black nil
+                        :foreground (ds/get-zenburn-color "bg+3")
+                        :background (ds/get-zenburn-color "bg+2"))
+    (set-face-attribute 'vterm-color-red nil
+                        :foreground (ds/get-zenburn-color "red-1")
+                        :background (ds/get-zenburn-color "red"))
+    (set-face-attribute 'vterm-color-bright-red nil
+                        :foreground (ds/get-zenburn-color "red-1")
+                        :background (ds/get-zenburn-color "red"))
+    (set-face-attribute 'vterm-color-green nil
+                        :foreground (ds/get-zenburn-color "green-1")
+                        :background (ds/get-zenburn-color "green"))
+    (set-face-attribute 'vterm-color-bright-green nil
+                        :foreground (ds/get-zenburn-color "green-1")
+                        :background (ds/get-zenburn-color "green"))
+    (set-face-attribute 'vterm-color-yellow nil
+                        :foreground (ds/get-zenburn-color "yellow-1")
+                        :background (ds/get-zenburn-color "yellow"))
+    (set-face-attribute 'vterm-color-bright-yellow nil
+                        :foreground (ds/get-zenburn-color "yellow-1")
+                        :background (ds/get-zenburn-color "yellow"))
+    (set-face-attribute 'vterm-color-blue nil
+                        :foreground (ds/get-zenburn-color "blue-1")
+                        :background (ds/get-zenburn-color "blue"))
+    (set-face-attribute 'vterm-color-bright-blue nil
+                        :foreground (ds/get-zenburn-color "blue-1")
+                        :background (ds/get-zenburn-color "blue"))
+    (set-face-attribute 'vterm-color-magenta nil
+                        :foreground (ds/get-zenburn-color "magenta-1")
+                        :background (ds/get-zenburn-color "magenta"))
+    (set-face-attribute 'vterm-color-bright-magenta nil
+                        :foreground (ds/get-zenburn-color "magenta-1")
+                        :background (ds/get-zenburn-color "magenta"))
+    (set-face-attribute 'vterm-color-cyan nil
+                        :foreground (ds/get-zenburn-color "orange")
+                        :background (ds/get-zenburn-color "orange+1"))
+    (set-face-attribute 'vterm-color-bright-cyan nil
+                        :foreground (ds/get-zenburn-color "orange")
+                        :background (ds/get-zenburn-color "orange+1"))
+    (set-face-attribute 'vterm-color-white nil
+                        :foreground (ds/get-zenburn-color "fg")
+                        :background (ds/get-zenburn-color "fg+1"))
+    (set-face-attribute 'vterm-color-bright-white nil
+                        :foreground (ds/get-zenburn-color "fg")
+                        :background (ds/get-zenburn-color "fg+1"))))
 
 (use-package zenburn-theme
   :ensure t
