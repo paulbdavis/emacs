@@ -109,8 +109,7 @@
                   :javascript
                   (:format (:indentSize 2 :tabSize 2))
                   :gopls
-                  ((staticcheck . t)
-                   (completeUnimported . t)
+                  ((completeUnimported . t)
                    (templateExtensions . ["tmpl" "html"])
                    (hints . (:assignVariableTypes :json-false
                                                   :compositeLiteralFields :json-false
